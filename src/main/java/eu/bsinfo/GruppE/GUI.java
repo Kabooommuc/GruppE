@@ -13,12 +13,13 @@ public class GUI extends JFrame {
     JTextField apartmentNumberInput = new JTextField();
     JTextField counterTypeInput = new JTextField();
     JTextField counterIdInput = new JTextField();
-    JTextField measurementReadingDateInput = new JTextField();
-    // TODO: measurementReadingDate is no String; it should be a date picker
+    JTextField measurementReadingDateTimeInput = new JTextField();
+    // TODO: measurementReadingDate is no String input; it should be a date picker
     JCheckBox counterChangeInput = new JCheckBox();
     JTextField commentInput = new JTextField();
     JTextField powerCurrentInput = new JTextField();
-    JTextField householdElecticityInput = new JTextField();
+    JTextField householdCurrentInput = new JTextField();
+
     public GUI() {
         super("Zählerabrechnung - ProgSchnellUndSicher GmbH");
         addWindowListener(new WindowAdapter() {
@@ -28,27 +29,32 @@ public class GUI extends JFrame {
             }
         });
 
+        /*
+        * base is the over-all container, all the others
+        *
+         */
         final Container base = getContentPane();
         base.setLayout(new GridBagLayout());
 
         final Container inputFields = new Container();
         inputFields.setLayout(new GridLayout(2, 10));
 
+
         JLabel customerIdLabel = new JLabel("KundenNr ");
         JLabel houseNumberLabel = new JLabel("HausNr ");
         JLabel apartmentNumberLabel = new JLabel("WohnungsNr ");
         JLabel powerCurrentLabel = new JLabel("Kraftstrom ");
-        JLabel householdElectricityLabel = new JLabel("Haushaltsstrom ");
-
+        JLabel householdCurrentLabel = new JLabel("Haushaltsstrom ");
         JLabel counterTypeLabel = new JLabel("Zählerart ");
         JLabel counterIdLabel = new JLabel("ZählerID ");
         JLabel measurementReadingDateLabel = new JLabel("Ablesedatum ");
         JLabel commentLabel = new JLabel("Kommentar ");
         JLabel counterChangeLabel = new JLabel("Zählertausch ");
 
+        // this array exists for the loop, which sets the padding and the right alignment
         JLabel[] list = {
                 customerIdLabel, houseNumberLabel, apartmentNumberLabel,
-                powerCurrentLabel, householdElectricityLabel, counterTypeLabel,
+                powerCurrentLabel, householdCurrentLabel, counterTypeLabel,
                 counterIdLabel, commentLabel, counterChangeLabel, measurementReadingDateLabel
         };
         for ( JLabel j : list ) {
@@ -64,15 +70,15 @@ public class GUI extends JFrame {
         inputFields.add(apartmentNumberInput);
         inputFields.add(powerCurrentLabel);
         inputFields.add(powerCurrentInput);
-        inputFields.add(householdElectricityLabel);
-        inputFields.add(householdElecticityInput);
+        inputFields.add(householdCurrentLabel);
+        inputFields.add(householdCurrentInput);
 
         inputFields.add(counterTypeLabel);
         inputFields.add(counterTypeInput);
         inputFields.add(counterIdLabel);
         inputFields.add(counterIdInput);
         inputFields.add(measurementReadingDateLabel);
-        inputFields.add(measurementReadingDateInput);
+        inputFields.add(measurementReadingDateTimeInput);
         inputFields.add(commentLabel);
         inputFields.add(commentInput);
         inputFields.add(counterChangeLabel);
@@ -96,5 +102,4 @@ public class GUI extends JFrame {
     private void exit() {
         System.exit(0);
     }
-
 }

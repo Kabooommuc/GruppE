@@ -19,8 +19,8 @@ public class MeasurementData {
     // DateTime of when the measurement will be read
     LocalDateTime measurementReadingDateTime;
     // Values of the measurement
-    Double measurementPower;
-    Double measurementHousehold;
+    Double powerCurrent;
+    Double householdCurrent;
     // Boolean whether the counter was swapped or not.
     Boolean counterChange;
     // Comment field
