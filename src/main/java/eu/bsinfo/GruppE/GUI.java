@@ -1,7 +1,5 @@
 package eu.bsinfo.GruppE;
 
-import eu.bsinfo.GruppE.DataClasses.MeasurementData;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
