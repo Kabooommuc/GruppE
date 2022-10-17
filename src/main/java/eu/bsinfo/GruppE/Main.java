@@ -1,6 +1,6 @@
 package eu.bsinfo.GruppE;
 
-public class Refactor {
+public class Main {
 
     public static void main(String[] args) {
 
