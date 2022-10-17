@@ -17,9 +17,11 @@ public class GUI extends JFrame {
 
         final Container con = getContentPane();
         con.setLayout(new BorderLayout());
-        final JPanel pn = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JTextField customerId;
-        pn.add(customerId = new JTextField(40));
+        final JPanel pn = new JPanel();
+
+
+        setSize(530, 200);
+        setVisible(true);
 
     }
 
