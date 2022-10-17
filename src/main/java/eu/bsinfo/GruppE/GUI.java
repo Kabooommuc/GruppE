@@ -96,6 +96,13 @@ public class GUI extends JFrame {
         setVisible(true);
     }
 
+    public void addData() {
+        MeasurementData m = new MeasurementData();
+        //TODO
+
+        DataHandler.addData(m);
+    }
+
     private void exit() {
         System.exit(0);
     }
