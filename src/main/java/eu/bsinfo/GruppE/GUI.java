@@ -5,6 +5,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GUI extends JFrame {
 
@@ -14,6 +17,7 @@ public class GUI extends JFrame {
     JTextField counterTypeInput = new JTextField();
     JTextField counterIdInput = new JTextField();
     JTextField measurementReadingDateInput = new JTextField();
+    // TODO: measurementReadingDate is no String; it should be a date picker
     JCheckBox counterChangeInput = new JCheckBox();
     JTextField commentInput = new JTextField();
     JTextField powerCurrentInput = new JTextField();
@@ -33,37 +37,27 @@ public class GUI extends JFrame {
         final Container inputFields = new Container();
         inputFields.setLayout(new GridLayout(2, 10));
 
-
         JLabel customerIdLabel = new JLabel("KundenNr ");
-        customerIdLabel.setHorizontalAlignment(JLabel.RIGHT);
-        customerIdLabel.setBorder(new EmptyBorder(0,15,0,10));
         JLabel houseNumberLabel = new JLabel("HausNr ");
-        houseNumberLabel.setHorizontalAlignment(4); // JLabel.Right = 4
-        houseNumberLabel.setBorder(new EmptyBorder(0,15,0,10));
         JLabel apartmentNumberLabel = new JLabel("WohnungsNr ");
-        apartmentNumberLabel.setHorizontalAlignment(4);
-        apartmentNumberLabel.setBorder(new EmptyBorder(0,15,0,10));
-        JLabel counterTypeLabel = new JLabel("Zählerart ");
-        counterTypeLabel.setHorizontalAlignment(4);
-        counterTypeLabel.setBorder(new EmptyBorder(0,15,0,10));
-        JLabel counterIdLabel = new JLabel("ZählerID ");
-        counterIdLabel.setHorizontalAlignment(4);
-        counterIdLabel.setBorder(new EmptyBorder(0,15,0,10));
-        JLabel measurementReadingDateLabel = new JLabel("Ablesedatum ");
-        measurementReadingDateLabel.setHorizontalAlignment(4);
-        measurementReadingDateLabel.setBorder(new EmptyBorder(0, 15,0,10));
-        JLabel counterChangeLabel = new JLabel("Zählertausch ");
-        counterChangeLabel.setHorizontalAlignment(4);
-        counterChangeLabel.setBorder(new EmptyBorder(0, 15,0, 10));
-        JLabel commentLabel = new JLabel("Kommentar ");
-        commentLabel.setHorizontalAlignment(4);
-        commentLabel.setBorder(new EmptyBorder(0, 15, 0, 10));
         JLabel powerCurrentLabel = new JLabel("Kraftstrom ");
-        powerCurrentLabel.setHorizontalAlignment(4);
-        powerCurrentLabel.setBorder(new EmptyBorder(0, 15, 0, 10));
         JLabel householdElectricityLabel = new JLabel("Haushaltsstrom ");
-        householdElectricityLabel.setHorizontalAlignment(4);
-        householdElectricityLabel.setBorder(new EmptyBorder(0,15,0,10));
+
+        JLabel counterTypeLabel = new JLabel("Zählerart ");
+        JLabel counterIdLabel = new JLabel("ZählerID ");
+        JLabel measurementReadingDateLabel = new JLabel("Ablesedatum ");
+        JLabel commentLabel = new JLabel("Kommentar ");
+        JLabel counterChangeLabel = new JLabel("Zählertausch ");
+
+        JLabel[] list = {
+                houseNumberLabel, apartmentNumberLabel,
+                powerCurrentLabel, householdElectricityLabel, counterTypeLabel,
+                counterIdLabel, commentLabel, counterChangeLabel, measurementReadingDateLabel
+        };
+        for ( JLabel j : list ) {
+            j.setHorizontalAlignment(4);
+            j.setBorder(new EmptyBorder(0,15,0,10));
+        }
 
         inputFields.add(customerIdLabel);
         inputFields.add(customerIdInput);
@@ -100,8 +94,6 @@ public class GUI extends JFrame {
 
         setSize(1450, 100);
         setVisible(true);
-
-
     }
 
     private void exit() {
