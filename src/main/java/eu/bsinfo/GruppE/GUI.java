@@ -15,9 +15,27 @@ public class GUI extends JFrame {
             }
         });
 
-        final Container con = getContentPane();
-        con.setLayout(new BorderLayout());
-        final JPanel pn = new JPanel();
+        final Container base = getContentPane();
+        base.setLayout(new GridBagLayout());
+
+        final Container inputFields = new Container();
+        inputFields.setLayout(new GridLayout());
+
+        final Container dataScrollpane = new Container();
+        dataScrollpane.setLayout(new ScrollPaneLayout());
+
+        final Container dataGrid = new Container();
+        dataGrid.setLayout(new GridBagLayout());
+
+        final Container actionButtons = new Container();
+        actionButtons.setLayout(new GridBagLayout());
+
+
+
+
+
+
+
 
 
         setSize(530, 200);
