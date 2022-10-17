@@ -14,8 +14,7 @@ public class MeasurementData {
     // Number of the house with the measurement
     String houseNumber;
     // null as our measurements will not be done in an apartment
-    Integer apartmentNumber = null;
-    // Enum if we measture "Strom", "Gas", etc.
+    Integer apartmentNumber = null;// Enum if we measure "Strom", "Gas", etc.
     CounterType counterType;
     // ID of the counter
     Integer counterId;
