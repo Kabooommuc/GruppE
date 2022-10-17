@@ -29,16 +29,11 @@ public class GUI extends JFrame {
             }
         });
 
-        /*
-        * base is the over-all container, all the others
-        *
-         */
         final Container base = getContentPane();
         base.setLayout(new GridBagLayout());
 
         final Container inputFields = new Container();
         inputFields.setLayout(new GridLayout(2, 10));
-
 
         JLabel customerIdLabel = new JLabel("KundenNr ");
         JLabel houseNumberLabel = new JLabel("HausNr ");
@@ -91,6 +86,10 @@ public class GUI extends JFrame {
 
         final Container dataGrid = new Container();
         dataGrid.setLayout(new GridBagLayout());
+
+        // error messages should be written into this container
+        final Container errorLog = new Container();
+        JLabel logging = new JLabel();
 
         final Container actionButtons = new Container();
         actionButtons.setLayout(new GridBagLayout());
