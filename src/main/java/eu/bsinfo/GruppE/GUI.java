@@ -1,4 +1,4 @@
 package eu.bsinfo.GruppE;
 
-public class Gui {
+public class GUI {
 }
