@@ -24,16 +24,9 @@ public class GUI extends JFrame {
     private final JTextField householdCurrentInput = new JTextField();
 
     private final JTextField[] inputList = {
-            customerIdInput,
-            houseNumberInput,
-            apartmentNumberInput,
-            counterTypeInput,
-            counterIdInput,
-            measurementReadingDateTimeInput,
-
-            commentInput,
-            powerCurrentInput,
-            householdCurrentInput
+            customerIdInput, houseNumberInput, apartmentNumberInput,
+            counterTypeInput, counterIdInput, measurementReadingDateTimeInput,
+            commentInput, powerCurrentInput, householdCurrentInput
     };
 
     JLabel errorMessageLabel = new JLabel("");
@@ -76,6 +69,8 @@ public class GUI extends JFrame {
             j.setBorder(new EmptyBorder(0,15,0,10));
         }
 
+
+
         inputFields.add(customerIdLabel);
         inputFields.add(customerIdInput);
         inputFields.add(houseNumberLabel);
@@ -85,7 +80,6 @@ public class GUI extends JFrame {
         inputFields.add(powerCurrentLabel);
         inputFields.add(powerCurrentInput);
         inputFields.add(householdCurrentLabel);
-        JTextField householdCurrentInput = new JTextField();
         inputFields.add(householdCurrentInput);
 
         inputFields.add(counterTypeLabel);
@@ -109,7 +103,7 @@ public class GUI extends JFrame {
 
         // error messages should be written into this container
         final Container errorLog = new Container();
-        JLabel logging = new JLabel();
+        errorLog.add(errorMessageLabel);
 
         final Container actionButtons = new Container();
         actionButtons.setLayout(new GridBagLayout());
@@ -152,7 +146,6 @@ public class GUI extends JFrame {
         for(JTextField j : inputList) {
             j.setText("");
         }
-
     }
 
     private void exit() {
