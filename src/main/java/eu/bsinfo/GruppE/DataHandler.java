@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class DataHandler {
     @Getter
-    public static ArrayList<MeasurementData> data;
+    public static ArrayList<MeasurementData> data = new ArrayList<>();
 
     public static void addData(MeasurementData d) {
         data.add(d);

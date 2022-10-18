@@ -48,7 +48,6 @@ public class GUI extends JFrame {
             }
         });
 
-
         final Container base = getContentPane();
         final boolean shouldFill = true;
         GridBagConstraints c = new GridBagConstraints();
@@ -71,7 +70,7 @@ public class GUI extends JFrame {
         JLabel commentLabel = new JLabel("Kommentar ");
         JLabel counterChangeLabel = new JLabel("Zählertausch ");
 
-            // this array exists for the loop, which sets the padding and the right alignment
+        // this array exists for the loop, which sets the padding and the right alignment
         JLabel[] list = {
                 customerIdLabel, houseNumberLabel, apartmentNumberLabel,
                 powerCurrentLabel, householdCurrentLabel, counterTypeLabel,
@@ -79,7 +78,7 @@ public class GUI extends JFrame {
         };
         for (JLabel j : list) {
             j.setHorizontalAlignment(4);
-            j.setBorder(new EmptyBorder(0, 15, 0, 10));
+            j.setBorder(new EmptyBorder(0,15,0,10));
         }
 
         inputFields.add(customerIdLabel);
@@ -91,7 +90,6 @@ public class GUI extends JFrame {
         inputFields.add(powerCurrentLabel);
         inputFields.add(powerCurrentInput);
         inputFields.add(householdCurrentLabel);
-        JTextField householdCurrentInput = new JTextField();
         inputFields.add(householdCurrentInput);
 
         inputFields.add(counterTypeLabel);
@@ -114,10 +112,7 @@ public class GUI extends JFrame {
 
         // error messages should be written into this container
         final Container errorLog = new Container();
-        
-//        base.add(errorMessageLabel);
-
-
+        errorLog.add(errorMessageLabel);
 
         final Container actionButtons = new Container();
         GridBagLayout aBgbl = new GridBagLayout();              // actionButtonsGridBagLayout
@@ -152,7 +147,6 @@ public class GUI extends JFrame {
 //        exportButton.addActionListener(e -> export());
         exitButton.addActionListener(e -> exit());
     }
-
 
     public void addData() {
         MeasurementData m;
