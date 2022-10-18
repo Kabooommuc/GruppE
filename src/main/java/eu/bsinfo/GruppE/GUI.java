@@ -49,12 +49,9 @@ public class GUI extends JFrame {
         });
 
         final Container base = getContentPane();
-        final boolean shouldFill = true;
-        GridBagConstraints c = new GridBagConstraints();
+        GridBagConstraints constraint = new GridBagConstraints();
         base.setLayout(new GridBagLayout());
-        if (shouldFill) {
-            c.fill = GridBagConstraints.HORIZONTAL;
-        }
+        constraint.fill = GridBagConstraints.HORIZONTAL;
 
         final Container inputFields = new Container();
         inputFields.setLayout(new GridLayout(2, 10));
@@ -103,41 +100,45 @@ public class GUI extends JFrame {
         inputFields.add(counterChangeLabel);
         inputFields.add(counterChangeInput);
 
-        c.gridx = 0;
-        c.gridy = 0;
-        base.add(inputFields, c);
+        constraint.gridx = 0;
+        constraint.gridy = 0;
+        base.add(inputFields, constraint);
 
         final Container dataScrollpane = new Container();
         dataScrollpane.setLayout(new ScrollPaneLayout());
+
+        constraint.gridx = 0;
+        constraint.gridy = 1;
 
         // error messages should be written into this container
         final Container errorLog = new Container();
         errorLog.add(errorMessageLabel);
 
         final Container actionButtons = new Container();
-        GridBagLayout aBgbl = new GridBagLayout();              // actionButtonsGridBagLayout
-        GridBagConstraints aBgbc = new GridBagConstraints();    // actionButtonsGridBagConstraints
-        actionButtons.setLayout(aBgbl);
-        aBgbl.setConstraints(actionButtons, aBgbc);
+        // TODO: Buttons muessen
+        GridBagLayout actionButtonsGridBagLayout = new GridBagLayout();              // actionButtonsGridBagLayout
+        GridBagConstraints actionButtonsGridBagConstraints = new GridBagConstraints();    // actionButtonsGridBagConstraints
+        actionButtons.setLayout(actionButtonsGridBagLayout);
+        actionButtonsGridBagLayout.setConstraints(actionButtons, actionButtonsGridBagConstraints);
 
         JButton addButton = new JButton("Add");
         JButton saveButton = new JButton("Save");
         JButton exportButton = new JButton("Export");
         JButton exitButton = new JButton("Exit");
 
-        aBgbc.gridx = 0;
+        actionButtonsGridBagConstraints.gridx = 0;
         actionButtons.add(addButton);
-        aBgbc.gridx = 1;
+        actionButtonsGridBagConstraints.gridx = 1;
         actionButtons.add(saveButton);
-        aBgbc.gridx = 3;
+        actionButtonsGridBagConstraints.gridx = 3;
         actionButtons.add(exportButton);
-        aBgbc.gridx = 4;
-        aBgbc.anchor = GridBagConstraints.EAST;
+        actionButtonsGridBagConstraints.gridx = 4;
+        actionButtonsGridBagConstraints.anchor = GridBagConstraints.EAST;
         actionButtons.add(exitButton);
 
-        c.gridx = 0;
-        c.gridy = 1;
-        base.add(actionButtons, c);
+        constraint.gridx = 0;
+        constraint.gridy = 3;
+        base.add(actionButtons, constraint);
 
         setSize(1500, 150);
         setVisible(true);
