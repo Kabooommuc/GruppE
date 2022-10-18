@@ -5,9 +5,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.InputMismatchException;
 
 public class GUI extends JFrame {
 
@@ -22,6 +20,10 @@ public class GUI extends JFrame {
     JTextField commentInput = new JTextField();
     JTextField powerCurrentInput = new JTextField();
     JTextField householdElecticityInput = new JTextField();
+
+    JLabel errorMessageLabel = new JLabel("");
+
+
     public GUI() {
         super("Zählerabrechnung - ProgSchnellUndSicher GmbH");
         addWindowListener(new WindowAdapter() {
@@ -98,9 +100,17 @@ public class GUI extends JFrame {
 
     public void addData() {
         MeasurementData m = new MeasurementData();
-        //TODO
+        try {
+            clearErrorMessage();
+            DataHandler.addData(m);
+        }
+        catch (InputMismatchException e) {
+            errorMessageLabel.setText("");
+        }
+    }
 
-        DataHandler.addData(m);
+    public void clearErrorMessage() {
+        errorMessageLabel.setText("");
     }
 
     private void exit() {
