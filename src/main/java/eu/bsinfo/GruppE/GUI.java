@@ -5,25 +5,36 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.InputMismatchException;
 
 public class GUI extends JFrame {
 
     private final String ERROR_INVALID_INPUT = "Error: Input data is not valid";
 
-    JTextField customerIdInput = new JTextField();
-    JTextField houseNumberInput = new JTextField();
-    JTextField apartmentNumberInput = new JTextField();
-    JTextField counterTypeInput = new JTextField();
-    JTextField counterIdInput = new JTextField();
-    JTextField measurementReadingDateTimeInput = new JTextField();
-    // TODO: measurementReadingDate is no String input; it should be a date picker
-    JCheckBox counterChangeInput = new JCheckBox();
-    JTextField commentInput = new JTextField();
-    JTextField powerCurrentInput = new JTextField();
-    JTextField householdCurrentInput = new JTextField();
+    private final JTextField customerIdInput = new JTextField();
+    private final JTextField houseNumberInput = new JTextField();
+    private final JTextField apartmentNumberInput = new JTextField();
+    private final JTextField counterTypeInput = new JTextField();
+    private final JTextField counterIdInput = new JTextField();
+    private final JTextField measurementReadingDateTimeInput = new JTextField();
+     // TODO: measurementReadingDate is no String input; it should be a date picker
+    private final JCheckBox counterChangeInput = new JCheckBox();
+    private final JTextField commentInput = new JTextField();
+    private final JTextField powerCurrentInput = new JTextField();
 
-    JTextField householdElecticityInput = new JTextField();
+    private final JTextField householdCurrentInput = new JTextField();
+
+    private final JTextField[] inputList = {
+            customerIdInput,
+            houseNumberInput,
+            apartmentNumberInput,
+            counterTypeInput,
+            counterIdInput,
+            measurementReadingDateTimeInput,
+
+            commentInput,
+            powerCurrentInput,
+            householdCurrentInput
+    };
 
     JLabel errorMessageLabel = new JLabel("");
 
@@ -74,6 +85,7 @@ public class GUI extends JFrame {
         inputFields.add(powerCurrentLabel);
         inputFields.add(powerCurrentInput);
         inputFields.add(householdCurrentLabel);
+        JTextField householdCurrentInput = new JTextField();
         inputFields.add(householdCurrentInput);
 
         inputFields.add(counterTypeLabel);
@@ -117,22 +129,30 @@ public class GUI extends JFrame {
                     Integer.parseInt(counterIdInput.getText()),
                     null, //TODO: use localDateTime here
                     Double.parseDouble(powerCurrentInput.getText()),
-                    Double.parseDouble(householdElecticityInput.getText()),
+                    Double.parseDouble(householdCurrentInput.getText()),
                     counterChangeInput.isSelected(),
                     commentInput.getText()
             );
         }
-        catch (InputMismatchException e) {
+        catch (NumberFormatException e) {
             errorMessageLabel.setText(ERROR_INVALID_INPUT);
             return;
         }
 
         clearErrorMessage();
+        clearInputFields();
         DataHandler.addData(m);
     }
 
     public void clearErrorMessage() {
         errorMessageLabel.setText("");
+    }
+
+    public void clearInputFields() {
+        for(JTextField j : inputList) {
+            j.setText("");
+        }
+
     }
 
     private void exit() {
