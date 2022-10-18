@@ -39,3 +39,7 @@ build/
 
 ### IntelliJ Idea ###
 .idea/
+
+### Exported files from Application ###
+*.json
+*.csv
