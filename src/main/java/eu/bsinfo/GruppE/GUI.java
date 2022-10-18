@@ -5,6 +5,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class GUI extends JFrame {
 
@@ -16,7 +19,6 @@ public class GUI extends JFrame {
     private final JTextField counterTypeInput = new JTextField();
     private final JTextField counterIdInput = new JTextField();
     private final JTextField measurementReadingDateTimeInput = new JTextField();
-     // TODO: measurementReadingDate is no String input; it should be a date picker
     private final JCheckBox counterChangeInput = new JCheckBox();
     private final JTextField commentInput = new JTextField();
     private final JTextField powerCurrentInput = new JTextField();
@@ -144,34 +146,34 @@ public class GUI extends JFrame {
         setVisible(true);
 
         addButton.addActionListener(e -> addData());
-//        saveButton.addActionListener(e -> save());
-//        exportButton.addActionListener(e -> export());
+        saveButton.addActionListener(e -> save());
+        exportButton.addActionListener(e -> {});     //TODO
         exitButton.addActionListener(e -> exit());
     }
 
     public void addData() {
         MeasurementData m;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         try {
             m = new MeasurementData(
                     Integer.parseInt(customerIdInput.getText()),
                     houseNumberInput.getText(),
-                    //null,
-                    //counterTypeInput.getText(),
                     Integer.parseInt(counterIdInput.getText()),
-                    null, //TODO: use localDateTime here
+                    LocalDate.parse(measurementReadingDateTimeInput.getText(),formatter), //TODO: use localDateTime here
                     Double.parseDouble(powerCurrentInput.getText()),
                     Double.parseDouble(householdCurrentInput.getText()),
                     counterChangeInput.isSelected(),
                     commentInput.getText()
             );
         }
-        catch (NumberFormatException e) {
+        catch (NumberFormatException | DateTimeParseException e) {
             setErrorMessage(ERROR_INVALID_INPUT);
             return;
         }
 
         clearErrorMessage();
         clearInputFields();
+        System.out.println(m);
         DataHandler.addData(m);
     }
 

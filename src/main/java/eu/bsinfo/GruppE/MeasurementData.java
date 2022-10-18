@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -23,7 +23,7 @@ public class MeasurementData {
     // ID of the counter
     Integer counterId;
     // DateTime of when the measurement will be read
-    LocalDateTime measurementReadingDateTime;
+    LocalDate measurementReadingDateTime;
     // Values of the measurement
     Double powerCurrent;
     Double householdCurrent;
