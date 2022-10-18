@@ -3,15 +3,16 @@ package eu.bsinfo.GruppE;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @JsonPropertyOrder({"customerId", "houseNumber", "apartmentNumber", "counterType", "counterId",
         "measurementReadingDateTime", "powerCurrent", "householdCurrent", "counterChange", "comment"})
 public class MeasurementData {
-
     // ID of the Customer
     Integer customerId;
     // Number of the house with the measurement
