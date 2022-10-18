@@ -5,8 +5,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.InputMismatchException;
 
 public class GUI extends JFrame {
+
+    private final String ERROR_INVALID_INPUT = "Error: Input data is not valid";
 
     JTextField customerIdInput = new JTextField();
     JTextField houseNumberInput = new JTextField();
@@ -19,6 +22,11 @@ public class GUI extends JFrame {
     JTextField commentInput = new JTextField();
     JTextField powerCurrentInput = new JTextField();
     JTextField householdCurrentInput = new JTextField();
+
+    JTextField householdElecticityInput = new JTextField();
+
+    JLabel errorMessageLabel = new JLabel("");
+
 
     public GUI() {
         super("Zählerabrechnung - ProgSchnellUndSicher GmbH");
@@ -98,7 +106,37 @@ public class GUI extends JFrame {
         setVisible(true);
     }
 
+    public void addData() {
+        MeasurementData m;
+        try {
+            m = new MeasurementData(
+                    Integer.parseInt(customerIdInput.getText()),
+                    houseNumberInput.getText(),
+                    null,
+                    counterTypeInput.getText(),
+                    Integer.parseInt(counterIdInput.getText()),
+                    null, //TODO: use localDateTime here
+                    Double.parseDouble(powerCurrentInput.getText()),
+                    Double.parseDouble(householdElecticityInput.getText()),
+                    counterChangeInput.isSelected(),
+                    commentInput.getText()
+            );
+        }
+        catch (InputMismatchException e) {
+            errorMessageLabel.setText(ERROR_INVALID_INPUT);
+            return;
+        }
+
+        clearErrorMessage();
+        DataHandler.addData(m);
+    }
+
+    public void clearErrorMessage() {
+        errorMessageLabel.setText("");
+    }
+
     private void exit() {
         System.exit(0);
     }
+
 }
