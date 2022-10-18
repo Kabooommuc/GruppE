@@ -15,23 +15,23 @@ public class DataExporter {
 
     static final File resourceDirectoryFile = Paths.get("src", "main", "resources").toFile();
 
-    public static void exportCSV(ArrayList<MeasurementData> dataArray) throws IOException {
-        File csvFile = new File(resourceDirectoryFile + "/export.csv");
+    public static void exportCSV(ArrayList<MeasurementData> dataToExport, String fileNameNoSuffix) throws IOException {
+        File csvFile = new File(resourceDirectoryFile + "/" + fileNameNoSuffix + ".csv");
 
         CsvMapper csvMapper = (CsvMapper) new CsvMapper()
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
                 .registerModule(new JavaTimeModule());
         CsvSchema csvSchema = csvMapper.schemaFor(MeasurementData.class).withHeader();
-        csvMapper.writer(csvSchema).writeValue(csvFile, dataArray);
+        csvMapper.writer(csvSchema).writeValue(csvFile, dataToExport);
     }
 
-    public static void exportJSON(ArrayList<MeasurementData> dataArray) throws IOException {
-        File jsonFile = new File(resourceDirectoryFile + "/export.json");
+    public static void exportJSON(ArrayList<MeasurementData> dataToExport, String fileNameNoSuffix) throws IOException {
+        File jsonFile = new File(resourceDirectoryFile + "/" + fileNameNoSuffix + ".json");
 
         ObjectMapper objMapper = new ObjectMapper()
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
                 .registerModule(new JavaTimeModule());
-        objMapper.writeValue(jsonFile, dataArray);
+        objMapper.writeValue(jsonFile, dataToExport);
     }
 
 }
