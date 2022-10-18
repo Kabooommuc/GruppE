@@ -173,7 +173,6 @@ public class GUI extends JFrame {
 
         clearErrorMessage();
         clearInputFields();
-        System.out.println(m);
         DataHandler.addData(m);
     }
 
