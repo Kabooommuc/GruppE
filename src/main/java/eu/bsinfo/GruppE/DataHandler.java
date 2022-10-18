@@ -10,7 +10,6 @@ public class DataHandler {
 
     public static void addData(MeasurementData d) {
         data.add(d);
-        System.out.println(d);
     }
 
 }
