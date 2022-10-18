@@ -165,7 +165,7 @@ public class GUI extends JFrame {
             );
         }
         catch (NumberFormatException e) {
-            errorMessageLabel.setText(ERROR_INVALID_INPUT);
+            setErrorMessage(ERROR_INVALID_INPUT);
             return;
         }
 
@@ -174,15 +174,23 @@ public class GUI extends JFrame {
         DataHandler.addData(m);
     }
 
+    public void setErrorMessage(String error) {
+        errorMessageLabel.setText(error);
+    }
+
     public void clearErrorMessage() {
         errorMessageLabel.setText("");
     }
 
     public void clearInputFields() {
-        for(JTextField j : inputList) {
-            j.setText("");
+        for(JTextField t : inputList) {
+            t.setText("");
         }
 
+    }
+
+    public void save() {
+        DataHandler.saveData();
     }
 
     private void exit() {
