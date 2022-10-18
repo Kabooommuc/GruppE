@@ -21,6 +21,7 @@ public class DataExporter {
 
         ObjectMapper objMapper = new ObjectMapper()
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                .configure(SerializationFeature.INDENT_OUTPUT, true)
                 .registerModule(new JavaTimeModule());
         objMapper.writeValue(jsonFile, dataToExport);
     }
