@@ -118,8 +118,8 @@ public class GUI extends JFrame {
             m = new MeasurementData(
                     Integer.parseInt(customerIdInput.getText()),
                     houseNumberInput.getText(),
-                    null,
-                    counterTypeInput.getText(),
+                    //null,
+                    //counterTypeInput.getText(),
                     Integer.parseInt(counterIdInput.getText()),
                     null, //TODO: use localDateTime here
                     Double.parseDouble(powerCurrentInput.getText()),

@@ -9,12 +9,13 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class DataExporter {
 
     static final File resourceDirectoryFile = Paths.get("src", "main", "resources").toFile();
 
-    public static void exportCSV(MeasurementData[] dataArray) throws IOException {
+    public static void exportCSV(ArrayList<MeasurementData> dataArray) throws IOException {
         File csvFile = new File(resourceDirectoryFile + "/export.csv");
 
         CsvMapper csvMapper = (CsvMapper) new CsvMapper()
@@ -24,7 +25,7 @@ public class DataExporter {
         csvMapper.writer(csvSchema).writeValue(csvFile, dataArray);
     }
 
-    public static void exportJSON(MeasurementData[] dataArray) throws IOException {
+    public static void exportJSON(ArrayList<MeasurementData> dataArray) throws IOException {
         File jsonFile = new File(resourceDirectoryFile + "/export.json");
 
         ObjectMapper objMapper = new ObjectMapper()
