@@ -9,6 +9,8 @@ import java.util.InputMismatchException;
 
 public class GUI extends JFrame {
 
+    private final String ERROR_INVALID_INPUT = "Error: Input data is not valid";
+
     JTextField customerIdInput = new JTextField();
     JTextField houseNumberInput = new JTextField();
     JTextField apartmentNumberInput = new JTextField();
@@ -99,14 +101,28 @@ public class GUI extends JFrame {
     }
 
     public void addData() {
-        MeasurementData m = new MeasurementData();
+        MeasurementData m;
         try {
-            clearErrorMessage();
-            DataHandler.addData(m);
+            m = new MeasurementData(
+                    Integer.parseInt(customerIdInput.getText()),
+                    houseNumberInput.getText(),
+                    null,
+                    counterTypeInput.getText(),
+                    Integer.parseInt(counterIdInput.getText()),
+                    null, //TODO: use localDateTime here
+                    Double.parseDouble(powerCurrentInput.getText()),
+                    Double.parseDouble(householdElecticityInput.getText()),
+                    counterChangeInput.isSelected(),
+                    commentInput.getText()
+            );
         }
         catch (InputMismatchException e) {
-            errorMessageLabel.setText("");
+            errorMessageLabel.setText(ERROR_INVALID_INPUT);
+            return;
         }
+
+        clearErrorMessage();
+        DataHandler.addData(m);
     }
 
     public void clearErrorMessage() {
