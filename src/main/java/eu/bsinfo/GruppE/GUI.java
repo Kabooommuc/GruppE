@@ -2,6 +2,7 @@ package eu.bsinfo.GruppE;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -107,17 +108,44 @@ public class GUI extends JFrame {
         base.add(inputFields, constraint);
 
         final Container dataScrollpane = new Container();
-        dataScrollpane.setLayout(new ScrollPaneLayout());
+        final String[] columnNames = {"KundenID","Hausnummer","WohnungsNr","Zählerart","ZählerID","Ablesedatum","Zählertausch","Kraftstrom","Haushaltsstrom","Kommentar"};
+        dataScrollpane.setLayout(new GridBagLayout());
+        DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
+
+        for (MeasurementData i: DataHandler.getData()) {
+            Object[] row = {
+                    i.customerId,
+                    i.houseNumber,
+                    i.apartmentNumber, // always null
+                    i.counterType,
+                    i.counterId,
+                    i.measurementReadingDateTime,
+                    i.powerCurrent,
+                    i.householdCurrent,
+                    i.counterChange,
+                    i.comment
+            };
+            tableModel.addRow(row);
+        }
+        JTable table = new JTable(tableModel);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        JScrollPane scrollPane = new JScrollPane(table);
+        dataScrollpane.add(scrollPane);
+
 
         constraint.gridx = 0;
         constraint.gridy = 1;
+        constraint.fill = GridBagConstraints.BOTH;
+        base.add(dataScrollpane, constraint);
+
+
 
         // error messages should be written into this container
         final Container errorLog = new Container();
         errorLog.add(errorMessageLabel);
 
         final Container actionButtons = new Container();
-
+        // TODO: Buttons muessen umpositioniert werden
         GridBagLayout actionButtonsGridBagLayout = new GridBagLayout();              // actionButtonsGridBagLayout
         GridBagConstraints actionButtonsGridBagConstraints = new GridBagConstraints();    // actionButtonsGridBagConstraints
         actionButtons.setLayout(actionButtonsGridBagLayout);
@@ -142,7 +170,7 @@ public class GUI extends JFrame {
         constraint.gridy = 3;
         base.add(actionButtons, constraint);
 
-        setSize(1500, 150);
+        setSize(1500, 550);
         setVisible(true);
 
         addButton.addActionListener(e -> addData());
