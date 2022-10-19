@@ -12,10 +12,23 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * The DataExporter contains all methods regarding the export and import functionality of the application.
+ * It does not handle Exceptions and will throw them to the calling class.
+ */
 public class DataExporter {
 
+    // Path to /src/main/resources as File Object
     static final File resourceDirectoryFile = Paths.get("src", "main", "resources").toFile();
 
+    /**
+     * Exports the given ArrayList of MeasurementData to a JSON file in ´/src/main/resources´ with the given fileName.
+     * The Jackson ObjectMapper will not write Dates as Timestamps and will pretty-print the JSON file.
+     *
+     * @param dataToExport     An ArrayList of MeasurementData to export
+     * @param fileNameNoSuffix A fileName string without file extension
+     * @throws IOException When the ObjectMapper fails to write the JSON file
+     */
     public static void exportJSON(ArrayList<MeasurementData> dataToExport, String fileNameNoSuffix) throws IOException {
         File jsonFile = new File(resourceDirectoryFile + "/" + fileNameNoSuffix + ".json");
 
@@ -26,6 +39,14 @@ public class DataExporter {
         objMapper.writeValue(jsonFile, dataToExport);
     }
 
+    /**
+     * Exports the given ArrayList of MeasurementData to a CSV file in /src/main/resources with the given fileName.
+     * The Jackson CSVMapper will not write Dates as Timestamps.
+     *
+     * @param dataToExport     An ArrayList of MeasurementData to export
+     * @param fileNameNoSuffix A fileName string without file extension
+     * @throws IOException When the CSVMapper fails to write the CSV file
+     */
     public static void exportCSV(ArrayList<MeasurementData> dataToExport, String fileNameNoSuffix) throws IOException {
         File csvFile = new File(resourceDirectoryFile + "/" + fileNameNoSuffix + ".csv");
 
@@ -36,6 +57,13 @@ public class DataExporter {
         csvMapper.writer(csvSchema).writeValue(csvFile, dataToExport);
     }
 
+    /**
+     * Returns an ArrayList of MeasurementData from an JSON file in /src/main/resources with the given fileName.
+     *
+     * @param fileNameNoSuffix A fileName string without file extension
+     * @return ArrayList of MeasurementData
+     * @throws IOException When the ObjectMapper fails to read the JSON file
+     */
     public static ArrayList<MeasurementData> importJson(String fileNameNoSuffix) throws IOException {
         File jsonFile = new File(resourceDirectoryFile + "/" + fileNameNoSuffix + ".json");
 
