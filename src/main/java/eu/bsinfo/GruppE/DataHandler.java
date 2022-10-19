@@ -17,15 +17,16 @@ public class DataHandler {
     public static ArrayList<MeasurementData> data = new ArrayList<>();
 
     /**
-     * Adds a piece of MeasurmentData to the data array
-     * @param d the piece of data to be added
+     * Adds an MeasurementData object to the application data ArrayList
+     *
+     * @param md The MeasurementData Object to add
      */
-    public static void addData(MeasurementData d) {
-        data.add(d);
+    public static void addData(MeasurementData md) {
+        data.add(md);
     }
 
     /**
-     * Saves the current data array as a JSON file or displays an error if saving was unsuccessful
+     * Saves the current application data ArrayList as an JSON file or displays an error if saving was unsuccessful.
      */
     public static void saveData() {
         try {

@@ -18,11 +18,11 @@ import java.util.Arrays;
  */
 public class DataExporter {
 
-    // Path to /src/main/resources as File Object
-    static final File resourceDirectoryFile = Paths.get("src", "main", "resources").toFile();
+    // Path to /target as File Object
+    static final File resourceDirectoryFile = Paths.get("target").toFile();
 
     /**
-     * Exports the given ArrayList of MeasurementData to a JSON file in ´/src/main/resources´ with the given fileName.
+     * Exports the given ArrayList of MeasurementData to a JSON file in ´/target´ with the given fileName.
      * The Jackson ObjectMapper will not write Dates as Timestamps and will pretty-print the JSON file.
      *
      * @param dataToExport     An ArrayList of MeasurementData to export
@@ -40,7 +40,7 @@ public class DataExporter {
     }
 
     /**
-     * Exports the given ArrayList of MeasurementData to a CSV file in /src/main/resources with the given fileName.
+     * Exports the given ArrayList of MeasurementData to a CSV file in ´/target´ with the given fileName.
      * The Jackson CSVMapper will not write Dates as Timestamps.
      *
      * @param dataToExport     An ArrayList of MeasurementData to export
@@ -58,7 +58,7 @@ public class DataExporter {
     }
 
     /**
-     * Returns an ArrayList of MeasurementData from an JSON file in /src/main/resources with the given fileName.
+     * Returns an ArrayList of MeasurementData from an JSON file in ´/target´ with the given fileName.
      *
      * @param fileNameNoSuffix A fileName string without file extension
      * @return ArrayList of MeasurementData
