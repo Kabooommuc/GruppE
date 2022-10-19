@@ -117,7 +117,7 @@ public class GUI extends JFrame {
         errorLog.add(errorMessageLabel);
 
         final Container actionButtons = new Container();
-        // TODO: Buttons muessen
+
         GridBagLayout actionButtonsGridBagLayout = new GridBagLayout();              // actionButtonsGridBagLayout
         GridBagConstraints actionButtonsGridBagConstraints = new GridBagConstraints();    // actionButtonsGridBagConstraints
         actionButtons.setLayout(actionButtonsGridBagLayout);
@@ -151,15 +151,19 @@ public class GUI extends JFrame {
         exitButton.addActionListener(e -> exit());
     }
 
+    /**
+     * Checks if the data in the inputFields is valid. If valid, the data is added to the DataHandler
+     * and the inputFields are cleared. If invalid, an error message is displayed and the fields remain filled.
+     */
     public void addData() {
         MeasurementData m;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             m = new MeasurementData(
                     Integer.parseInt(customerIdInput.getText()),
                     houseNumberInput.getText(),
                     Integer.parseInt(counterIdInput.getText()),
-                    LocalDate.parse(measurementReadingDateTimeInput.getText(),formatter), //TODO: use localDateTime here
+                    LocalDate.parse(measurementReadingDateTimeInput.getText(),formatter),
                     Double.parseDouble(powerCurrentInput.getText()),
                     Double.parseDouble(householdCurrentInput.getText()),
                     counterChangeInput.isSelected(),
@@ -176,14 +180,24 @@ public class GUI extends JFrame {
         DataHandler.addData(m);
     }
 
+    /**
+     * Adjusts the errorMessageLabel to display an error.
+     * @param error the error message to display
+     */
     public void setErrorMessage(String error) {
         errorMessageLabel.setText(error);
     }
 
+    /**
+     * Sets the errorMessageLabel to be empty.
+     */
     public void clearErrorMessage() {
         errorMessageLabel.setText("");
     }
 
+    /**
+     * Clears all the inputFields of the input values
+     */
     public void clearInputFields() {
         for(JTextField t : inputList) {
             t.setText("");
@@ -191,11 +205,18 @@ public class GUI extends JFrame {
 
     }
 
+    /**
+     * Calls on the DataHandler to save the current data
+     */
     public void save() {
         DataHandler.saveData();
     }
 
+    /**
+     * Saves data and stops the program
+     */
     private void exit() {
+        save();
         System.exit(0);
     }
 
