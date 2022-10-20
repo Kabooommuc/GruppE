@@ -3,12 +3,15 @@ package eu.bsinfo.GruppE;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GUI extends JFrame {
 
@@ -108,9 +111,24 @@ public class GUI extends JFrame {
         base.add(inputFields, constraint);
 
         final Container dataScrollpane = new Container();
-        final String[] columnNames = {"KundenID","Hausnummer","WohnungsNr","Zählerart","ZählerID","Ablesedatum","Zählertausch","Kraftstrom","Haushaltsstrom","Kommentar"};
+
+
+        final HashMap<String,Double> COLUMN_NAMES_AND_WIDTH = new HashMap<>(Map.of(
+                "KundenID",30.0,
+                "Hausnummer",30.0,
+                "WohnungsNr",30.0,
+                "Zählerart",30.0,
+                "ZählerID",30.0,
+                "Ablesedatum",30.0,
+                "Zählertausch",30.0,
+                "Kraftstrom",30.0,
+                "Haushaltsstrom",30.0,
+                "Kommentar",30.0
+        ));
+
+
         dataScrollpane.setLayout(new GridBagLayout());
-        DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
+        DefaultTableModel tableModel = new DefaultTableModel(null, COLUMN_NAMES_AND_WIDTH.keySet().toArray());
 
         for (MeasurementData i: DataHandler.getData()) {
             Object[] row = {
@@ -176,12 +194,23 @@ public class GUI extends JFrame {
         exportButton.addActionListener(e -> export());
         exitButton.addActionListener(e -> exit());
 
-        DataHandler.loadData();
 
         setSize(1500, 550);
         setVisible(true);
     }
+    public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth,
+                                             double... percentages) {
+        double total = 0;
+        for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+            total += percentages[i];
+        }
 
+        for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+            TableColumn column = table.getColumnModel().getColumn(i);
+            column.setPreferredWidth((int)
+                    (tablePreferredWidth * (percentages[i] / total)));
+        }
+    }
     /**
      * Checks if the data in the inputFields is valid. If valid, the data is added to the DataHandler
      * and the inputFields are cleared. If invalid, an error message is displayed and the fields remain filled.
