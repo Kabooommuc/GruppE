@@ -176,7 +176,7 @@ public class GUI extends JFrame {
 
         addButton.addActionListener(e -> addData());
         saveButton.addActionListener(e -> save());
-        exportButton.addActionListener(e -> {});     //TODO
+        exportButton.addActionListener(e -> export());
         exitButton.addActionListener(e -> exit());
     }
 
@@ -231,15 +231,23 @@ public class GUI extends JFrame {
         for(JTextField t : inputList) {
             t.setText("");
         }
-
     }
 
     /**
      * Calls on the DataHandler to save the current data
      */
     public void save() {
-        DataHandler.saveData();
+        DataHandler.exportData(ExportType.JSON, DataHandler.SAVE_FILENAME);
     }
+
+    /**
+     * Calls on the DataHandler to export the current data and opens the target directory in Explorer
+     */
+    public void export() {
+        DataHandler.exportData(ExportType.CSV, DataHandler.EXPORT_FILENAME);
+        DataHandler.openTargetDirectoryInExplorer();
+    }
+
 
     /**
      * Saves data and stops the program
