@@ -19,7 +19,7 @@ import java.util.Arrays;
 public class DataExporter {
 
     // Path to /target as File Object
-    static final File resourceDirectoryFile = Paths.get("target").toFile();
+    static final File targetDirectoryFile = Paths.get("target").toFile();
 
     /**
      * Exports the given ArrayList of MeasurementData to a JSON file in ´/target´ with the given fileName.
@@ -30,7 +30,7 @@ public class DataExporter {
      * @throws IOException When the ObjectMapper fails to write the JSON file
      */
     public static void exportJSON(ArrayList<MeasurementData> dataToExport, String fileNameNoSuffix) throws IOException {
-        File jsonFile = new File(resourceDirectoryFile + "/" + fileNameNoSuffix + ".json");
+        File jsonFile = new File(targetDirectoryFile + "/" + fileNameNoSuffix + ".json");
 
         ObjectMapper objMapper = new ObjectMapper()
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
@@ -48,7 +48,7 @@ public class DataExporter {
      * @throws IOException When the CSVMapper fails to write the CSV file
      */
     public static void exportCSV(ArrayList<MeasurementData> dataToExport, String fileNameNoSuffix) throws IOException {
-        File csvFile = new File(resourceDirectoryFile + "/" + fileNameNoSuffix + ".csv");
+        File csvFile = new File(targetDirectoryFile + "/" + fileNameNoSuffix + ".csv");
 
         CsvMapper csvMapper = (CsvMapper) new CsvMapper()
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
@@ -65,7 +65,7 @@ public class DataExporter {
      * @throws IOException When the ObjectMapper fails to read the JSON file
      */
     public static ArrayList<MeasurementData> importJson(String fileNameNoSuffix) throws IOException {
-        File jsonFile = new File(resourceDirectoryFile + "/" + fileNameNoSuffix + ".json");
+        File jsonFile = new File(targetDirectoryFile + "/" + fileNameNoSuffix + ".json");
 
         ObjectMapper objMapper = new ObjectMapper()
                 .registerModule(new JavaTimeModule());
