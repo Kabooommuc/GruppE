@@ -42,6 +42,9 @@ public class GUI extends JFrame {
             householdCurrentInput
     };
 
+    private final String[] columnNames = {"KundenID", "Hausnummer", "WohnungsNr", "Zählerart", "ZählerID", "Ablesedatum", "Zählertausch", "Kraftstrom", "Haushaltsstrom", "Kommentar"};
+    private final DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+
     JLabel errorMessageLabel = new JLabel("");
 
 
@@ -128,22 +131,9 @@ public class GUI extends JFrame {
 
 
         dataScrollpane.setLayout(new GridBagLayout());
-        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
 
-        for (MeasurementData i: DataHandler.getData()) {
-            Object[] row = {
-                    i.customerId,
-                    i.houseNumber,
-                    i.apartmentNumber, // always null
-                    i.counterType,
-                    i.counterId,
-                    i.measurementReadingDateTime,
-                    i.powerCurrent,
-                    i.householdCurrent,
-                    i.counterChange,
-                    i.comment
-            };
-            tableModel.addRow(row);
+        for (MeasurementData md : DataHandler.getData()) {
+            addRow(md);
         }
         JTable table = new JTable(tableModel);
         table.setAutoCreateRowSorter(true);
@@ -194,7 +184,6 @@ public class GUI extends JFrame {
         exportButton.addActionListener(e -> export());
         exitButton.addActionListener(e -> exit());
 
-
         setSize(1500, 550);
         setVisible(true);
     }
@@ -216,28 +205,44 @@ public class GUI extends JFrame {
      * and the inputFields are cleared. If invalid, an error message is displayed and the fields remain filled.
      */
     public void addData() {
-        MeasurementData m;
+        MeasurementData md;
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            m = new MeasurementData(
+            md = new MeasurementData(
                     Integer.parseInt(customerIdInput.getText()),
                     houseNumberInput.getText(),
                     Integer.parseInt(counterIdInput.getText()),
-                    LocalDate.parse(measurementReadingDateTimeInput.getText(),formatter),
+                    LocalDate.parse(measurementReadingDateTimeInput.getText(), formatter),
                     Double.parseDouble(powerCurrentInput.getText()),
                     Double.parseDouble(householdCurrentInput.getText()),
                     counterChangeInput.isSelected(),
                     commentInput.getText()
             );
-        }
-        catch (NumberFormatException | DateTimeParseException e) {
+        } catch (NumberFormatException | DateTimeParseException e) {
             setErrorMessage(ERROR_INVALID_INPUT);
             return;
         }
 
         clearErrorMessage();
         clearInputFields();
-        DataHandler.addData(m);
+        DataHandler.addData(md);
+        addRow(md);
+    }
+
+    private void addRow(MeasurementData md) {
+        Object[] row = {
+                md.customerId,
+                md.houseNumber,
+                md.apartmentNumber, // always null
+                md.counterType,
+                md.counterId,
+                md.measurementReadingDateTime,
+                md.powerCurrent,
+                md.householdCurrent,
+                md.counterChange,
+                md.comment
+        };
+        tableModel.addRow(row);
     }
 
     /**
