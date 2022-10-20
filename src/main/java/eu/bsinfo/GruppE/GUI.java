@@ -128,6 +128,7 @@ public class GUI extends JFrame {
             tableModel.addRow(row);
         }
         JTable table = new JTable(tableModel);
+        table.setAutoCreateRowSorter(true);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         JScrollPane scrollPane = new JScrollPane(table);
         dataScrollpane.add(scrollPane);
