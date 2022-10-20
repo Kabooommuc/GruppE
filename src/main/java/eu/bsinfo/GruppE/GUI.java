@@ -128,7 +128,7 @@ public class GUI extends JFrame {
 
 
         dataScrollpane.setLayout(new GridBagLayout());
-        DefaultTableModel tableModel = new DefaultTableModel(null, COLUMN_NAMES_AND_WIDTH.keySet().toArray());
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
 
         for (MeasurementData i: DataHandler.getData()) {
             Object[] row = {
