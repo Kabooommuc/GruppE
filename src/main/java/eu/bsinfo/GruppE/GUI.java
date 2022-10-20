@@ -5,6 +5,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
@@ -47,7 +48,6 @@ public class GUI extends JFrame {
     private final DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0);
 
     JLabel errorMessageLabel = new JLabel("");
-
 
     public GUI() {
         super("Zählerabrechnung - ProgSchnellUndSicher GmbH");
@@ -119,19 +119,23 @@ public class GUI extends JFrame {
         base.add(inputFields, constraint);
 
         final Container dataScrollpane = new Container();
-
-
         dataScrollpane.setLayout(new GridBagLayout());
 
         for (MeasurementData md : DataHandler.getData()) {
             addRow(md);
         }
         JTable table = new JTable(tableModel);
-
-        setJTableColumnsWidth(table,FRAME_WIDTH,COLUMN_WIDTHS);
-
+        setJTableColumnsWidth(table, FRAME_WIDTH, COLUMN_WIDTHS);
         table.setAutoCreateRowSorter(true);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        new TableCellListener(table, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TableCellListener tcl = (TableCellListener) e.getSource();
+                updateMDfromRow(tcl.getRow(), tcl.getColumn(), tcl.getNewValue());
+            }
+        });
+
         JScrollPane scrollPane = new JScrollPane(table);
         dataScrollpane.add(scrollPane);
 
@@ -140,7 +144,6 @@ public class GUI extends JFrame {
         constraint.gridy = 1;
         constraint.fill = GridBagConstraints.BOTH;
         base.add(dataScrollpane, constraint);
-
 
 
         // error messages should be written into this container
@@ -181,7 +184,6 @@ public class GUI extends JFrame {
         setVisible(true);
     }
     public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth, double[] percentages) {
-
         double total = Arrays.stream(percentages).sum();
 
         for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
@@ -236,7 +238,20 @@ public class GUI extends JFrame {
     }
 
     /**
+     * Updates a value of the MeasurementData object from the given row index with the new value.
+     *
+     * @param row      row index of the edited cell
+     * @param column   column index of the edited cell
+     * @param newValue new value of the edited cell
+     */
+    private void updateMDfromRow(int row, int column, Object newValue) {
+        MeasurementData mdUpdate = DataHandler.data.get(row);
+        mdUpdate.setValueBasedOnColumn(column, newValue);
+    }
+
+    /**
      * Adjusts the errorMessageLabel to display an error.
+     *
      * @param error the error message to display
      */
     public void setErrorMessage(String error) {

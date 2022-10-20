@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+/**
+ * MeasurementData object which holds all information for a measurement
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,5 +34,34 @@ public class MeasurementData {
     Boolean counterChange;
     // Comment field
     String comment;
+
+    /**
+     * Sets an variable value based on the variable order.
+     *
+     * @param index    index of the variable to change
+     * @param newValue new variable value
+     */
+    public void setValueBasedOnColumn(int index, Object newValue) {
+        switch (index) {
+            case 0:
+                setCustomerId((Integer) newValue);
+            case 1:
+                setHouseNumber((String) newValue);
+            case 2, 3:
+                break;
+            case 4:
+                setCounterId((Integer) newValue);
+            case 5:
+                setMeasurementReadingDateTime((LocalDate) newValue);
+            case 6:
+                setPowerCurrent((Double) newValue);
+            case 7:
+                setHouseholdCurrent((Double) newValue);
+            case 8:
+                setCounterChange((Boolean) newValue);
+            case 9:
+                setComment((String) newValue);
+        }
+    }
 }
 
