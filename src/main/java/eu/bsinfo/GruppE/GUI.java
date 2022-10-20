@@ -171,13 +171,15 @@ public class GUI extends JFrame {
         constraint.gridy = 3;
         base.add(actionButtons, constraint);
 
-        setSize(1500, 550);
-        setVisible(true);
-
         addButton.addActionListener(e -> addData());
         saveButton.addActionListener(e -> save());
         exportButton.addActionListener(e -> export());
         exitButton.addActionListener(e -> exit());
+
+        DataHandler.loadData();
+
+        setSize(1500, 550);
+        setVisible(true);
     }
 
     /**
