@@ -10,8 +10,7 @@ import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
 public class GUI extends JFrame {
 
@@ -42,8 +41,10 @@ public class GUI extends JFrame {
             householdCurrentInput
     };
 
-    private final String[] columnNames = {"KundenID", "Hausnummer", "WohnungsNr", "Zählerart", "ZählerID", "Ablesedatum", "Zählertausch", "Kraftstrom", "Haushaltsstrom", "Kommentar"};
-    private final DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+    private final String[] COLUMN_NAMES = {"KundenID", "Hausnummer", "WohnungsNr", "Zählerart", "ZählerID", "Ablesedatum", "Zählertausch", "Kraftstrom", "Haushaltsstrom", "Kommentar"};
+    final double[] COLUMN_WIDTHS = {10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 50.0};
+
+    private final DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0);
 
     JLabel errorMessageLabel = new JLabel("");
 
@@ -56,6 +57,10 @@ public class GUI extends JFrame {
                 exit();
             }
         });
+
+
+        final int FRAME_WIDTH = 1800;
+        final int FRAME_HEIGHT = 600;
 
         final Container base = getContentPane();
         GridBagConstraints constraint = new GridBagConstraints();
@@ -116,26 +121,15 @@ public class GUI extends JFrame {
         final Container dataScrollpane = new Container();
 
 
-        final HashMap<String,Double> COLUMN_NAMES_AND_WIDTH = new HashMap<>(Map.of(
-                "KundenID",30.0,
-                "Hausnummer",30.0,
-                "WohnungsNr",30.0,
-                "Zählerart",30.0,
-                "ZählerID",30.0,
-                "Ablesedatum",30.0,
-                "Zählertausch",30.0,
-                "Kraftstrom",30.0,
-                "Haushaltsstrom",30.0,
-                "Kommentar",30.0
-        ));
-
-
         dataScrollpane.setLayout(new GridBagLayout());
 
         for (MeasurementData md : DataHandler.getData()) {
             addRow(md);
         }
         JTable table = new JTable(tableModel);
+
+        setJTableColumnsWidth(table,FRAME_WIDTH,COLUMN_WIDTHS);
+
         table.setAutoCreateRowSorter(true);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         JScrollPane scrollPane = new JScrollPane(table);
@@ -154,7 +148,6 @@ public class GUI extends JFrame {
         errorLog.add(errorMessageLabel);
 
         final Container actionButtons = new Container();
-        // TODO: Buttons muessen umpositioniert werden
         GridBagLayout actionButtonsGridBagLayout = new GridBagLayout();              // actionButtonsGridBagLayout
         GridBagConstraints actionButtonsGridBagConstraints = new GridBagConstraints();    // actionButtonsGridBagConstraints
         actionButtons.setLayout(actionButtonsGridBagLayout);
@@ -184,15 +177,12 @@ public class GUI extends JFrame {
         exportButton.addActionListener(e -> export());
         exitButton.addActionListener(e -> exit());
 
-        setSize(1500, 550);
+        setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setVisible(true);
     }
-    public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth,
-                                             double... percentages) {
-        double total = 0;
-        for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
-            total += percentages[i];
-        }
+    public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth, double[] percentages) {
+
+        double total = Arrays.stream(percentages).sum();
 
         for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
             TableColumn column = table.getColumnModel().getColumn(i);
