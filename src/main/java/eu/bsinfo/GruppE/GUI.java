@@ -110,7 +110,7 @@ public class GUI extends JFrame {
         final Container dataScrollpane = new Container();
         final String[] columnNames = {"KundenID","Hausnummer","WohnungsNr","Zählerart","ZählerID","Ablesedatum","Zählertausch","Kraftstrom","Haushaltsstrom","Kommentar"};
         dataScrollpane.setLayout(new GridBagLayout());
-        DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
 
         for (MeasurementData i: DataHandler.getData()) {
             Object[] row = {
@@ -175,8 +175,6 @@ public class GUI extends JFrame {
         saveButton.addActionListener(e -> save());
         exportButton.addActionListener(e -> export());
         exitButton.addActionListener(e -> exit());
-
-        DataHandler.loadData();
 
         setSize(1500, 550);
         setVisible(true);
