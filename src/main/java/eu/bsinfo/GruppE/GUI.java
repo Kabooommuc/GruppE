@@ -63,9 +63,7 @@ public class GUI extends JFrame {
         final int FRAME_HEIGHT = 600;
 
         final Container base = getContentPane();
-        GridBagConstraints constraint = new GridBagConstraints();
-        base.setLayout(new GridBagLayout());
-        constraint.fill = GridBagConstraints.HORIZONTAL;
+        base.setLayout(new BorderLayout());
 
         final Container inputFields = new Container();
         inputFields.setLayout(new GridLayout(2, 10));
@@ -114,9 +112,7 @@ public class GUI extends JFrame {
         inputFields.add(counterChangeLabel);
         inputFields.add(counterChangeInput);
 
-        constraint.gridx = 0;
-        constraint.gridy = 0;
-        base.add(inputFields, constraint);
+        base.add(inputFields, BorderLayout.NORTH);
 
         final Container dataTable = new Container();
         dataTable.setLayout(new BorderLayout());
@@ -145,10 +141,7 @@ public class GUI extends JFrame {
         dataTable.add(scrollPane);
 
 
-        constraint.gridx = 0;
-        constraint.gridy = 1;
-        constraint.fill = GridBagConstraints.BOTH;
-        base.add(dataTable, constraint);
+        base.add(dataTable, BorderLayout.CENTER);
 
 
         // error messages should be written into this container
@@ -176,9 +169,7 @@ public class GUI extends JFrame {
         actionButtonsGridBagConstraints.anchor = GridBagConstraints.EAST;
         actionButtons.add(exitButton);
 
-        constraint.gridx = 0;
-        constraint.gridy = 3;
-        base.add(actionButtons, constraint);
+        base.add(actionButtons, BorderLayout.SOUTH);
 
         addButton.addActionListener(e -> addData());
         saveButton.addActionListener(e -> save());
