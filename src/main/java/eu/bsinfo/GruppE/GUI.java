@@ -118,8 +118,8 @@ public class GUI extends JFrame {
         constraint.gridy = 0;
         base.add(inputFields, constraint);
 
-        final Container dataScrollpane = new Container();
-        dataScrollpane.setLayout(new GridBagLayout());
+        final Container dataTable = new Container();
+        dataTable.setLayout(new BorderLayout());
 
         for (MeasurementData md : DataHandler.getData()) {
             addRow(md);
@@ -128,6 +128,11 @@ public class GUI extends JFrame {
         setJTableColumnsWidth(table, FRAME_WIDTH, COLUMN_WIDTHS);
         table.setAutoCreateRowSorter(true);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
+        /**
+         * Listens on GUI, when user updates data via double-clicking in a cell
+         * and type new data, it'll update automatically.
+         */
         new TableCellListener(table, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -137,13 +142,13 @@ public class GUI extends JFrame {
         });
 
         JScrollPane scrollPane = new JScrollPane(table);
-        dataScrollpane.add(scrollPane);
+        dataTable.add(scrollPane);
 
 
         constraint.gridx = 0;
         constraint.gridy = 1;
         constraint.fill = GridBagConstraints.BOTH;
-        base.add(dataScrollpane, constraint);
+        base.add(dataTable, constraint);
 
 
         // error messages should be written into this container
