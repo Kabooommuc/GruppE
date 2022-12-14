@@ -1,4 +1,4 @@
-package eu.bsinfo.GruppE;
+package eu.bsinfo.GruppE.GUI;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

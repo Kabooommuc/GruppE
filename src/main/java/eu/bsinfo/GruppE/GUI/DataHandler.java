@@ -1,4 +1,4 @@
-package eu.bsinfo.GruppE;
+package eu.bsinfo.GruppE.GUI;
 
 import lombok.Getter;
 
@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static eu.bsinfo.GruppE.Runtime.gui;
+import static eu.bsinfo.GruppE.GUI.Runtime.gui;
 
 /**
  * Stores and manages the already entered data

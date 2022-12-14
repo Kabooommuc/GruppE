@@ -1,4 +1,4 @@
-package eu.bsinfo.GruppE;
+package eu.bsinfo.GruppE.GUI;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
