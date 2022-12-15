@@ -6,20 +6,22 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Path("kunden")
 public class KundenRessource {
 
-    private static final List<Kunde> kunden = new ArrayList<>();
+    public static ArrayList<Kunde> kunden = new ArrayList<>();
     private static final String MSG_NOT_FOUND = "Kunde not found!";
     private static final String MSG_UPDATED = " was successfully updated!";
+    private static final String MSG_IS_NULL = "Kunde is null!";
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response postKunde(Kunde postKunde) {
+        if(postKunde == null)
+            return Response.status(Response.Status.BAD_REQUEST).entity(MSG_IS_NULL).build();
         kunden.add(postKunde);
         return Response.status(Response.Status.CREATED).entity(postKunde).build();
     }

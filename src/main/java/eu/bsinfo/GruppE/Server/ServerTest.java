@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ class ServerTest {
 	private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	@BeforeAll
-	static void setUp() {
+	static void setUp() throws IOException {
 		setUpKundenList();
 		Server.startServer(url, false);
 	}
@@ -72,7 +73,7 @@ class ServerTest {
 	}
 
 	@AfterAll
-	static void shutDown() {
+	static void shutDown() throws IOException {
 		Server.stopServer(false);
 	}
 
@@ -405,7 +406,7 @@ class ServerTest {
 	}
 
 	@Test
-	void t24_loadFromFileWorks() {
+	void t24_loadFromFileWorks() throws IOException, InterruptedException {
 		Server.stopServer(true);
 		assertThrows(ProcessingException.class, () -> postNeuerKunde(new Kunde("Fehler", "Fehler")));
 		Server.startServer(url, true);
