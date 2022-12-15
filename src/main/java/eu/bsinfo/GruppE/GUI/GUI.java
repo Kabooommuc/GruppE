@@ -73,6 +73,7 @@ public class GUI extends JFrame {
 
         final Container inputFields = new Container();
         inputFields.setLayout(new GridLayout(2, 10));
+        //TODO: ADD LABEL TAGS TO ARRAYLIST SO I CAN THEN UHHHHHH LOOP THROUGH THEM WHEN CHECKING THAT THEY ARE VALID AND JUST SAY XYZ INVALID WITHOUT HAVING DUPLICATE CODE OMG
 
         JLabel customerIdLabel = new JLabel("KundenNr ");
         JLabel houseNumberLabel = new JLabel("HausNr ");
