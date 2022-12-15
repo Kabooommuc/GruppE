@@ -135,7 +135,7 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TableCellListener tcl = (TableCellListener) e.getSource();
-                updateMDfromRow(tcl.getRow(), tcl.getColumn(), tcl.getNewValue());
+                updateMDFromRow(tcl.getRow(), tcl.getColumn(), tcl.getNewValue());
             }
         });
 
@@ -210,7 +210,7 @@ public class GUI extends JFrame {
             );
         } catch (NumberFormatException | DateTimeParseException e) {
             String ERROR_INVALID_INPUT = ERROR_TAG + "Input data is not valid";
-            displayError(ERROR_INVALID_INPUT);
+            displayMessage(ERROR_INVALID_INPUT);
             return;
         }
 
@@ -242,7 +242,7 @@ public class GUI extends JFrame {
      * @param column   column index of the edited cell
      * @param newValue new value of the edited cell
      */
-    private void updateMDfromRow(int row, int column, Object newValue) {
+    private void updateMDFromRow(int row, int column, Object newValue) {
         MeasurementData mdUpdate = DataHandler.data.get(row);
         mdUpdate.setValueBasedOnColumn(column, newValue);
     }
@@ -252,22 +252,14 @@ public class GUI extends JFrame {
      *
      * @param error the error message to display
      */
-    public void displayError(String error) {
+    public void displayMessage(String error) {
 
-        String errorType;
-        String errorMessage;
-        try {
-            errorType = error.substring(error.indexOf("[") + 1, error.indexOf("]"));
-        }
-        catch(StringIndexOutOfBoundsException ignored) {
-            errorType = "";
-        }
+        String errorType ="";
+        String errorMessage = error;
 
-        try {
+        if(error.contains("]") && error.contains("[") && error.indexOf("[") < error.indexOf("]")) {
             errorMessage = error.substring(error.indexOf("]") + 1).trim();
-        }
-        catch (StringIndexOutOfBoundsException ignored) {
-            errorMessage = error;
+            errorType = error.substring(error.indexOf("[") + 1, error.indexOf("]"));
         }
 
         int windowType = JOptionPane.PLAIN_MESSAGE;

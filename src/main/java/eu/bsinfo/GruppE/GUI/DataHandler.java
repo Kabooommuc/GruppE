@@ -34,7 +34,7 @@ public class DataHandler {
             data = DataExporter.importJson(SAVE_FILENAME);
         } catch (IOException e) {
             e.printStackTrace();
-            gui.displayError(ERROR_WHILE_LOADING);
+            gui.displayMessage(ERROR_WHILE_LOADING);
         }
     }
 
@@ -59,7 +59,7 @@ public class DataHandler {
                 DataExporter.exportCSV(data, fileName);
         } catch (IOException e) {
             e.printStackTrace();
-            gui.displayError(ERROR_WHILE_SAVING);
+            gui.displayMessage(ERROR_WHILE_SAVING);
         }
     }
 
@@ -71,7 +71,7 @@ public class DataHandler {
             Desktop.getDesktop().open(DataExporter.targetDirectoryFile);
         } catch (IOException e) {
             e.printStackTrace();
-            gui.displayError(ERROR_COULD_NOT_OPEN);
+            gui.displayMessage(ERROR_COULD_NOT_OPEN);
         }
     }
 
