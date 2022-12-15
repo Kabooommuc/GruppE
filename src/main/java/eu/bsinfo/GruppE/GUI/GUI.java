@@ -257,7 +257,7 @@ public class GUI extends JFrame {
         String errorType ="";
         String errorMessage = error;
 
-        if(error.contains("]") && error.contains("[") && error.indexOf("[") < error.indexOf("]")) {
+        if(error.contains("[") && error.contains("]") && error.indexOf("[") < error.indexOf("]")) {
             errorMessage = error.substring(error.indexOf("]") + 1).trim();
             errorType = error.substring(error.indexOf("[") + 1, error.indexOf("]"));
         }
