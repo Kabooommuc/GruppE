@@ -1,5 +1,6 @@
 package eu.bsinfo.GruppE.Server.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -11,7 +12,7 @@ import java.util.UUID;
 @Data
 @ToString
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-@JsonTypeName(value = "Kunde")
+@JsonTypeName(value = "kunde")
 public class Kunde {
     @JsonProperty
     private UUID id;
