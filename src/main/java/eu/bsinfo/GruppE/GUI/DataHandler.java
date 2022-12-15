@@ -16,9 +16,9 @@ public class DataHandler {
     public static final String SAVE_FILENAME = "data";
     public static final String EXPORT_FILENAME = "export";
 
-    private static final String ERROR_WHILE_LOADING = "Error: Failed to load file!";
-    private static final String ERROR_WHILE_SAVING = "Error: Failed to save file!";
-    private static final String ERROR_COULD_NOT_OPEN = "Error: Could not open target directory";
+    private static final String ERROR_WHILE_LOADING =  GUI.ERROR_TAG + "Failed to load file!";
+    private static final String ERROR_WHILE_SAVING = GUI.ERROR_TAG + "Failed to save file!";
+    private static final String ERROR_COULD_NOT_OPEN = GUI.ERROR_TAG + "Could not open target directory";
 
     @Getter
     public static ArrayList<MeasurementData> data = new ArrayList<>();
@@ -34,7 +34,7 @@ public class DataHandler {
             data = DataExporter.importJson(SAVE_FILENAME);
         } catch (IOException e) {
             e.printStackTrace();
-            gui.setErrorMessage(ERROR_WHILE_LOADING);
+            gui.displayError(ERROR_WHILE_LOADING);
         }
     }
 
@@ -59,7 +59,7 @@ public class DataHandler {
                 DataExporter.exportCSV(data, fileName);
         } catch (IOException e) {
             e.printStackTrace();
-            gui.setErrorMessage(ERROR_WHILE_SAVING);
+            gui.displayError(ERROR_WHILE_SAVING);
         }
     }
 
@@ -71,7 +71,7 @@ public class DataHandler {
             Desktop.getDesktop().open(DataExporter.targetDirectoryFile);
         } catch (IOException e) {
             e.printStackTrace();
-            gui.setErrorMessage(ERROR_COULD_NOT_OPEN);
+            gui.displayError(ERROR_COULD_NOT_OPEN);
         }
     }
 

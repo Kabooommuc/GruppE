@@ -15,7 +15,13 @@ import java.util.Arrays;
 
 public class GUI extends JFrame {
 
-    private final String ERROR_INVALID_INPUT = "Error: Input data is not valid";
+
+    private static final String INFO = "Info";
+    public static final String INFO_TAG = "["+ INFO + "]";
+    private static final String WARNING = "Warning";
+    public static final String WARNING_TAG = "["+ WARNING + "]";
+    private static final String ERROR = "Error";
+    public static final String ERROR_TAG = "["+ ERROR + "]";
 
     private final JTextField customerIdInput = new JTextField();
     private final JTextField houseNumberInput = new JTextField();
@@ -125,10 +131,6 @@ public class GUI extends JFrame {
         table.setAutoCreateRowSorter(true);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
-        /**
-         * Listens on GUI, when user updates data via double-clicking in a cell
-         * and type new data, it'll update automatically.
-         */
         new TableCellListener(table, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -207,11 +209,11 @@ public class GUI extends JFrame {
                     commentInput.getText()
             );
         } catch (NumberFormatException | DateTimeParseException e) {
-            setErrorMessage(ERROR_INVALID_INPUT);
+            String ERROR_INVALID_INPUT = ERROR_TAG + "Input data is not valid";
+            displayError(ERROR_INVALID_INPUT);
             return;
         }
 
-        clearErrorMessage();
         clearInputFields();
         DataHandler.addData(md);
         addRow(md);
@@ -246,19 +248,36 @@ public class GUI extends JFrame {
     }
 
     /**
-     * Adjusts the errorMessageLabel to display an error.
+     * Adjusts the errorMessageLabel to display an error. The Tag a
      *
      * @param error the error message to display
      */
-    public void setErrorMessage(String error) {
-        errorMessageLabel.setText(error);
-    }
+    public void displayError(String error) {
 
-    /**
-     * Sets the errorMessageLabel to be empty.
-     */
-    public void clearErrorMessage() {
-        errorMessageLabel.setText("");
+        String errorType;
+        String errorMessage;
+        try {
+            errorType = error.substring(error.indexOf("[") + 1, error.indexOf("]"));
+        }
+        catch(StringIndexOutOfBoundsException ignored) {
+            errorType = "";
+        }
+
+        try {
+            errorMessage = error.substring(error.indexOf("]") + 1).trim();
+        }
+        catch (StringIndexOutOfBoundsException ignored) {
+            errorMessage = error;
+        }
+
+        int windowType = JOptionPane.PLAIN_MESSAGE;
+
+        switch(errorType) {
+            case INFO -> windowType = JOptionPane.INFORMATION_MESSAGE;
+            case WARNING -> windowType = JOptionPane.WARNING_MESSAGE;
+            case ERROR -> windowType = JOptionPane.ERROR_MESSAGE;
+        }
+        JOptionPane.showMessageDialog(new JFrame(), errorMessage,errorType,windowType);
     }
 
     /**
