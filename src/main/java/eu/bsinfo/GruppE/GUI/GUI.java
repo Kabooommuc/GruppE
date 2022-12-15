@@ -277,7 +277,7 @@ public class GUI extends JFrame {
             case WARNING -> windowType = JOptionPane.WARNING_MESSAGE;
             case ERROR -> windowType = JOptionPane.ERROR_MESSAGE;
         }
-        JOptionPane.showMessageDialog(new JFrame(), errorMessage,errorType,windowType);
+        JOptionPane.showMessageDialog(new JFrame(), errorMessage, errorType, windowType);
     }
 
     /**
