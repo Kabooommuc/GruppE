@@ -1,9 +1,9 @@
 package eu.bsinfo.GruppE.Server.models;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import eu.bsinfo.GruppE.Server.ressources.KundenRessource;
 import lombok.Data;
 import lombok.ToString;
 
@@ -26,7 +26,11 @@ public class Kunde {
     }
 
     public Kunde(String name, String vorname) {
-        this.id = UUID.randomUUID();
+        do {
+            this.id = UUID.randomUUID();
+        }
+        while(KundenRessource.isUUIDTaken(this.id));
+
         this.name = name;
         this.vorname = vorname;
     }

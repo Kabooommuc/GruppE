@@ -98,4 +98,12 @@ public class KundenRessource {
         return objUUID;
     }
 
+    public static boolean isUUIDTaken(UUID id) {
+        for(Kunde k : kunden) {
+            if(k.getId() ==  id)
+                return true;
+        }
+        return false;
+    }
+
 }
