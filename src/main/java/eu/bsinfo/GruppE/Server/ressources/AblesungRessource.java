@@ -12,7 +12,7 @@ import java.util.UUID;
 @Path("ablesungen")
 public class AblesungRessource {
 
-    private static final ArrayList<Ablesung> ablesungen = new ArrayList<>();
+    public static ArrayList<Ablesung> ablesungen = new ArrayList<>();
     private static final String MSG_NOT_FOUND = "Ablesung not found!";
     private static final String MSG_UPDATED = " was successfully updated.";
 
