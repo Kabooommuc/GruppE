@@ -33,6 +33,15 @@ public class AblesungVonVor2JahrenRessource {
 
             // read through file, line by line, ignore first line (headers)
             int cnt = 0;
+
+            //find out current year, subtract two, begin of year
+            LocalDate current_date = LocalDate.now();
+            LocalDate two_years_ago = current_date.minusYears(2);
+            //subtract two years
+            int get_year = two_years_ago.getYear();
+            LocalDate begin_of_two_year = LocalDate.of(get_year, 01, 01);
+            //create variable "begin_of_two_year"
+
             while (sc.hasNextLine()) {
                 cnt++;
                 // First time will skip header, all other times it will simply advance to the next line
@@ -49,29 +58,34 @@ public class AblesungVonVor2JahrenRessource {
                 int zaehlerstand = sc.nextInt();
                 String kommentar = "";
 
-                // create an Ablesungen object with the above values
-                Ablesung a = new Ablesung(
-                        zaehlerNummer,
-                        datum,
-                        new Kunde("fake", "name"),
-                        kommentar,
-                        neuEingebaut,
-                        zaehlerstand
-                );
-                // We ignore the last column (Kommentar), since it is empty and scanner doesnt really get that
+                if(datum.isAfter(begin_of_two_year)) {
+                    // create an Ablesungen object with the above values
+                    Ablesung a = new Ablesung(
+                            zaehlerNummer,
+                            datum,
+                            new Kunde("fake", "name"),
+                            kommentar,
+                            neuEingebaut,
+                            zaehlerstand
+                    );
+                    // We ignore the last column (Kommentar), since it is empty and scanner doesnt really get that
 
-                // add the newly created object to the List
-                ablesungenCsv.add(a);
-                System.out.println("added " +cnt);
+                    // add the newly created object to the List
+                    ablesungenCsv.add(a);
+                    System.out.println("added " + cnt);
+                }else{
+                    System.out.println("ignored" + cnt);
+                }
             }
             System.out.println("after while");
 
-            // filter the list for the dates (last 2 years)
+            /* filter the list for the dates (last 2 years)
             ArrayList<Ablesung> ablesungenCsvFiltered = ablesungenCsv.stream().filter((ablesung) -> {
                 //
                 // here must be code that returns a boolean.
                 // everything that is true, remains in the collection, everything else will be discarded
-            }).collect.....;
+            }).collect;
+             */
 
             // error handling -> return 500 on real server side error
 
