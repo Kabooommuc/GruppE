@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sun.net.httpserver.HttpServer;
+import eu.bsinfo.GruppE.Server.models.Ablesung;
 import eu.bsinfo.GruppE.Server.models.Kunde;
+import eu.bsinfo.GruppE.Server.ressources.AblesungRessource;
 import eu.bsinfo.GruppE.Server.ressources.KundenRessource;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -15,10 +17,13 @@ import java.net.URI;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.UUID;
 
 public class Server {
 
-    static final File targetDirectoryFile = Paths.get("target").toFile();
+    private static final File targetDirectoryFile = Paths.get("target").toFile();
+    private static final String serverKundenFileName = "server_kunden";
+    private static final String serverAblesungenFileName = "server_ablesungen";
     final static String pack = "eu.bsinfo.GruppE.Server.ressources";
     static HttpServer server;
     final static ResourceConfig rc = new ResourceConfig().packages(pack);
@@ -44,12 +49,16 @@ public class Server {
 
             ObjectMapper objMapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule());
-            File jsonFileKunden = new File(targetDirectoryFile + "/" + "server_kunden" + ".json");
+            File jsonFileKunden = new File(targetDirectoryFile + "/" + serverKundenFileName + ".json");
+            File jsonFileAblesungen = new File(targetDirectoryFile + "/" + serverAblesungenFileName + ".json");
             if(jsonFileKunden.exists()) {
                 Kunde[] importedArrayData = objMapper.readValue(jsonFileKunden, Kunde[].class);
                 KundenRessource.kunden = new ArrayList<>(Arrays.asList(importedArrayData));
             }
-
+            if(jsonFileAblesungen.exists()) {
+                Ablesung[] importedArrayData = objMapper.readValue(jsonFileAblesungen, Ablesung[].class);
+                AblesungRessource.ablesungen = new ArrayList<>(Arrays.asList(importedArrayData));
+            }
         }
 
         server = JdkHttpServerFactory.createHttpServer(URI.create(url), rc);
@@ -59,11 +68,13 @@ public class Server {
     public static void stopServer(boolean saveToFile) throws IOException {
         if(saveToFile) {
             System.out.println("Saving to files...");
-            saveData(KundenRessource.kunden, "server_kunden");
+            saveData(KundenRessource.kunden, serverKundenFileName);
+            saveData(AblesungRessource.ablesungen, serverAblesungenFileName);
         }
-        if(server == null || server.getExecutor() == null ) {
+
+        if(server == null || server.getExecutor() == null )
             return;
-        }
+
         server.stop(0);
     }
 
@@ -75,6 +86,18 @@ public class Server {
                 .configure(SerializationFeature.INDENT_OUTPUT, true)
                 .registerModule(new JavaTimeModule());
         objMapper.writeValue(jsonFile, dataToExport);
+    }
+
+    public static UUID convertStringToUUID(String strUUID) {
+        UUID objUUID;
+
+        try {
+            objUUID = UUID.fromString(strUUID);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+
+        return objUUID;
     }
 
 }
