@@ -16,7 +16,7 @@ import java.util.*;
 
 @Path("ablesungenVorZweiJahrenHeute")
 public class AblesungVonVor2JahrenRessource {
-    public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd.MM.uuuu");
+    public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -34,13 +34,12 @@ public class AblesungVonVor2JahrenRessource {
             // read through file, line by line, ignore first line (headers)
             int cnt = 0;
 
-            //find out current year, subtract two, begin of year
-            LocalDate current_date = LocalDate.now();
-            LocalDate two_years_ago = current_date.minusYears(2);
-            //subtract two years
-            int get_year = two_years_ago.getYear();
-            LocalDate begin_of_two_year = LocalDate.of(get_year, 01, 01);
-            //create variable "begin_of_two_year"
+            LocalDate current_date = LocalDate.now();       //find out current year
+            LocalDate two_years_ago = current_date.minusYears(2);            //subtract two years
+            int get_year = two_years_ago.getYear();         //variable get_year = two years ago
+            LocalDate begin_of_two_year = LocalDate.of(get_year, 1, 1);       //create variable begin_of_2_years
+            String SaveAsString = begin_of_two_year + " I fucking hate you"; //convert localDate to string because I cant format localDate with localDate
+            LocalDate two_year_fm = LocalDate.parse(SaveAsString, DTF);     // above statement = true if this works
 
             while (sc.hasNextLine()) {
                 cnt++;
@@ -53,12 +52,12 @@ public class AblesungVonVor2JahrenRessource {
                 LocalDate datum = LocalDate.parse(datumAsString, DTF);
                 String zaehlerart = sc.next();
                 String zaehlerNummer = sc.next();
-                int neuEingebautAsInt = sc.nextInt(); // needs to be either 0 or 1, we dont check it though
+                int neuEingebautAsInt = sc.nextInt(); // needs to be either 0 or 1, we don't check it though
                 Boolean neuEingebaut = neuEingebautAsInt == 1 ? true : false;
                 int zaehlerstand = sc.nextInt();
                 String kommentar = "";
 
-                if(datum.isAfter(begin_of_two_year)) {
+                if(datum.isAfter(two_year_fm)) {
                     // create an Ablesungen object with the above values
                     Ablesung a = new Ablesung(
                             zaehlerNummer,
@@ -68,7 +67,7 @@ public class AblesungVonVor2JahrenRessource {
                             neuEingebaut,
                             zaehlerstand
                     );
-                    // We ignore the last column (Kommentar), since it is empty and scanner doesnt really get that
+                    // We ignore the last column (Kommentar), since it is empty and scanner doesn't really get that
 
                     // add the newly created object to the List
                     ablesungenCsv.add(a);
