@@ -12,34 +12,19 @@ public class InputChecker {
 
         int emptyFieldIndex = checkForEmpty(fieldsToCheck);
         if(emptyFieldIndex!=-1) {
-            System.out.println(fieldsToCheck[emptyFieldIndex].getName());
-            fieldsToCheck[emptyFieldIndex].setText("FEHLER");
             return GUI.INFO_TAG + "Das Feld " + inputFieldNames[emptyFieldIndex].trim() + " muss ausgefüllt sein.";
         }
 
         String formatProblems = checkFormat(fieldsToCheck,inputFieldNames);
-        if(!formatProblems.equals("")) {
+        if(formatProblems!=null) {
             return GUI.ERROR_TAG + formatProblems;
         }
-
-
-
-
-
-
-
-
-
-        return "";
-
-
+        return null;
 
     }
 
     private static String checkFormat(JTextField[] jTextFields, String[] inputFieldNames) {
-
         for (int i = 0; i < jTextFields.length;i++) {
-
             switch(i) {
                 //customerId and counterId
                 case 0, 6 -> {
@@ -59,35 +44,8 @@ public class InputChecker {
                     }
                 }
             }
-
-
-
-
-
-
-
-
-
         }
-
-        try {
-            Integer.parseInt(jTextFields[0].getText());
-        } catch(NumberFormatException n) {
-            return "KundeNr muss eine ganze Zahl sein.";
-        }
-
-
-
-
-
-
-
-        for (int i = 0; i<jTextFields.length-1; i++) {
-            switch(i) {
-
-            }
-        }
-        return " ";
+        return null;
     }
 
     private static int checkForEmpty(JTextField[] jTextFields) {

@@ -1,6 +1,8 @@
 package eu.bsinfo.GruppE.GUI;
 
+import eu.bsinfo.GruppE.GUI.textfields.IntTextField;
 import lombok.Getter;
+import org.jdatepicker.JDatePicker;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -10,9 +12,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Date;
 
 public class GUI extends JFrame {
 
@@ -24,12 +26,13 @@ public class GUI extends JFrame {
     private static final String ERROR = "Error";
     public static final String ERROR_TAG = "[" + ERROR + "]";
 
-    private final JTextField customerIdInput = new JTextField();
+    private final IntTextField customerIdInput = new IntTextField();
     private final JTextField houseNumberInput = new JTextField();
     private final JTextField apartmentNumberInput = new JTextField();
     private final JTextField counterTypeInput = new JTextField();
-    private final JTextField counterIdInput = new JTextField();
+    private final IntTextField counterIdInput = new IntTextField();
     private final JTextField measurementReadingDateTimeInput = new JTextField();
+    private final JDatePicker measurementReadingDateTimeTest = new JDatePicker();
     private final JCheckBox counterChangeInput = new JCheckBox();
     private final JTextField commentInput = new JTextField();
     private final JTextField powerCurrentInput = new JTextField();
@@ -46,7 +49,7 @@ public class GUI extends JFrame {
 
             counterTypeInput,
             counterIdInput,
-            measurementReadingDateTimeInput,
+            //measurementReadingDateTimeInput,
             commentInput,
     };
 
@@ -78,8 +81,6 @@ public class GUI extends JFrame {
 
         final Container inputFields = new Container();
         inputFields.setLayout(new GridLayout(2, 10));
-        //TODO: ADD LABEL TAGS TO ARRAYLIST SO I CAN THEN UHHHHHH LOOP THROUGH THEM WHEN CHECKING THAT THEY ARE VALID AND JUST SAY XYZ INVALID WITHOUT HAVING DUPLICATE CODE OMG
-
 
         JLabel customerIdLabel = new JLabel(INPUT_FIELD_NAMES[0]);
         JLabel houseNumberLabel = new JLabel(INPUT_FIELD_NAMES[1]);
@@ -89,7 +90,7 @@ public class GUI extends JFrame {
         JLabel counterTypeLabel = new JLabel(INPUT_FIELD_NAMES[5]);
         JLabel counterIdLabel = new JLabel(INPUT_FIELD_NAMES[6]);
         JLabel measurementReadingDateLabel = new JLabel(INPUT_FIELD_NAMES[7]);
-        JLabel commentLabel = new JLabel(INPUT_FIELD_NAMES[8]);
+        JLabel commentLabel = new JLabel("Kommentar:");
 
         JLabel counterChangeLabel = new JLabel("Zählertausch ");
 
@@ -120,7 +121,8 @@ public class GUI extends JFrame {
         inputFields.add(counterIdLabel);
         inputFields.add(counterIdInput);
         inputFields.add(measurementReadingDateLabel);
-        inputFields.add(measurementReadingDateTimeInput);
+        //inputFields.add(measurementReadingDateTimeInput);
+        inputFields.add(measurementReadingDateTimeTest);
         inputFields.add(commentLabel);
         inputFields.add(commentInput);
         inputFields.add(counterChangeLabel);
@@ -206,22 +208,21 @@ public class GUI extends JFrame {
      */
     public void addData() {
         MeasurementData md;
-
-        //TODO: Check all of these if they are valid and tell the user which one is not valid
-
         String fieldCheckResult = InputChecker.checkInputFields(this);
-        if (fieldCheckResult.equals("")) {
+        if (fieldCheckResult==null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
             md = new MeasurementData(
                     Integer.parseInt(customerIdInput.getText()),
                     houseNumberInput.getText(),
                     Integer.parseInt(counterIdInput.getText()),
-                    LocalDate.parse(measurementReadingDateTimeInput.getText(), formatter),
+                   // LocalDate.parse(, formatter),
+                    (Date) measurementReadingDateTimeTest.getModel().getValue(),
                     Double.parseDouble(powerCurrentInput.getText()),
                     Double.parseDouble(householdCurrentInput.getText()),
                     counterChangeInput.isSelected(),
                     commentInput.getText()
             );
+            System.out.println(md);
         }
         else {
             displayMessage(fieldCheckResult);

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * MeasurementData object which holds all information for a measurement
@@ -26,7 +26,7 @@ public class MeasurementData {
     // ID of the counter
     Integer counterId;
     // DateTime of when the measurement will be read
-    LocalDate measurementReadingDateTime;
+    Date measurementReadingDateTime;
     // Values of the measurement
     Double powerCurrent;
     Double householdCurrent;
@@ -52,7 +52,7 @@ public class MeasurementData {
             case 4:
                 setCounterId((Integer) newValue);
             case 5:
-                setMeasurementReadingDateTime((LocalDate) newValue);
+                setMeasurementReadingDateTime((Date) newValue);
             case 6:
                 setPowerCurrent((Double) newValue);
             case 7:
