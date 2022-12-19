@@ -1,5 +1,5 @@
 package eu.bsinfo.GruppE.Server.ressources;
-
+/**
 import eu.bsinfo.GruppE.Server.models.Ablesung;
 import eu.bsinfo.GruppE.Server.models.Kunde;
 import jakarta.ws.rs.*;
@@ -67,11 +67,6 @@ public class AblesungVonVor2JahrenRessource {
             System.out.println("after while");
 
             // filter the list for the dates (last 2 years)
-            ArrayList<Ablesung> ablesungenCsvFiltered = ablesungenCsv.stream().filter((ablesung) -> {
-                //
-                // here must be code that returns a boolean.
-                // everything that is true, remains in the collection, everything else will be discarded
-            }).collect.....;
 
             // error handling -> return 500 on real server side error
 
@@ -93,3 +88,4 @@ public class AblesungVonVor2JahrenRessource {
         return null;
     }
 }
+**/
