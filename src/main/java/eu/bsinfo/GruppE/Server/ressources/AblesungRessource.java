@@ -1,6 +1,8 @@
 package eu.bsinfo.GruppE.Server.ressources;
 
 import eu.bsinfo.GruppE.Server.models.Ablesung;
+import eu.bsinfo.GruppE.Server.models.Kunde;
+import jakarta.validation.constraints.Null;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -14,6 +16,7 @@ public class AblesungRessource {
 
     public static ArrayList<Ablesung> ablesungen = new ArrayList<>();
     private static final String MSG_NOT_FOUND = "Ablesung not found!";
+    private static final String MSG_ERROR = "Request war fehlerhaft!";
     private static final String MSG_UPDATED = " was successfully updated.";
 
     @POST
@@ -21,9 +24,18 @@ public class AblesungRessource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response postAblesung(Ablesung ablesung) {
         System.out.println(ablesung);
-        ablesungen.add(ablesung);
-        return Response.status(Response.Status.CREATED).entity(ablesung).build();
-        //TODO: 400 und 404 Response Code
+        Kunde kundeWithData = Kunde.getKundeFromKunden(ablesung.getKunde().getId());
+
+        if (kundeWithData == null)
+            return Response.status(Response.Status.NOT_FOUND).entity(KundenRessource.MSG_NOT_FOUND).build();
+
+        for(Ablesung ablesung1 : ablesungen) {
+            ablesung1.setKunde(kundeWithData);
+            ablesungen.add(ablesung1);
+            return Response.status(Response.Status.CREATED).entity(ablesung1).build();
+        }
+        return Response.status(Response.Status.BAD_REQUEST).entity(MSG_ERROR).build();
+
     }
 
     // not required, but maybe useful

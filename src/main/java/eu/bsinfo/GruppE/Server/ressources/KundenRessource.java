@@ -12,7 +12,7 @@ import java.util.UUID;
 public class KundenRessource {
 
     public static ArrayList<Kunde> kunden = new ArrayList<>();
-    private static final String MSG_NOT_FOUND = "Kunde not found!";
+    public static final String MSG_NOT_FOUND = "Kunde not found!";
     private static final String MSG_UPDATED = " was successfully updated!";
     private static final String MSG_IS_NULL = "Kunde is null!";
 
