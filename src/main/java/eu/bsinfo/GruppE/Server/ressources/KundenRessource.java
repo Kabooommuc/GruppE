@@ -1,5 +1,6 @@
 package eu.bsinfo.GruppE.Server.ressources;
 
+import eu.bsinfo.GruppE.Server.Server;
 import eu.bsinfo.GruppE.Server.models.Kunde;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -36,7 +37,7 @@ public class KundenRessource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getKunde(@PathParam("id") String id) {
-        UUID kundenId = convertStringToUUID(id);
+        UUID kundenId = Server.convertStringToUUID(id);
         if(kundenId == null)
             return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
 
@@ -68,7 +69,7 @@ public class KundenRessource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteKunde(@PathParam("id") String id) {
-        UUID kundenId = convertStringToUUID(id);
+        UUID kundenId = Server.convertStringToUUID(id);
         if(kundenId == null)
             return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
 
@@ -86,26 +87,6 @@ public class KundenRessource {
         }
 
         return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
-    }
-
-    private UUID convertStringToUUID(String strUUID) {
-        UUID objUUID;
-
-        try {
-            objUUID = UUID.fromString(strUUID);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-
-        return objUUID;
-    }
-
-    public static boolean isUUIDTaken(UUID id) {
-        for(Kunde k : kunden) {
-            if(k.getId() ==  id)
-                return true;
-        }
-        return false;
     }
 
 }

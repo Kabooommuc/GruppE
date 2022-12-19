@@ -17,6 +17,7 @@ import java.net.URI;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.UUID;
 
 public class Server {
 
@@ -85,6 +86,18 @@ public class Server {
                 .configure(SerializationFeature.INDENT_OUTPUT, true)
                 .registerModule(new JavaTimeModule());
         objMapper.writeValue(jsonFile, dataToExport);
+    }
+
+    public static UUID convertStringToUUID(String strUUID) {
+        UUID objUUID;
+
+        try {
+            objUUID = UUID.fromString(strUUID);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+
+        return objUUID;
     }
 
 }

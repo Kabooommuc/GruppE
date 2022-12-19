@@ -1,8 +1,8 @@
 package eu.bsinfo.GruppE.Server.ressources;
 
+import eu.bsinfo.GruppE.Server.Server;
 import eu.bsinfo.GruppE.Server.models.Ablesung;
 import eu.bsinfo.GruppE.Server.models.Kunde;
-import jakarta.validation.constraints.Null;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -16,14 +16,13 @@ public class AblesungRessource {
 
     public static ArrayList<Ablesung> ablesungen = new ArrayList<>();
     private static final String MSG_NOT_FOUND = "Ablesung not found!";
-    private static final String MSG_ERROR = "Request war fehlerhaft!";
+    private static final String MSG_ERROR = "Error with Ablesung!";
     private static final String MSG_UPDATED = " was successfully updated.";
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response postAblesung(Ablesung ablesung) {
-        System.out.println(ablesung);
         Kunde kundeWithData = Kunde.getKundeFromKunden(ablesung.getKunde().getId());
 
         if (kundeWithData == null)
@@ -49,7 +48,7 @@ public class AblesungRessource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAblesungById(@PathParam("id") String id) {
-        UUID ablesungId = convertStringToUUID(id);
+        UUID ablesungId = Server.convertStringToUUID(id);
         if (ablesungId == null)
             return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
 
@@ -80,7 +79,7 @@ public class AblesungRessource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteAblesung(@PathParam("id") String id) {
-        UUID ablesungId = convertStringToUUID(id);
+        UUID ablesungId = Server.convertStringToUUID(id);
         if(ablesungId == null)
             return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
 
@@ -95,16 +94,4 @@ public class AblesungRessource {
         return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
     }
 
-
-    private UUID convertStringToUUID(String strUUID) {
-        UUID objUUID;
-
-        try {
-            objUUID = UUID.fromString(strUUID);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-
-        return objUUID;
-    }
 }
