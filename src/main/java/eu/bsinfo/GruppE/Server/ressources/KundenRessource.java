@@ -36,7 +36,7 @@ public class KundenRessource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getKunde(@PathParam("id") String id) {
+    public Response getKundeById(@PathParam("id") String id) {
         UUID kundenId = Server.convertStringToUUID(id);
         if(kundenId == null)
             return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();

@@ -22,16 +22,16 @@ public class AblesungRessource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response postAblesung(Ablesung ablesung) {
-        Kunde kundeWithData = Kunde.getKundeFromKunden(ablesung.getKunde().getId());
+    public Response postAblesung(Ablesung postAblesung) {
+        Kunde kundeWithData = Kunde.getKundeFromKunden(postAblesung.getKunde().getId());
 
         if (kundeWithData == null)
             return Response.status(Response.Status.NOT_FOUND).entity(KundenRessource.MSG_NOT_FOUND).build();
 
-        for(Ablesung ablesung1 : ablesungen) {
-            ablesung1.setKunde(kundeWithData);
-            ablesungen.add(ablesung1);
-            return Response.status(Response.Status.CREATED).entity(ablesung1).build();
+        for(Ablesung ablesung : ablesungen) {
+            ablesung.setKunde(kundeWithData);
+            ablesungen.add(ablesung);
+            return Response.status(Response.Status.CREATED).entity(ablesung).build();
         }
         return Response.status(Response.Status.BAD_REQUEST).entity(MSG_ERROR).build();
 
