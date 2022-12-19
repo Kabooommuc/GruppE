@@ -1,6 +1,8 @@
 package eu.bsinfo.GruppE.Server.ressources;
 
+import eu.bsinfo.GruppE.Server.Server;
 import eu.bsinfo.GruppE.Server.models.Ablesung;
+import eu.bsinfo.GruppE.Server.models.Kunde;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -12,18 +14,27 @@ import java.util.UUID;
 @Path("ablesungen")
 public class AblesungRessource {
 
-    private static final ArrayList<Ablesung> ablesungen = new ArrayList<>();
+    public static ArrayList<Ablesung> ablesungen = new ArrayList<>();
     private static final String MSG_NOT_FOUND = "Ablesung not found!";
+    private static final String MSG_ERROR = "Error with Ablesung!";
     private static final String MSG_UPDATED = " was successfully updated.";
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response postAblesung(Ablesung ablesung) {
-        System.out.println(ablesung);
-        ablesungen.add(ablesung);
-        return Response.status(Response.Status.CREATED).entity(ablesung).build();
-        //TODO: 400 und 404 Response Code
+    public Response postAblesung(Ablesung postAblesung) {
+        Kunde kundeWithData = Kunde.getKundeFromKunden(postAblesung.getKunde().getId());
+
+        if (kundeWithData == null)
+            return Response.status(Response.Status.NOT_FOUND).entity(KundenRessource.MSG_NOT_FOUND).build();
+
+        for(Ablesung ablesung : ablesungen) {
+            ablesung.setKunde(kundeWithData);
+            ablesungen.add(ablesung);
+            return Response.status(Response.Status.CREATED).entity(ablesung).build();
+        }
+        return Response.status(Response.Status.BAD_REQUEST).entity(MSG_ERROR).build();
+
     }
 
     // not required, but maybe useful
@@ -37,7 +48,7 @@ public class AblesungRessource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAblesungById(@PathParam("id") String id) {
-        UUID ablesungId = convertStringToUUID(id);
+        UUID ablesungId = Server.convertStringToUUID(id);
         if (ablesungId == null)
             return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
 
@@ -68,7 +79,7 @@ public class AblesungRessource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteAblesung(@PathParam("id") String id) {
-        UUID ablesungId = convertStringToUUID(id);
+        UUID ablesungId = Server.convertStringToUUID(id);
         if(ablesungId == null)
             return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
 
@@ -83,16 +94,4 @@ public class AblesungRessource {
         return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
     }
 
-
-    private UUID convertStringToUUID(String strUUID) {
-        UUID objUUID;
-
-        try {
-            objUUID = UUID.fromString(strUUID);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-
-        return objUUID;
-    }
 }

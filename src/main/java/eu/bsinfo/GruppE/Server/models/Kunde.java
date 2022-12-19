@@ -18,20 +18,22 @@ public class Kunde {
     private String vorname;
 
     public Kunde() {
-        this.id = generateRandomUUID();
+        this.id = UUID.randomUUID();
     }
 
     public Kunde(String name, String vorname) {
-        this.id = generateRandomUUID();
+        this.id = UUID.randomUUID();
         this.name = name;
         this.vorname = vorname;
     }
 
-    private UUID generateRandomUUID(){
-        UUID randomUUID;
-        do {
-            randomUUID = UUID.randomUUID();
-        } while(KundenRessource.isUUIDTaken(randomUUID));
-        return randomUUID;
+    public static Kunde getKundeFromKunden(UUID id) {
+        for(Kunde kunde : KundenRessource.kunden) {
+            if(!kunde.getId().equals(id))
+                continue;
+
+            return kunde;
+        }
+        return null;
     }
 }
