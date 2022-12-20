@@ -17,7 +17,8 @@ import java.util.*;
 @Path("ablesungenVorZweiJahrenHeute")
 public class AblesungVonVor2JahrenRessource {
     public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-
+    private static final String DATA_NOT_FOUND = "No Data found!";
+    private static final String DATA_COMPILED = "Data Successfully Compiled";
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTwoYearOldAblesung() {
@@ -53,7 +54,7 @@ public class AblesungVonVor2JahrenRessource {
                 String zaehlerart = sc.next();
                 String zaehlerNummer = sc.next();
                 int neuEingebautAsInt = sc.nextInt(); // needs to be either 0 or 1, we don't check it though
-                Boolean neuEingebaut = neuEingebautAsInt == 1 ? true : false;
+                Boolean neuEingebaut = neuEingebautAsInt == 1;
                 int zaehlerstand = sc.nextInt();
                 String kommentar = "";
 
@@ -78,19 +79,12 @@ public class AblesungVonVor2JahrenRessource {
             }
             System.out.println("after while");
 
-            /* filter the list for the dates (last 2 years)
-            ArrayList<Ablesung> ablesungenCsvFiltered = ablesungenCsv.stream().filter((ablesung) -> {
-                //
-                // here must be code that returns a boolean.
-                // everything that is true, remains in the collection, everything else will be discarded
-            }).collect;
-             */
-
-            // error handling -> return 500 on real server side error
-
-            // return empty list, if no data could be found
-
-            return Response.status(Response.Status.OK).entity(ablesungenCsv).build();
+            if(ablesungenCsv.size() == 0){
+                return Response.status(Response.Status.NOT_FOUND).entity(DATA_NOT_FOUND).build();
+            }else{
+                System.out.println(DATA_COMPILED);
+                return Response.status(Response.Status.OK).entity(ablesungenCsv).build();
+            }
 
         } catch (Exception e) {
             System.err.println(e);
@@ -99,7 +93,8 @@ public class AblesungVonVor2JahrenRessource {
                 try {
                     inStream.close();
                 } catch (IOException ioe) {
-                    // todo. i.e. log, ignore, whatever
+                    System.out.println (ioe);
+                    System.out.println("Could not find data");
                 }
             }
         }
