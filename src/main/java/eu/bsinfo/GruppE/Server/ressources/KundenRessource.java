@@ -1,12 +1,14 @@
 package eu.bsinfo.GruppE.Server.ressources;
 
 import eu.bsinfo.GruppE.Server.Server;
+import eu.bsinfo.GruppE.Server.models.Ablesung;
 import eu.bsinfo.GruppE.Server.models.Kunde;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 @Path("kunden")
@@ -69,6 +71,8 @@ public class KundenRessource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteKunde(@PathParam("id") String id) {
+        ArrayList<Ablesung> ablesungen = new ArrayList<>();
+
         UUID kundenId = Server.convertStringToUUID(id);
         if(kundenId == null)
             return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
@@ -77,13 +81,19 @@ public class KundenRessource {
             if(!kunde.getId().equals(kundenId))
                 continue;
 
-            // TODO: Die Ablesungen dieses Kunden sollen aber noch auf dem Server gespeichert bleiben,
-            //  der Attributwert von kunde soll dabei auf null gesetzt werden.
-            //  Das gelöschte Kunden-Objekt soll zusammen mit der Liste der Ablesungen dieses Kunden
-            //  als Map mit dem Code 200 zurückgeschickt werden.
+            for(Ablesung ablesung : AblesungRessource.ablesungen) {
+                if(!ablesung.getKunde().getId().equals(kunde.getId()))
+                    continue;
+
+                ablesung.setKunde(null);
+                ablesungen.add(ablesung);
+            }
 
             kunden.remove(kunde);
-            return Response.status(Response.Status.OK).entity(kunde).build();
+            HashMap<String, Object> responseHashMap = new HashMap<>();
+            responseHashMap.put("kunde", kunde);
+            responseHashMap.put("ablesungen", ablesungen);
+            return Response.status(Response.Status.OK).entity(responseHashMap).build();
         }
 
         return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
