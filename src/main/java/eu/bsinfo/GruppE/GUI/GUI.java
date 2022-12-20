@@ -1,6 +1,7 @@
 package eu.bsinfo.GruppE.GUI;
 
 import com.toedter.calendar.JDateChooser;
+import eu.bsinfo.GruppE.GUI.textfields.DoubleTextField;
 import eu.bsinfo.GruppE.GUI.textfields.IntTextField;
 import lombok.Getter;
 
@@ -8,11 +9,12 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
 import java.util.Arrays;
 
 public class GUI extends JFrame {
@@ -31,12 +33,14 @@ public class GUI extends JFrame {
     private final JTextField counterTypeInput = new JTextField();
     private final IntTextField counterIdInput = new IntTextField();
     private final JTextField measurementReadingDateTimeInput = new JTextField();
-    private final JDateChooser measurementReadingDateTimeTest = new JDateChooser();
+    private final JDateChooser measurementReadingDateTime = new JDateChooser();
     private final JCheckBox counterChangeInput = new JCheckBox();
     private final JTextField commentInput = new JTextField();
-    private final JTextField powerCurrentInput = new JTextField();
+    private final DoubleTextField powerCurrentInput = new DoubleTextField();
 
-    private final JTextField householdCurrentInput = new JTextField();
+    private final JFormattedTextField powerCurrentInputTest = new JFormattedTextField(getMaskFormatter("########.##"));
+
+    private final DoubleTextField householdCurrentInput = new DoubleTextField();
 
     @Getter
     private final JTextField[] inputList = {
@@ -55,7 +59,7 @@ public class GUI extends JFrame {
     @Getter
     private final String[] INPUT_FIELD_NAMES = {"KundeNr ", "HausNr ", "WohnungsNr ","Kraftstrom ","Haushaltsstrom ","Zählerart ","ZählerID ","Ablesedatum ","Kommentar "};
 
-    private final String[] COLUMN_NAMES = {"KundenID", "Hausnummer", "WohnungsNr", "Zählerart", "ZählerID", "Ablesedatum", "Zählertausch", "Kraftstrom", "Haushaltsstrom", "Kommentar"};
+    private final String[] COLUMN_NAMES = {"KundenID", "Hausnummer", "WohnungsNr", "Zählerart", "ZählerID", "Ablesedatum", "Kraftstrom", "Haushaltsstrom","Zählertausch", "Kommentar"};
     final double[] COLUMN_WIDTHS = {10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 50.0};
 
     private final DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0);
@@ -120,8 +124,7 @@ public class GUI extends JFrame {
         inputFields.add(counterIdLabel);
         inputFields.add(counterIdInput);
         inputFields.add(measurementReadingDateLabel);
-        //inputFields.add(measurementReadingDateTimeInput);
-        inputFields.add(measurementReadingDateTimeTest);
+        inputFields.add(measurementReadingDateTime);
         inputFields.add(commentLabel);
         inputFields.add(commentInput);
         inputFields.add(counterChangeLabel);
@@ -208,14 +211,18 @@ public class GUI extends JFrame {
     public void addData() {
         MeasurementData md;
         String fieldCheckResult = InputChecker.checkInputFields(this);
+
+        if(measurementReadingDateTime.getDate()==null) {
+            displayMessage(ERROR_TAG + "Invalid date");
+        }
+
         if (fieldCheckResult==null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
             md = new MeasurementData(
                     Integer.parseInt(customerIdInput.getText()),
                     houseNumberInput.getText(),
+                    apartmentNumberInput.getText(),
                     Integer.parseInt(counterIdInput.getText()),
-                   // LocalDate.parse(, formatter),
-                    measurementReadingDateTimeTest.getDate(),
+                    measurementReadingDateTime.getDate(),
                     Double.parseDouble(powerCurrentInput.getText()),
                     Double.parseDouble(householdCurrentInput.getText()),
                     counterChangeInput.isSelected(),
@@ -237,7 +244,7 @@ public class GUI extends JFrame {
         Object[] row = {
                 md.customerId,
                 md.houseNumber,
-                md.apartmentNumber, // always null
+                md.apartmentNumber,
                 md.counterType,
                 md.counterId,
                 md.measurementReadingDateTime,
@@ -260,6 +267,18 @@ public class GUI extends JFrame {
         MeasurementData mdUpdate = DataHandler.data.get(row);
         mdUpdate.setValueBasedOnColumn(column, newValue);
     }
+
+    private MaskFormatter getMaskFormatter(String format) {
+        MaskFormatter mask = null;
+        try {
+            mask = new MaskFormatter(format);
+            mask.setPlaceholderCharacter('0');
+        }catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        return mask;
+    }
+
 
     /**
      * Displays an error message as a popup
