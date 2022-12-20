@@ -87,13 +87,13 @@ public class AblesungVonVor2JahrenRessource {
             }
 
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
         } finally {
             if (inStream != null) {
                 try {
                     inStream.close();
                 } catch (IOException ioe) {
-                    System.out.println (ioe);
+                    ioe.printStackTrace();
                     System.out.println("Could not find data");
                 }
             }
