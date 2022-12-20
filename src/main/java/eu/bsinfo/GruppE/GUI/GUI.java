@@ -1,8 +1,8 @@
 package eu.bsinfo.GruppE.GUI;
 
+import com.toedter.calendar.JDateChooser;
 import eu.bsinfo.GruppE.GUI.textfields.IntTextField;
 import lombok.Getter;
-import org.jdatepicker.JDatePicker;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,7 +14,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Date;
 
 public class GUI extends JFrame {
 
@@ -32,7 +31,7 @@ public class GUI extends JFrame {
     private final JTextField counterTypeInput = new JTextField();
     private final IntTextField counterIdInput = new IntTextField();
     private final JTextField measurementReadingDateTimeInput = new JTextField();
-    private final JDatePicker measurementReadingDateTimeTest = new JDatePicker();
+    private final JDateChooser measurementReadingDateTimeTest = new JDateChooser();
     private final JCheckBox counterChangeInput = new JCheckBox();
     private final JTextField commentInput = new JTextField();
     private final JTextField powerCurrentInput = new JTextField();
@@ -216,13 +215,12 @@ public class GUI extends JFrame {
                     houseNumberInput.getText(),
                     Integer.parseInt(counterIdInput.getText()),
                    // LocalDate.parse(, formatter),
-                    (Date) measurementReadingDateTimeTest.getModel().getValue(),
+                    measurementReadingDateTimeTest.getDate(),
                     Double.parseDouble(powerCurrentInput.getText()),
                     Double.parseDouble(householdCurrentInput.getText()),
                     counterChangeInput.isSelected(),
                     commentInput.getText()
             );
-            System.out.println(md);
         }
         else {
             displayMessage(fieldCheckResult);
