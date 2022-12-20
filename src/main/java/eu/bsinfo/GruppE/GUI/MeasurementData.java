@@ -17,23 +17,26 @@ import java.util.Date;
         "measurementReadingDateTime", "powerCurrent", "householdCurrent", "counterChange", "comment"})
 public class MeasurementData {
     // ID of the Customer
-    Integer customerId;
+    int customerId;
     // Number of the house with the measurement
     String houseNumber;
     // null as our measurements will not be done in an apartment
-    final String apartmentNumber = "none";// Enum if we measure "Strom", "Gas", etc.
+    String apartmentNumber = "none";// Enum if we measure "Strom", "Gas", etc.
     final String counterType = "STROM";
     // ID of the counter
-    Integer counterId;
+    int counterId;
     // DateTime of when the measurement will be read
     Date measurementReadingDateTime;
     // Values of the measurement
-    Double powerCurrent;
-    Double householdCurrent;
+    double powerCurrent;
+    double householdCurrent;
     // Boolean whether the counter was swapped or not.
-    Boolean counterChange;
+    boolean counterChange;
     // Comment field
     String comment;
+
+
+
 
     /**
      * Sets an variable value based on the variable order.

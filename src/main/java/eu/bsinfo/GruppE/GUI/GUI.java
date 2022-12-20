@@ -15,7 +15,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.ParseException;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 public class GUI extends JFrame {
@@ -60,7 +59,7 @@ public class GUI extends JFrame {
     @Getter
     private final String[] INPUT_FIELD_NAMES = {"KundeNr ", "HausNr ", "WohnungsNr ","Kraftstrom ","Haushaltsstrom ","Zählerart ","ZählerID ","Ablesedatum ","Kommentar "};
 
-    private final String[] COLUMN_NAMES = INPUT_FIELD_NAMES; //{"KundenID", "Hausnummer", "WohnungsNr", "Zählerart", "ZählerID", "Ablesedatum", "Zählertausch", "Kraftstrom", "Haushaltsstrom", "Kommentar"};
+    private final String[] COLUMN_NAMES = {"KundenID", "Hausnummer", "WohnungsNr", "Zählerart", "ZählerID", "Ablesedatum", "Kraftstrom", "Haushaltsstrom","Zählertausch", "Kommentar"};
     final double[] COLUMN_WIDTHS = {10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 50.0};
 
     private final DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0);
@@ -117,7 +116,6 @@ public class GUI extends JFrame {
         inputFields.add(apartmentNumberInput);
         inputFields.add(powerCurrentLabel);
         inputFields.add(powerCurrentInput);
-        //inputFields.add(powerCurrentInputTest);
         inputFields.add(householdCurrentLabel);
         inputFields.add(householdCurrentInput);
 
@@ -126,7 +124,6 @@ public class GUI extends JFrame {
         inputFields.add(counterIdLabel);
         inputFields.add(counterIdInput);
         inputFields.add(measurementReadingDateLabel);
-        //inputFields.add(measurementReadingDateTimeInput);
         inputFields.add(measurementReadingDateTime);
         inputFields.add(commentLabel);
         inputFields.add(commentInput);
@@ -214,13 +211,17 @@ public class GUI extends JFrame {
     public void addData() {
         MeasurementData md;
         String fieldCheckResult = InputChecker.checkInputFields(this);
+
+        if(measurementReadingDateTime.getDate()==null) {
+            displayMessage(ERROR_TAG + "Invalid date");
+        }
+
         if (fieldCheckResult==null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
             md = new MeasurementData(
                     Integer.parseInt(customerIdInput.getText()),
                     houseNumberInput.getText(),
+                    apartmentNumberInput.getText(),
                     Integer.parseInt(counterIdInput.getText()),
-                   // LocalDate.parse(, formatter),
                     measurementReadingDateTime.getDate(),
                     Double.parseDouble(powerCurrentInput.getText()),
                     Double.parseDouble(householdCurrentInput.getText()),
@@ -243,7 +244,7 @@ public class GUI extends JFrame {
         Object[] row = {
                 md.customerId,
                 md.houseNumber,
-                md.apartmentNumber, // always null
+                md.apartmentNumber,
                 md.counterType,
                 md.counterId,
                 md.measurementReadingDateTime,
