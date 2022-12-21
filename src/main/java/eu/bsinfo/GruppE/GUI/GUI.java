@@ -12,6 +12,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.ParseException;
@@ -185,10 +187,21 @@ public class GUI extends JFrame {
 
         JLabel firstName = new JLabel("Vorname: ");
         JLabel lastName = new JLabel("Nachname: ");
-        JTextField firstNameInput= new JTextField();
-        JTextField lastNameInput= new JTextField();
+        MyTextField firstNameInput= new MyTextField();
+        MyTextField lastNameInput= new MyTextField();
         JButton createCustomer = new JButton("Kunde Erstellen");
         JButton cancel = new JButton("Abbrechen");
+
+
+
+        lastNameInput.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode()==KeyEvent.VK_ENTER) {
+                    createCustomer.doClick();
+                }
+            }
+        });
 
         cancel.addActionListener(e -> f.dispose());
         createCustomer.addActionListener(e -> {
