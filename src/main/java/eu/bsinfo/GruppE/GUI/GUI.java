@@ -12,7 +12,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.ParseException;
@@ -139,14 +138,6 @@ public class GUI extends JFrame {
         setJTableColumnsWidth(table, FRAME_WIDTH, COLUMN_WIDTHS);
         table.setAutoCreateRowSorter(true);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-
-        new TableCellListener(table, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                TableCellListener tcl = (TableCellListener) e.getSource();
-                updateMDFromRow(tcl.getRow(), tcl.getColumn(), tcl.getNewValue());
-            }
-        });
 
         JScrollPane scrollPane = new JScrollPane(table);
         dataTable.add(scrollPane);
