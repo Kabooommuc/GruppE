@@ -23,6 +23,11 @@ public class AblesungRessource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response postAblesung(Ablesung postAblesung) {
+        if(postAblesung == null)
+            return Response.status(Response.Status.BAD_REQUEST).entity(MSG_ERROR).build();
+        if(postAblesung.getKunde() == null)
+            return Response.status(Response.Status.NOT_FOUND).entity(KundenRessource.MSG_NOT_FOUND).build();
+
         Kunde kundeWithData = Kunde.getKundeFromKunden(postAblesung.getKunde().getId());
 
         if (kundeWithData == null)
@@ -54,7 +59,7 @@ public class AblesungRessource {
                 continue;
             return Response.status(Response.Status.OK).entity(ablesung).build();
         }
-        return Response.status(Response.Status.BAD_REQUEST).entity(MSG_NOT_FOUND).build();
+        return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
     }
 
     @PUT
@@ -84,6 +89,7 @@ public class AblesungRessource {
             if(!ablesung.getId().equals(ablesungId))
                 continue;
 
+            ablesung.setKunde(null);
             ablesungen.remove(ablesung);
             return Response.status(Response.Status.OK).entity(ablesung).build();
         }
