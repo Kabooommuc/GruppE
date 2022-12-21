@@ -2,21 +2,25 @@ package eu.bsinfo.GruppE.Server.ressources;
 
 import eu.bsinfo.GruppE.Server.models.Ablesung;
 import eu.bsinfo.GruppE.Server.models.Kunde;
-import jakarta.ws.rs.*;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 @Path("ablesungenVorZweiJahrenHeute")
 public class AblesungVonVor2JahrenRessource {
     public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
+    // create an empty Ablesungen list, where we can put our Ablesungen entities to.
+    public static ArrayList<Ablesung> ablesungenResult = new ArrayList<>();
     private static final String DATA_NOT_FOUND = "No Data found!";
     private static final String DATA_COMPILED = "Data Successfully Compiled";
     @GET
@@ -26,11 +30,9 @@ public class AblesungVonVor2JahrenRessource {
         InputStream inStream = null;
         try {
             inStream = getClass().getClassLoader().getResourceAsStream(resourceName);
+            assert inStream != null;
             Scanner sc = new Scanner(inStream);
             sc.useDelimiter(";");
-
-            // create an empty Ablesungen list, where we can put our Ablesungen entities to.
-            ArrayList<Ablesung> ablesungenCsv = new ArrayList<>();
 
             // read through file, line by line, ignore first line (headers)
             int cnt = 0;
@@ -58,9 +60,10 @@ public class AblesungVonVor2JahrenRessource {
                 int zaehlerstand = sc.nextInt();
                 String kommentar = "";
 
-                if(datum.isAfter(two_year_fm)) {
+                if(datum.isAfter(two_year_fm)) {        //if date is after 01.01.2019, program continues.
                     // create an Ablesungen object with the above values
                     Ablesung a = new Ablesung(
+
                             zaehlerNummer,
                             datum,
                             new Kunde("fake", "name"),
@@ -71,19 +74,19 @@ public class AblesungVonVor2JahrenRessource {
                     // We ignore the last column (Kommentar), since it is empty and scanner doesn't really get that
 
                     // add the newly created object to the List
-                    ablesungenCsv.add(a);
+                    ablesungenResult.add(a);
                     System.out.println("added " + cnt);
                 }else{
                     System.out.println("ignored" + cnt);
                 }
             }
-            System.out.println("after while");
+            System.out.println("after while");      //can be removed after testing
 
-            if(ablesungenCsv.size() == 0){
+            if(ablesungenResult.size() == 0){       //if array size is 0, prints "Data not found"
                 return Response.status(Response.Status.NOT_FOUND).entity(DATA_NOT_FOUND).build();
             }else{
-                System.out.println(DATA_COMPILED);
-                return Response.status(Response.Status.OK).entity(ablesungenCsv).build();
+                System.out.println(DATA_COMPILED);      //otherwise, prints message and builds
+                return Response.status(Response.Status.OK).entity(ablesungenResult).build();
             }
 
         } catch (Exception e) {

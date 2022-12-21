@@ -8,6 +8,7 @@ import eu.bsinfo.GruppE.Server.models.Ablesung;
 import eu.bsinfo.GruppE.Server.models.Kunde;
 import eu.bsinfo.GruppE.Server.ressources.AblesungRessource;
 import eu.bsinfo.GruppE.Server.ressources.KundenRessource;
+import eu.bsinfo.GruppE.Server.ressources.AblesungVonVor2JahrenRessource;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -58,6 +59,7 @@ public class Server {
             if(jsonFileAblesungen.exists()) {
                 Ablesung[] importedArrayData = objMapper.readValue(jsonFileAblesungen, Ablesung[].class);
                 AblesungRessource.ablesungen = new ArrayList<>(Arrays.asList(importedArrayData));
+                AblesungVonVor2JahrenRessource.ablesungenResult = new ArrayList<>(Arrays.asList(importedArrayData));
             }
         }
 
