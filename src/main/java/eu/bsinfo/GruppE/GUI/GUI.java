@@ -1,8 +1,9 @@
 package eu.bsinfo.GruppE.GUI;
 
-import com.toedter.calendar.JDateChooser;
 import eu.bsinfo.GruppE.GUI.textfields.DoubleTextField;
 import eu.bsinfo.GruppE.GUI.textfields.IntTextField;
+import eu.bsinfo.GruppE.GUI.textfields.MyDateChooser;
+import eu.bsinfo.GruppE.GUI.textfields.MyTextField;
 import lombok.Getter;
 
 import javax.swing.*;
@@ -28,18 +29,14 @@ public class GUI extends JFrame {
     public static final String ERROR_TAG = "[" + ERROR + "]";
 
     private final IntTextField customerIdInput = new IntTextField();
-    private final JTextField houseNumberInput = new JTextField();
-    private final JTextField apartmentNumberInput = new JTextField();
-    private final JTextField counterTypeInput = new JTextField();
+    private final MyTextField houseNumberInput = new MyTextField();
+    private final MyTextField apartmentNumberInput = new MyTextField();
+    private final MyTextField counterTypeInput = new MyTextField();
     private final IntTextField counterIdInput = new IntTextField();
-    private final JTextField measurementReadingDateTimeInput = new JTextField();
-    private final JDateChooser measurementReadingDateTime = new JDateChooser();
+    private final MyDateChooser measurementReadingDateTime = new MyDateChooser();
     private final JCheckBox counterChangeInput = new JCheckBox();
-    private final JTextField commentInput = new JTextField();
+    private final MyTextField commentInput = new MyTextField();
     private final DoubleTextField powerCurrentInput = new DoubleTextField();
-
-    private final JFormattedTextField powerCurrentInputTest = new JFormattedTextField(getMaskFormatter("########.##"));
-
     private final DoubleTextField householdCurrentInput = new DoubleTextField();
 
     @Getter
@@ -57,9 +54,9 @@ public class GUI extends JFrame {
     };
 
     @Getter
-    private final String[] INPUT_FIELD_NAMES = {"KundeNr ", "HausNr ", "WohnungsNr ","Kraftstrom ","Haushaltsstrom ","Zählerart ","ZählerID ","Ablesedatum ","Kommentar "};
+    private final String[] INPUT_FIELD_NAMES = {"KundeNr ", "HausNr ", "WohnungsNr ", "Kraftstrom ", "Haushaltsstrom ", "Zählerart ", "ZählerID ", "Ablesedatum ", "Kommentar "};
 
-    private final String[] COLUMN_NAMES = {"KundenID", "Hausnummer", "WohnungsNr", "Zählerart", "ZählerID", "Ablesedatum", "Kraftstrom", "Haushaltsstrom","Zählertausch", "Kommentar"};
+    private final String[] COLUMN_NAMES = {"KundenID", "Hausnummer", "WohnungsNr", "Zählerart", "ZählerID", "Ablesedatum", "Kraftstrom", "Haushaltsstrom", "Zählertausch", "Kommentar"};
     final double[] COLUMN_WIDTHS = {10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 50.0};
 
     private final DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0);
@@ -212,28 +209,27 @@ public class GUI extends JFrame {
         MeasurementData md;
         String fieldCheckResult = InputChecker.checkInputFields(this);
 
-        if(measurementReadingDateTime.getDate()==null) {
+        if (measurementReadingDateTime.getDate() == null) {
             displayMessage(ERROR_TAG + "Invalid date");
+            return;
         }
-
-        if (fieldCheckResult==null) {
-            md = new MeasurementData(
-                    Integer.parseInt(customerIdInput.getText()),
-                    houseNumberInput.getText(),
-                    apartmentNumberInput.getText(),
-                    Integer.parseInt(counterIdInput.getText()),
-                    measurementReadingDateTime.getDate(),
-                    Double.parseDouble(powerCurrentInput.getText()),
-                    Double.parseDouble(householdCurrentInput.getText()),
-                    counterChangeInput.isSelected(),
-                    commentInput.getText()
-            );
-        }
-        else {
+        if (fieldCheckResult != null) {
             displayMessage(fieldCheckResult);
             return;
-
         }
+
+        md = new MeasurementData(
+                Integer.parseInt(customerIdInput.getText()),
+                houseNumberInput.getText(),
+                apartmentNumberInput.getText(),
+                Integer.parseInt(counterIdInput.getText()),
+                measurementReadingDateTime.getDate(),
+                Double.parseDouble(powerCurrentInput.getText()),
+                Double.parseDouble(householdCurrentInput.getText()),
+                counterChangeInput.isSelected(),
+                commentInput.getText()
+        );
+
 
         clearInputFields();
         DataHandler.addData(md);
@@ -273,7 +269,7 @@ public class GUI extends JFrame {
         try {
             mask = new MaskFormatter(format);
             mask.setPlaceholderCharacter('0');
-        }catch (ParseException ex) {
+        } catch (ParseException ex) {
             ex.printStackTrace();
         }
         return mask;

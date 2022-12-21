@@ -8,7 +8,7 @@ public class DoubleTextDocument extends PlainDocument {
 
     public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
 
-        str = str.replace(".", ",");
+        str = str.replace(".", "");
         str = str.replace("d", "");
         str = str.replace("f", "");
         str = str.trim();
@@ -18,14 +18,7 @@ public class DoubleTextDocument extends PlainDocument {
         } catch (NumberFormatException n) {
             return;
         }
-
-
         super.insertString(offs, str, a);
-
-
     }
-
-
-
 
 }
