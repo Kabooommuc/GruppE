@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 public class MyDateChooser extends JDateChooser {
     public MyDateChooser() {
         super();
+        setDateFormatString("dd.MM.yyyy");
         getDateEditor().getUiComponent().addKeyListener(new KeyAdapter(){
             @Override
             public void keyPressed(KeyEvent e) {
