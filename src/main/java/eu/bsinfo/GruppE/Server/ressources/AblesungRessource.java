@@ -28,12 +28,9 @@ public class AblesungRessource {
         if (kundeWithData == null)
             return Response.status(Response.Status.NOT_FOUND).entity(KundenRessource.MSG_NOT_FOUND).build();
 
-        for(Ablesung ablesung : ablesungen) {
-            ablesung.setKunde(kundeWithData);
-            ablesungen.add(ablesung);
-            return Response.status(Response.Status.CREATED).entity(ablesung).build();
-        }
-        return Response.status(Response.Status.BAD_REQUEST).entity(MSG_ERROR).build();
+        postAblesung.setKunde(kundeWithData);
+        ablesungen.add(postAblesung);
+        return Response.status(Response.Status.CREATED).entity(postAblesung).build();
 
     }
 

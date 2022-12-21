@@ -1,54 +1,62 @@
 package eu.bsinfo.GruppE.GUI;
 
+import eu.bsinfo.GruppE.GUI.textfields.DoubleTextField;
+import eu.bsinfo.GruppE.GUI.textfields.IntTextField;
+import eu.bsinfo.GruppE.GUI.textfields.MyDateChooser;
+import eu.bsinfo.GruppE.GUI.textfields.MyTextField;
+import lombok.Getter;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.text.ParseException;
 import java.util.Arrays;
 
 public class GUI extends JFrame {
 
 
     private static final String INFO = "Info";
-    public static final String INFO_TAG = "["+ INFO + "]";
+    public static final String INFO_TAG = "[" + INFO + "]";
     private static final String WARNING = "Warning";
-    public static final String WARNING_TAG = "["+ WARNING + "]";
+    public static final String WARNING_TAG = "[" + WARNING + "]";
     private static final String ERROR = "Error";
-    public static final String ERROR_TAG = "["+ ERROR + "]";
+    public static final String ERROR_TAG = "[" + ERROR + "]";
 
-    private final JTextField customerIdInput = new JTextField();
-    private final JTextField houseNumberInput = new JTextField();
-    private final JTextField apartmentNumberInput = new JTextField();
-    private final JTextField counterTypeInput = new JTextField();
-    private final JTextField counterIdInput = new JTextField();
-    private final JTextField measurementReadingDateTimeInput = new JTextField();
+    private final IntTextField customerIdInput = new IntTextField();
+    private final MyTextField houseNumberInput = new MyTextField();
+    private final MyTextField apartmentNumberInput = new MyTextField();
+    private final MyTextField counterTypeInput = new MyTextField();
+    private final IntTextField counterIdInput = new IntTextField();
+    private final MyDateChooser measurementReadingDateTime = new MyDateChooser();
     private final JCheckBox counterChangeInput = new JCheckBox();
-    private final JTextField commentInput = new JTextField();
-    private final JTextField powerCurrentInput = new JTextField();
+    private final MyTextField commentInput = new MyTextField();
+    private final DoubleTextField powerCurrentInput = new DoubleTextField();
+    private final DoubleTextField householdCurrentInput = new DoubleTextField();
 
-    private final JTextField householdCurrentInput = new JTextField();
-
+    @Getter
     private final JTextField[] inputList = {
             customerIdInput,
             houseNumberInput,
             apartmentNumberInput,
+            powerCurrentInput,
+            householdCurrentInput,
+
             counterTypeInput,
             counterIdInput,
-            measurementReadingDateTimeInput,
-
+            //measurementReadingDateTimeInput,
             commentInput,
-            powerCurrentInput,
-            householdCurrentInput
     };
 
-    private final String[] COLUMN_NAMES = {"KundenID", "Hausnummer", "WohnungsNr", "Zählerart", "ZählerID", "Ablesedatum", "Zählertausch", "Kraftstrom", "Haushaltsstrom", "Kommentar"};
+    @Getter
+    private final String[] INPUT_FIELD_NAMES = {"KundeNr ", "HausNr ", "WohnungsNr ", "Kraftstrom ", "Haushaltsstrom ", "Zählerart ", "ZählerID ", "Ablesedatum ", "Kommentar "};
+
+    private final String[] COLUMN_NAMES = {"KundenID", "Hausnummer", "WohnungsNr", "Zählerart", "ZählerID", "Ablesedatum", "Kraftstrom", "Haushaltsstrom", "Zählertausch", "Kommentar"};
     final double[] COLUMN_WIDTHS = {10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 50.0};
 
     private final DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0);
@@ -74,15 +82,16 @@ public class GUI extends JFrame {
         final Container inputFields = new Container();
         inputFields.setLayout(new GridLayout(2, 10));
 
-        JLabel customerIdLabel = new JLabel("KundenNr ");
-        JLabel houseNumberLabel = new JLabel("HausNr ");
-        JLabel apartmentNumberLabel = new JLabel("WohnungsNr ");
-        JLabel powerCurrentLabel = new JLabel("Kraftstrom ");
-        JLabel householdCurrentLabel = new JLabel("Haushaltsstrom ");
-        JLabel counterTypeLabel = new JLabel("Zählerart ");
-        JLabel counterIdLabel = new JLabel("ZählerID ");
-        JLabel measurementReadingDateLabel = new JLabel("Ablesedatum ");
-        JLabel commentLabel = new JLabel("Kommentar ");
+        JLabel customerIdLabel = new JLabel(INPUT_FIELD_NAMES[0]);
+        JLabel houseNumberLabel = new JLabel(INPUT_FIELD_NAMES[1]);
+        JLabel apartmentNumberLabel = new JLabel(INPUT_FIELD_NAMES[2]);
+        JLabel powerCurrentLabel = new JLabel(INPUT_FIELD_NAMES[3]);
+        JLabel householdCurrentLabel = new JLabel(INPUT_FIELD_NAMES[4]);
+        JLabel counterTypeLabel = new JLabel(INPUT_FIELD_NAMES[5]);
+        JLabel counterIdLabel = new JLabel(INPUT_FIELD_NAMES[6]);
+        JLabel measurementReadingDateLabel = new JLabel(INPUT_FIELD_NAMES[7]);
+        JLabel commentLabel = new JLabel("Kommentar:");
+
         JLabel counterChangeLabel = new JLabel("Zählertausch ");
 
         // this array exists for the loop, which sets the padding and the right alignment
@@ -93,7 +102,7 @@ public class GUI extends JFrame {
         };
         for (JLabel j : list) {
             j.setHorizontalAlignment(4);
-            j.setBorder(new EmptyBorder(0,15,0,10));
+            j.setBorder(new EmptyBorder(0, 15, 0, 10));
         }
 
         inputFields.add(customerIdLabel);
@@ -112,7 +121,7 @@ public class GUI extends JFrame {
         inputFields.add(counterIdLabel);
         inputFields.add(counterIdInput);
         inputFields.add(measurementReadingDateLabel);
-        inputFields.add(measurementReadingDateTimeInput);
+        inputFields.add(measurementReadingDateTime);
         inputFields.add(commentLabel);
         inputFields.add(commentInput);
         inputFields.add(counterChangeLabel);
@@ -181,6 +190,7 @@ public class GUI extends JFrame {
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
         setVisible(true);
     }
+
     public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth, double[] percentages) {
         double total = Arrays.stream(percentages).sum();
 
@@ -190,29 +200,36 @@ public class GUI extends JFrame {
                     (tablePreferredWidth * (percentages[i] / total)));
         }
     }
+
     /**
      * Checks if the data in the inputFields is valid. If valid, the data is added to the DataHandler
      * and the inputFields are cleared. If invalid, an error message is displayed and the fields remain filled.
      */
     public void addData() {
         MeasurementData md;
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-            md = new MeasurementData(
-                    Integer.parseInt(customerIdInput.getText()),
-                    houseNumberInput.getText(),
-                    Integer.parseInt(counterIdInput.getText()),
-                    LocalDate.parse(measurementReadingDateTimeInput.getText(), formatter),
-                    Double.parseDouble(powerCurrentInput.getText()),
-                    Double.parseDouble(householdCurrentInput.getText()),
-                    counterChangeInput.isSelected(),
-                    commentInput.getText()
-            );
-        } catch (NumberFormatException | DateTimeParseException e) {
-            String ERROR_INVALID_INPUT = ERROR_TAG + "Input data is not valid";
-            displayMessage(ERROR_INVALID_INPUT);
+        String fieldCheckResult = InputChecker.checkInputFields(this);
+
+        if (measurementReadingDateTime.getDate() == null) {
+            displayMessage(ERROR_TAG + "Invalid date");
             return;
         }
+        if (fieldCheckResult != null) {
+            displayMessage(fieldCheckResult);
+            return;
+        }
+
+        md = new MeasurementData(
+                Integer.parseInt(customerIdInput.getText()),
+                houseNumberInput.getText(),
+                apartmentNumberInput.getText(),
+                Integer.parseInt(counterIdInput.getText()),
+                measurementReadingDateTime.getDate(),
+                Double.parseDouble(powerCurrentInput.getText()),
+                Double.parseDouble(householdCurrentInput.getText()),
+                counterChangeInput.isSelected(),
+                commentInput.getText()
+        );
+
 
         clearInputFields();
         DataHandler.addData(md);
@@ -223,7 +240,7 @@ public class GUI extends JFrame {
         Object[] row = {
                 md.customerId,
                 md.houseNumber,
-                md.apartmentNumber, // always null
+                md.apartmentNumber,
                 md.counterType,
                 md.counterId,
                 md.measurementReadingDateTime,
@@ -247,24 +264,36 @@ public class GUI extends JFrame {
         mdUpdate.setValueBasedOnColumn(column, newValue);
     }
 
+    private MaskFormatter getMaskFormatter(String format) {
+        MaskFormatter mask = null;
+        try {
+            mask = new MaskFormatter(format);
+            mask.setPlaceholderCharacter('0');
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
+        return mask;
+    }
+
+
     /**
-     * Adjusts the errorMessageLabel to display an error. The Tag a
+     * Displays an error message as a popup
      *
      * @param error the error message to display
      */
     public void displayMessage(String error) {
 
-        String errorType ="";
+        String errorType = "";
         String errorMessage = error;
 
-        if(error.contains("[") && error.contains("]") && error.indexOf("[") < error.indexOf("]")) {
+        if (error.contains("[") && error.contains("]") && error.indexOf("[") < error.indexOf("]")) {
             errorMessage = error.substring(error.indexOf("]") + 1).trim();
             errorType = error.substring(error.indexOf("[") + 1, error.indexOf("]"));
         }
 
         int windowType = JOptionPane.PLAIN_MESSAGE;
 
-        switch(errorType) {
+        switch (errorType) {
             case INFO -> windowType = JOptionPane.INFORMATION_MESSAGE;
             case WARNING -> windowType = JOptionPane.WARNING_MESSAGE;
             case ERROR -> windowType = JOptionPane.ERROR_MESSAGE;
@@ -276,7 +305,7 @@ public class GUI extends JFrame {
      * Clears all the inputFields of the input values
      */
     public void clearInputFields() {
-        for(JTextField t : inputList) {
+        for (JTextField t : inputList) {
             t.setText("");
         }
     }
