@@ -26,12 +26,12 @@ public class AblesungVonVor2JahrenRessource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTwoYearOldAblesung() {
-        final String resourceName = "testdata.csv";
+        final String resourceName = "testdata.csv";     //muss umgenannt werden, soll die Ablesung speicher sein
         InputStream inStream = null;
         try {
             inStream = getClass().getClassLoader().getResourceAsStream(resourceName);
             assert inStream != null;
-            Scanner sc = new Scanner(inStream);
+            Scanner sc = new Scanner(inStream);     //scannt den speicher
             sc.useDelimiter(";");
 
             // read through file, line by line, ignore first line (headers)
@@ -41,8 +41,8 @@ public class AblesungVonVor2JahrenRessource {
             LocalDate two_years_ago = current_date.minusYears(2);            //subtract two years
             int get_year = two_years_ago.getYear();         //variable get_year = two years ago
             LocalDate begin_of_two_year = LocalDate.of(get_year, 1, 1);       //create variable begin_of_2_years
-            String SaveAsString = begin_of_two_year + " I fucking hate you"; //convert localDate to string because I cant format localDate with localDate
-            LocalDate two_year_fm = LocalDate.parse(SaveAsString, DTF);     // above statement = true if this works
+            String SaveAsString = String.valueOf(begin_of_two_year); //convert localDate to string because I cant format localDate with localDate
+            LocalDate two_year_fm = LocalDate.parse(SaveAsString, DTF);
 
             while (sc.hasNextLine()) {
                 cnt++;
