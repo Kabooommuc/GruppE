@@ -10,7 +10,6 @@ import eu.bsinfo.GruppE.Server.models.Kunde;
 import eu.bsinfo.GruppE.Server.ressources.AblesungRessource;
 import eu.bsinfo.GruppE.Server.ressources.KundenRessource;
 import eu.bsinfo.GruppE.Server.ressources.UUIDRessource;
-import eu.bsinfo.GruppE.Server.ressources.AblesungVonVor2JahrenRessource;
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -20,6 +19,7 @@ import java.net.URI;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class Server {
@@ -28,6 +28,7 @@ public class Server {
     private static final String serverAblesungenFileName = "server_ablesungen";
     private static final String serverKundenFileName = "server_kunden";
     private static final String serverUUIDFileName = "server_uuid";
+    private static final String serveridFileName = "server_id";
     final static String pack = "eu.bsinfo.GruppE.Server.ressources";
     static HttpServer server;
     final static ResourceConfig rc = new ResourceConfig().packages(pack);
@@ -56,6 +57,7 @@ public class Server {
             File jsonFileAblesungen = new File(targetDirectoryFile + "/" + serverAblesungenFileName + ".json");
             File jsonFileKunden = new File(targetDirectoryFile + "/" + serverKundenFileName + ".json");
             File jsonFileUUID = new File(targetDirectoryFile + "/" + serverUUIDFileName + ".json");
+            File jsonFileid = new File(targetDirectoryFile + "/" + serveridFileName + ".json");
             if(jsonFileAblesungen.exists()) {
                 Ablesung[] importedArrayData = objMapper.readValue(jsonFileAblesungen, Ablesung[].class);
                 AblesungRessource.ablesungen = new ArrayList<>(Arrays.asList(importedArrayData));
@@ -65,8 +67,12 @@ public class Server {
                 KundenRessource.kunden = new ArrayList<>(Arrays.asList(importedArrayData));
             }
             if(jsonFileUUID.exists()) {
-                TypeReference<HashMap<Integer, UUID>> typeReference = new TypeReference<HashMap<Integer, UUID>>() {};
+                TypeReference<HashMap<Integer, UUID>> typeReference = new TypeReference<>() {};
                 UUIDRessource.idUUIDpairs = objMapper.readValue(jsonFileUUID, typeReference);
+            }
+            if(jsonFileid.exists()) {
+                TypeReference<HashMap<UUID, Integer>> typeReference = new TypeReference<>() {};
+                UUIDRessource.UUIDidpairs = objMapper.readValue(jsonFileid, typeReference);
             }
         }
 
@@ -77,8 +83,10 @@ public class Server {
     public static void stopServer(boolean saveToFile) throws IOException {
         if(saveToFile) {
             System.out.println("Saving to files...");
-            saveData(KundenRessource.kunden, serverKundenFileName);
             saveData(AblesungRessource.ablesungen, serverAblesungenFileName);
+            saveData(KundenRessource.kunden, serverKundenFileName);
+            saveData(UUIDRessource.idUUIDpairs, serverUUIDFileName);
+            saveData(UUIDRessource.UUIDidpairs, serveridFileName);
         }
 
         if(server == null || server.getExecutor() == null )
@@ -87,7 +95,7 @@ public class Server {
         server.stop(0);
     }
 
-    private static void saveData(ArrayList<?> dataToExport, String fileNameNoSuffix) throws IOException {
+    private static void saveData(Object dataToExport, String fileNameNoSuffix) throws IOException {
         File jsonFile = new File(targetDirectoryFile + "/" + fileNameNoSuffix + ".json");
 
         ObjectMapper objMapper = new ObjectMapper()

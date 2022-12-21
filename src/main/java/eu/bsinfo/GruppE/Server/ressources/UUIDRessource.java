@@ -11,13 +11,17 @@ import java.util.UUID;
 public class UUIDRessource {
 
     public static HashMap<Integer, UUID> idUUIDpairs = new HashMap<>();
+    public static HashMap<UUID, Integer> UUIDidpairs = new HashMap<>();
 
     @POST
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response postUUID(@PathParam("id") Integer id){
-        if(!idUUIDpairs.containsKey(id))
-            idUUIDpairs.put(id, UUID.randomUUID());
+        if(!idUUIDpairs.containsKey(id)) {
+            UUID putUUID = UUID.randomUUID();
+            idUUIDpairs.put(id, putUUID);
+            UUIDidpairs.put(putUUID, id);
+        }
 
         return Response.status(Response.Status.OK).entity(idUUIDpairs.get(id)).build();
     }
@@ -31,11 +35,27 @@ public class UUIDRessource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPair(@PathParam("id") Integer id) {
-        if(!idUUIDpairs.containsKey(id))
-            return Response.status(Response.Status.NOT_FOUND).build();
+    public Response getPair(@PathParam("id") String id) {
+        Integer intId;
+        UUID uuidId;
 
-        return Response.status(Response.Status.OK).entity(idUUIDpairs.get(id)).build();
+        try {
+            intId = Integer.valueOf(id);
+        } catch(NumberFormatException e) {
+            intId = null;
+        }
+        if(intId != null && idUUIDpairs.containsKey(intId))
+            return Response.status(Response.Status.OK).entity(idUUIDpairs.get(intId)).build();
+
+        try {
+            uuidId = UUID.fromString(id);
+        } catch(IllegalArgumentException e){
+            uuidId = null;
+        }
+        if(uuidId != null && UUIDidpairs.containsKey(uuidId))
+            return Response.status(Response.Status.OK).entity(UUIDidpairs.get(uuidId)).build();
+
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
 }
