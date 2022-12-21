@@ -37,7 +37,7 @@ public class AblesungVonVor2JahrenRessource {
             // read through file, line by line, ignore first line (headers)
             int cnt = 0;
 
-            LocalDate current_date = LocalDate.now();       //find out current year
+            LocalDate current_date = LocalDate.now();       //gets current date
             LocalDate two_years_ago = current_date.minusYears(2);            //subtract two years
             int get_year = two_years_ago.getYear();         //variable get_year = two years ago
             LocalDate begin_of_two_year = LocalDate.of(get_year, 1, 1);       //create variable begin_of_2_years
@@ -77,7 +77,7 @@ public class AblesungVonVor2JahrenRessource {
                     ablesungenResult.add(a);
                     System.out.println("added " + cnt);
                 }else{
-                    System.out.println("ignored" + cnt);
+                    System.out.println("ignored " + cnt);
                 }
             }
             System.out.println("after while");      //can be removed after testing
