@@ -151,35 +151,82 @@ public class GUI extends JFrame {
         errorLog.add(errorMessageLabel);
 
         final Container actionButtons = new Container();
-        GridBagLayout actionButtonsGridBagLayout = new GridBagLayout();              // actionButtonsGridBagLayout
-        GridBagConstraints actionButtonsGridBagConstraints = new GridBagConstraints();    // actionButtonsGridBagConstraints
-        actionButtons.setLayout(actionButtonsGridBagLayout);
-        actionButtonsGridBagLayout.setConstraints(actionButtons, actionButtonsGridBagConstraints);
+        actionButtons.setLayout(new GridLayout(1,10,5,5));
 
-        JButton addButton = new JButton("Add");
+        JButton addButton = new JButton("Datensatz Hinzufügen");
         JButton saveButton = new JButton("Save");
-        JButton exportButton = new JButton("Export");
-        JButton exitButton = new JButton("Exit");
+        JButton createKunde = new JButton("Kunde Erstellen");
+        JButton exportButton = new JButton("Exportieren");
+        JButton exitButton = new JButton("Schließen");
 
-        actionButtonsGridBagConstraints.gridx = 0;
+        actionButtons.add(createKunde);
         actionButtons.add(addButton);
-        actionButtonsGridBagConstraints.gridx = 1;
-        actionButtons.add(saveButton);
-        actionButtonsGridBagConstraints.gridx = 3;
+        for(int i = 0; i < 5;i++)
+            actionButtons.add(new JLabel(""));
         actionButtons.add(exportButton);
-        actionButtonsGridBagConstraints.gridx = 4;
-        actionButtonsGridBagConstraints.anchor = GridBagConstraints.EAST;
         actionButtons.add(exitButton);
 
         base.add(actionButtons, BorderLayout.SOUTH);
 
+        createKunde.addActionListener(e -> openCustomerDialogue());
         addButton.addActionListener(e -> addData());
         saveButton.addActionListener(e -> save());
         exportButton.addActionListener(e -> export());
         exitButton.addActionListener(e -> exit());
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+
+    public void openCustomerDialogue() {
+        JFrame f = new JFrame();
+
+        JLabel firstName = new JLabel("Vorname: ");
+        JLabel lastName = new JLabel("Nachname: ");
+        JTextField firstNameInput= new JTextField();
+        JTextField lastNameInput= new JTextField();
+        JButton createCustomer = new JButton("Kunde Erstellen");
+        JButton cancel = new JButton("Abbrechen");
+
+        cancel.addActionListener(e -> f.dispose());
+        createCustomer.addActionListener(e -> {
+            if(firstNameInput.getText().equals("") || lastNameInput.getText().equals("")) {
+                displayMessage(INFO_TAG + "Feld darf nicht leer sein.");
+            }
+            else {
+                addKunde(firstNameInput.getText(), lastNameInput.getText());
+                f.dispose();
+            }
+        });
+
+        Container c = f.getContentPane();
+
+        JPanel  j = new JPanel();
+        j.setBorder(new EmptyBorder(10,10,10,10));
+
+        j.setLayout(new GridLayout(3,2,10,30));
+        j.add(firstName);
+        j.add(firstNameInput);
+        j.add(lastName);
+        j.add(lastNameInput);
+        j.add(createCustomer);
+        j.add(cancel);
+        c.add(j);
+        f.setSize(400,230);
+        f.setLocationRelativeTo(null);
+        f.setVisible(true);
+
+
+    }
+    public void addKunde(String vorname, String nachname) {
+
+        displayMessage(INFO_TAG + "Kunde erstellt");
+        //TODO
+        //Add Kunde to Backend
+        //Use the returned UUID and map it with an ID
+        //Display ID
     }
 
     public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth, double[] percentages) {
@@ -194,18 +241,18 @@ public class GUI extends JFrame {
 
     /**
      * Checks if the data in the inputFields is valid. If valid, the data is added to the DataHandler
-     * and the inputFields are cleared. If invalid, an error message is displayed and the fields remain filled.
+     * and the inputFields are cleared. If invalid, an error message is displayed and the data is not added.
      */
     public void addData() {
         MeasurementData md;
         String fieldCheckResult = InputChecker.checkInputFields(this);
 
-        if (measurementReadingDateTime.getDate() == null) {
-            displayMessage(ERROR_TAG + "Invalid date");
-            return;
-        }
         if (fieldCheckResult != null) {
             displayMessage(fieldCheckResult);
+            return;
+        }
+        if (measurementReadingDateTime.getDate() == null) {
+            displayMessage(ERROR_TAG + "Invalid date");
             return;
         }
 

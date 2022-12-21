@@ -23,6 +23,7 @@ public class InputChecker {
 
     }
 
+    @Deprecated
     private static String checkFormat(JTextField[] jTextFields, String[] inputFieldNames) {
         for (int i = 0; i < jTextFields.length;i++) {
             switch(i) {
