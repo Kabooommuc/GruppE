@@ -9,7 +9,7 @@ public class IntTextDocument extends PlainDocument {
     public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
 
         try {
-            Integer.parseInt(str);
+            Integer.parseInt(getText(0, getLength()) + str);
         } catch (NumberFormatException n) {
             return;
         }
