@@ -10,13 +10,11 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.text.ParseException;
 import java.util.Arrays;
 
 public class GUI extends JFrame {
@@ -309,18 +307,6 @@ public class GUI extends JFrame {
         MeasurementData mdUpdate = DataHandler.data.get(row);
         mdUpdate.setValueBasedOnColumn(column, newValue);
     }
-
-    private MaskFormatter getMaskFormatter(String format) {
-        MaskFormatter mask = null;
-        try {
-            mask = new MaskFormatter(format);
-            mask.setPlaceholderCharacter('0');
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-        }
-        return mask;
-    }
-
 
     /**
      * Displays an error message as a popup
