@@ -16,7 +16,7 @@ import java.util.Date;
 @JsonPropertyOrder({"customerId", "houseNumber", "apartmentNumber", "counterType", "counterId",
         "measurementReadingDateTime", "powerCurrent", "householdCurrent", "counterChange", "comment"})
 public class MeasurementData {
-    // ID of the Customer
+    // ID of the Customer - bzw KundenNr die eingegeben wird
     int customerId;
     // Number of the house with the measurement
     String houseNumber;
