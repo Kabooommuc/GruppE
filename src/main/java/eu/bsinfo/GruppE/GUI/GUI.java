@@ -26,8 +26,8 @@ public class GUI extends JFrame {
     public static final String WARNING_TAG = "[" + WARNING + "]";
     private static final String ERROR = "Fehler";
     public static final String ERROR_TAG = "[" + ERROR + "]";
+    private final JComboBox<Integer> customerIdInput = new JComboBox<>(DataHandler.getKundenIDs().toArray(new Integer[0]));
 
-    private final IntTextField customerIdInput = new IntTextField();
     private final MyTextField houseNumberInput = new MyTextField();
     private final MyTextField apartmentNumberInput = new MyTextField();
     private final MyTextField counterTypeInput = new MyTextField();
@@ -38,9 +38,14 @@ public class GUI extends JFrame {
     private final DoubleTextField powerCurrentInput = new DoubleTextField();
     private final DoubleTextField householdCurrentInput = new DoubleTextField();
 
+
+    private final JButton addButton = new JButton("Datensatz Hinzufügen");
+    private final JButton saveButton = new JButton("Save");
+    private final JButton exportButton = new JButton("Exportieren");
+
     @Getter
     private final JTextField[] inputList = {
-            customerIdInput,
+            //customerIdInput,
             houseNumberInput,
             apartmentNumberInput,
             powerCurrentInput,
@@ -71,6 +76,12 @@ public class GUI extends JFrame {
             }
         });
 
+        //TODO: something like this once customers can be loaded
+        //if(DataHandler.getKundenIDs().size()==0) {
+        //    saveButton.setEnabled(false);
+        //    addButton.setEnabled(false);
+        //    exportButton.setEnabled(false);
+        //}
 
         final int FRAME_WIDTH = 1800;
         final int FRAME_HEIGHT = 600;
@@ -152,10 +163,7 @@ public class GUI extends JFrame {
         final Container actionButtons = new Container();
         actionButtons.setLayout(new GridLayout(1,10,5,5));
 
-        JButton addButton = new JButton("Datensatz Hinzufügen");
-        JButton saveButton = new JButton("Save");
         JButton createKunde = new JButton("Kunde Erstellen");
-        JButton exportButton = new JButton("Exportieren");
         JButton exitButton = new JButton("Schließen");
 
         actionButtons.add(createKunde);
@@ -263,7 +271,7 @@ public class GUI extends JFrame {
         }
 
         md = new MeasurementData(
-                Integer.parseInt(customerIdInput.getText()),
+                (Integer) customerIdInput.getSelectedItem(),
                 houseNumberInput.getText(),
                 apartmentNumberInput.getText(),
                 Integer.parseInt(counterIdInput.getText()),
@@ -274,6 +282,7 @@ public class GUI extends JFrame {
                 commentInput.getText()
         );
 
+        System.out.println(md);
 
         clearInputFields();
         DataHandler.addData(md);
@@ -303,6 +312,7 @@ public class GUI extends JFrame {
      * @param column   column index of the edited cell
      * @param newValue new value of the edited cell
      */
+    @Deprecated
     private void updateMDFromRow(int row, int column, Object newValue) {
         MeasurementData mdUpdate = DataHandler.data.get(row);
         mdUpdate.setValueBasedOnColumn(column, newValue);
@@ -313,7 +323,7 @@ public class GUI extends JFrame {
      *
      * @param error the error message to display
      */
-    public void displayMessage(String error) {
+    public static void displayMessage(String error) {
 
         String errorType = "";
         String errorMessage = error;

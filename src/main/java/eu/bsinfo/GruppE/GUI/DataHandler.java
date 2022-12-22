@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.time.ZoneId;
 import java.util.ArrayList;
 
-import static eu.bsinfo.GruppE.GUI.Runtime.gui;
-
 /**
  * Stores and manages the already entered data
  */
@@ -26,6 +24,8 @@ public class DataHandler {
 
     @Getter
     public static ArrayList<MeasurementData> data = new ArrayList<>();
+    @Getter
+    public static ArrayList<Integer> kundenIDs = new ArrayList<>();
 
     /**
      * Loads data from the cached save file and sets the data ArrayList to the data returned from the import.
@@ -37,7 +37,7 @@ public class DataHandler {
             data = DataExporter.importJson(SAVE_FILENAME);
         } catch (IOException e) {
             e.printStackTrace();
-            gui.displayMessage(ERROR_WHILE_LOADING);
+            GUI.displayMessage(ERROR_WHILE_LOADING);
         }
     }
 
@@ -47,15 +47,15 @@ public class DataHandler {
      * @param md The MeasurementData Object to add
      */
     public static void addData(MeasurementData md) {
-        /** TODO
-         * hier muss aus measurementData eine Ablesung gemacht werden. also alle values raus und statt kundennr das kundenobjekt in ablesungen rein
-         */
+
+         //hier muss aus measurementData eine Ablesung gemacht werden. also alle values raus und statt kundennr das kundenobjekt in ablesungen rein
+
         int kundenNr = md.customerId;
 
         Kunde kunde = new Kunde();
         String kundenUUID = GuiToRestClient.getFromRest("uuid/"+kundenNr);
         if (kundenUUID.equals("404 - not found")) {
-            gui.displayMessage(gui.ERROR_TAG + "Kunde " + md.customerId + " wurde nicht gefunden");
+            GUI.displayMessage(GUI.ERROR_TAG + "Kunde " + md.customerId + " wurde nicht gefunden");
         } else {
             kunde = GuiToRestClient.getKundeFromUUID("kunden/" + kundenUUID);
         }
@@ -77,7 +77,7 @@ public class DataHandler {
             else if (exportType == ExportType.CSV) DataExporter.exportCSV(data, fileName);
         } catch (IOException e) {
             e.printStackTrace();
-            gui.displayMessage(ERROR_WHILE_SAVING);
+            GUI.displayMessage(ERROR_WHILE_SAVING);
         }
     }
 
@@ -89,7 +89,7 @@ public class DataHandler {
             Desktop.getDesktop().open(DataExporter.targetDirectoryFile);
         } catch (IOException e) {
             e.printStackTrace();
-            gui.displayMessage(ERROR_COULD_NOT_OPEN);
+            GUI.displayMessage(ERROR_COULD_NOT_OPEN);
         }
     }
 

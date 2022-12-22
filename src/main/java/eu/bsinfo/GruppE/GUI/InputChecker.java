@@ -12,13 +12,13 @@ public class InputChecker {
 
         int emptyFieldIndex = checkForEmpty(fieldsToCheck);
         if(emptyFieldIndex!=-1) {
-            return GUI.INFO_TAG + "Das Feld " + inputFieldNames[emptyFieldIndex].trim() + " muss ausgefüllt sein.";
+            return GUI.INFO_TAG + "Das Feld '" + inputFieldNames[emptyFieldIndex].trim() + "' muss ausgefüllt sein.";
         }
 
-        String formatProblems = checkFormat(fieldsToCheck,inputFieldNames);
-        if(formatProblems!=null) {
-            return GUI.ERROR_TAG + formatProblems;
-        }
+        //String formatProblems = checkFormat(fieldsToCheck,inputFieldNames);
+        //if(formatProblems!=null) {
+        //    return GUI.ERROR_TAG + formatProblems;
+        //}
         return null;
 
     }

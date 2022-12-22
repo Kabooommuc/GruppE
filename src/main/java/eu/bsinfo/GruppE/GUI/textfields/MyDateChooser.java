@@ -24,9 +24,10 @@ public class MyDateChooser extends JDateChooser {
 
     public void ensureDoubleDigitYear() {
         Calendar c = getCalendar();
-        if (getCalendar().get(Calendar.YEAR) < 100)
-            c.add(Calendar.YEAR, 2000);
+        if (c.get(Calendar.YEAR) >= 100)
+            return;
 
+        c.add(Calendar.YEAR, 2000);
         setCalendar(c);
     }
 
