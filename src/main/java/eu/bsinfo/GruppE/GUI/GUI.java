@@ -24,9 +24,9 @@ public class GUI extends JFrame {
 
     private static final String INFO = "Info";
     public static final String INFO_TAG = "[" + INFO + "]";
-    private static final String WARNING = "Warning";
+    private static final String WARNING = "Warnung";
     public static final String WARNING_TAG = "[" + WARNING + "]";
-    private static final String ERROR = "Error";
+    private static final String ERROR = "Fehler";
     public static final String ERROR_TAG = "[" + ERROR + "]";
 
     private final IntTextField customerIdInput = new IntTextField();
@@ -55,7 +55,7 @@ public class GUI extends JFrame {
     };
 
     @Getter
-    private final String[] INPUT_FIELD_NAMES = {"KundeNr ", "HausNr ", "WohnungsNr ", "Kraftstrom ", "Haushaltsstrom ", "Zählerart ", "ZählerID ", "Ablesedatum ", "Kommentar "};
+    private final String[] INPUT_FIELD_NAMES = {"KundenNr ", "HausNr ", "WohnungsNr ", "Kraftstrom (kWh) ", "Haushaltsstrom (kWh) ", "Zählerart ", "ZählerID ", "Ablesedatum ", "Kommentar ", "Zählertausch "};
 
     private final String[] COLUMN_NAMES = {"KundenID", "Hausnummer", "WohnungsNr", "Zählerart", "ZählerID", "Ablesedatum", "Kraftstrom", "Haushaltsstrom", "Zählertausch", "Kommentar"};
     final double[] COLUMN_WIDTHS = {10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 50.0};
@@ -91,9 +91,8 @@ public class GUI extends JFrame {
         JLabel counterTypeLabel = new JLabel(INPUT_FIELD_NAMES[5]);
         JLabel counterIdLabel = new JLabel(INPUT_FIELD_NAMES[6]);
         JLabel measurementReadingDateLabel = new JLabel(INPUT_FIELD_NAMES[7]);
-        JLabel commentLabel = new JLabel("Kommentar:");
-
-        JLabel counterChangeLabel = new JLabel("Zählertausch ");
+        JLabel commentLabel = new JLabel(INPUT_FIELD_NAMES[8]);
+        JLabel counterChangeLabel = new JLabel(INPUT_FIELD_NAMES[9]);
 
         // this array exists for the loop, which sets the padding and the right alignment
         JLabel[] list = {
@@ -184,6 +183,7 @@ public class GUI extends JFrame {
 
     public void openCustomerDialogue() {
         JFrame f = new JFrame();
+        f.setAlwaysOnTop(true);
 
         JLabel firstName = new JLabel("Vorname: ");
         JLabel lastName = new JLabel("Nachname: ");
@@ -191,8 +191,6 @@ public class GUI extends JFrame {
         MyTextField lastNameInput= new MyTextField();
         JButton createCustomer = new JButton("Kunde Erstellen");
         JButton cancel = new JButton("Abbrechen");
-
-
 
         lastNameInput.addKeyListener(new KeyAdapter() {
             @Override
@@ -206,7 +204,7 @@ public class GUI extends JFrame {
         cancel.addActionListener(e -> f.dispose());
         createCustomer.addActionListener(e -> {
             if(firstNameInput.getText().equals("") || lastNameInput.getText().equals("")) {
-                displayMessage(INFO_TAG + "Feld darf nicht leer sein.");
+                displayMessage(WARNING_TAG + "Feld darf nicht leer sein.");
             }
             else {
                 addKunde(firstNameInput.getText(), lastNameInput.getText());
@@ -214,11 +212,8 @@ public class GUI extends JFrame {
             }
         });
 
-        Container c = f.getContentPane();
-
         JPanel  j = new JPanel();
         j.setBorder(new EmptyBorder(10,10,10,10));
-
         j.setLayout(new GridLayout(3,2,10,30));
         j.add(firstName);
         j.add(firstNameInput);
@@ -226,12 +221,12 @@ public class GUI extends JFrame {
         j.add(lastNameInput);
         j.add(createCustomer);
         j.add(cancel);
-        c.add(j);
+
+        f.getContentPane().add(j);
+
         f.setSize(400,230);
         f.setLocationRelativeTo(null);
         f.setVisible(true);
-
-
     }
     public void addKunde(String vorname, String nachname) {
 
@@ -349,7 +344,9 @@ public class GUI extends JFrame {
             case WARNING -> windowType = JOptionPane.WARNING_MESSAGE;
             case ERROR -> windowType = JOptionPane.ERROR_MESSAGE;
         }
-        JOptionPane.showMessageDialog(new JFrame(), errorMessage, errorType, windowType);
+        JFrame f = new JFrame();
+        f.setAlwaysOnTop(true);
+        JOptionPane.showMessageDialog(f, errorMessage, errorType, windowType);
     }
 
     /**
