@@ -258,7 +258,7 @@ public class GUI extends JFrame {
             return;
         }
         if (readingDate.getDate() == null) {
-            displayMessage(ERROR_TAG + "Invalid date");
+            displayMessage(ERROR_TAG + "Invalide Datum");
             return;
         }
 
