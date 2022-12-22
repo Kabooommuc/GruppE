@@ -5,19 +5,29 @@ import com.toedter.calendar.JDateChooser;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Calendar;
 
 public class MyDateChooser extends JDateChooser {
     public MyDateChooser() {
         super();
         setDateFormatString("dd.MM.yyyy");
-        getDateEditor().getUiComponent().addKeyListener(new KeyAdapter(){
+        getDateEditor().getUiComponent().addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode()==KeyEvent.VK_ENTER) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     pressTab();
+                    ensureDoubleDigitYear();
                 }
             }
         });
+    }
+
+    public void ensureDoubleDigitYear() {
+        Calendar c = getCalendar();
+        if (getCalendar().get(Calendar.YEAR) < 100)
+            c.add(Calendar.YEAR, 2000);
+
+        setCalendar(c);
     }
 
     public void pressTab() {
