@@ -32,7 +32,7 @@ public class GUI extends JFrame {
     private final MyTextField apartmentNumberInput = new MyTextField();
     private final MyTextField counterTypeInput = new MyTextField();
     private final IntTextField counterIdInput = new IntTextField();
-    private final MyDateChooser measurementReadingDateTime = new MyDateChooser();
+    private final MyDateChooser readingDate = new MyDateChooser();
     private final JCheckBox counterChangeInput = new JCheckBox();
     private final MyTextField commentInput = new MyTextField();
     private final DoubleTextField powerCurrentInput = new DoubleTextField();
@@ -119,7 +119,7 @@ public class GUI extends JFrame {
         inputFields.add(counterIdLabel);
         inputFields.add(counterIdInput);
         inputFields.add(measurementReadingDateLabel);
-        inputFields.add(measurementReadingDateTime);
+        inputFields.add(readingDate);
         inputFields.add(commentLabel);
         inputFields.add(commentInput);
         inputFields.add(counterChangeLabel);
@@ -257,7 +257,7 @@ public class GUI extends JFrame {
             displayMessage(fieldCheckResult);
             return;
         }
-        if (measurementReadingDateTime.getDate() == null) {
+        if (readingDate.getDate() == null) {
             displayMessage(ERROR_TAG + "Invalid date");
             return;
         }
@@ -267,7 +267,7 @@ public class GUI extends JFrame {
                 houseNumberInput.getText(),
                 apartmentNumberInput.getText(),
                 Integer.parseInt(counterIdInput.getText()),
-                measurementReadingDateTime.getDate(),
+                readingDate.getDate(),
                 Double.parseDouble(powerCurrentInput.getText()),
                 Double.parseDouble(householdCurrentInput.getText()),
                 counterChangeInput.isSelected(),
@@ -342,6 +342,8 @@ public class GUI extends JFrame {
         for (JTextField t : inputList) {
             t.setText("");
         }
+        readingDate.setCalendar(null);
+
     }
 
     /**
