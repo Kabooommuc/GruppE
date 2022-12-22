@@ -19,6 +19,10 @@ public class KundenRessource {
     private static final String MSG_UPDATED = " was successfully updated!";
     private static final String MSG_IS_NULL = "Kunde is null!";
 
+    /**
+     * @param postKunde uebergebenes Kundenobjekt
+     * @return daten, die uebermittelt wurden
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -29,12 +33,19 @@ public class KundenRessource {
         return Response.status(Response.Status.CREATED).entity(postKunde).build();
     }
 
+    /**
+     * Gibt alle vorhandenen Kunden als JSON aus
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllKunden() {
         return Response.status(Response.Status.OK).entity(kunden).build();
     }
 
+    /**
+     * Fordert uuid des kunden, wenn vorhanden gibt kundendaten zurueck.
+     * @param id == UUID
+     */
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -52,6 +63,10 @@ public class KundenRessource {
         return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
     }
 
+    /**
+     * Veraendert Daten eines Kunden anhand der uuid
+     * @param putKunde == Kundenobjekt
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -67,6 +82,10 @@ public class KundenRessource {
         return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
     }
 
+    /**
+     * Loescht Kundenobjekt anhand der uuid
+     * @param id == UUID
+     */
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
