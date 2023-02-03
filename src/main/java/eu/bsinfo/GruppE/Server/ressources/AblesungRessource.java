@@ -19,6 +19,11 @@ public class AblesungRessource {
     private static final String MSG_ERROR = "Error with Ablesung!";
     private static final String MSG_UPDATED = " was successfully updated.";
 
+    /**
+     * Prueft, ob KundenUUID aus der Ablesung existiert, wenn ja, speichert in ArrayList
+     * @param postAblesung
+     * @return
+     */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -39,13 +44,21 @@ public class AblesungRessource {
 
     }
 
-    // not required, but maybe useful
+    /**
+     * Gibt alle vorhandenen Ablesungen aus
+     * @return
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllAblesungen() {
         return Response.status(Response.Status.OK).entity(ablesungen).build();
     }
 
+    /**
+     * Gibt Ablesung fuer AbluesungUUID aus
+     * @param id
+     * @return
+     */
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -62,6 +75,11 @@ public class AblesungRessource {
         return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
     }
 
+    /**
+     * Veraendert Ablesung anhand von uebergebenen Daten
+     * @param putAblesung
+     * @return
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -77,6 +95,11 @@ public class AblesungRessource {
         return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
     }
 
+    /**
+     * Loescht Ablesung aus ArrayList anhand von AblesungUUID
+     * @param id
+     * @return
+     */
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)

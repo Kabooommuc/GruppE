@@ -1,13 +1,15 @@
 package eu.bsinfo.GruppE.GUI;
 
+import eu.bsinfo.GruppE.Client.GuiToRestClient;
+import eu.bsinfo.GruppE.Server.models.Ablesung;
+import eu.bsinfo.GruppE.Server.models.Kunde;
 import lombok.Getter;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.time.ZoneId;
 import java.util.ArrayList;
-
-import static eu.bsinfo.GruppE.GUI.Runtime.gui;
 
 /**
  * Stores and manages the already entered data
@@ -16,12 +18,14 @@ public class DataHandler {
     public static final String SAVE_FILENAME = "data";
     public static final String EXPORT_FILENAME = "export";
 
-    private static final String ERROR_WHILE_LOADING =  GUI.ERROR_TAG + "Failed to load file!";
+    private static final String ERROR_WHILE_LOADING = GUI.ERROR_TAG + "Failed to load file!";
     private static final String ERROR_WHILE_SAVING = GUI.ERROR_TAG + "Failed to save file!";
     private static final String ERROR_COULD_NOT_OPEN = GUI.ERROR_TAG + "Could not open target directory";
 
     @Getter
     public static ArrayList<MeasurementData> data = new ArrayList<>();
+    @Getter
+    public static ArrayList<Integer> kundenIDs = new ArrayList<>();
 
     /**
      * Loads data from the cached save file and sets the data ArrayList to the data returned from the import.
@@ -29,12 +33,11 @@ public class DataHandler {
     public static void loadData() {
         try {
             File jsonFile = new File(DataExporter.targetDirectoryFile + "/" + SAVE_FILENAME + ".json");
-            if (!jsonFile.exists())
-                return;
+            if (!jsonFile.exists()) return;
             data = DataExporter.importJson(SAVE_FILENAME);
         } catch (IOException e) {
             e.printStackTrace();
-            gui.displayMessage(ERROR_WHILE_LOADING);
+            GUI.displayMessage(ERROR_WHILE_LOADING);
         }
     }
 
@@ -44,7 +47,24 @@ public class DataHandler {
      * @param md The MeasurementData Object to add
      */
     public static void addData(MeasurementData md) {
-        data.add(md);
+
+         //hier muss aus measurementData eine Ablesung gemacht werden. also alle values raus und statt kundennr das kundenobjekt in ablesungen rein
+
+        int kundenNr = md.customerId;
+
+        Kunde kunde = new Kunde();
+        String kundenUUID = GuiToRestClient.getFromRest("uuid/"+kundenNr);
+        if (kundenUUID.equals("404 - not found")) {
+            GUI.displayMessage(GUI.ERROR_TAG + "Kunde " + md.customerId + " wurde nicht gefunden");
+        } else {
+            kunde = GuiToRestClient.getKundeFromUUID("kunden/" + kundenUUID);
+        }
+        Ablesung newAblesung = new Ablesung(
+                String.valueOf(md.counterId),
+                md.measurementReadingDateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                kunde, md.comment, md.counterChange, md.powerCurrent);
+
+        GuiToRestClient.postAblesung(newAblesung);
     }
 
     /**
@@ -53,13 +73,11 @@ public class DataHandler {
      */
     public static void exportData(ExportType exportType, String fileName) {
         try {
-            if (exportType == ExportType.JSON)
-                DataExporter.exportJSON(data, fileName);
-            else if (exportType == ExportType.CSV)
-                DataExporter.exportCSV(data, fileName);
+            if (exportType == ExportType.JSON) DataExporter.exportJSON(data, fileName);
+            else if (exportType == ExportType.CSV) DataExporter.exportCSV(data, fileName);
         } catch (IOException e) {
             e.printStackTrace();
-            gui.displayMessage(ERROR_WHILE_SAVING);
+            GUI.displayMessage(ERROR_WHILE_SAVING);
         }
     }
 
@@ -71,7 +89,7 @@ public class DataHandler {
             Desktop.getDesktop().open(DataExporter.targetDirectoryFile);
         } catch (IOException e) {
             e.printStackTrace();
-            gui.displayMessage(ERROR_COULD_NOT_OPEN);
+            GUI.displayMessage(ERROR_COULD_NOT_OPEN);
         }
     }
 
