@@ -17,7 +17,7 @@ import java.util.Scanner;
 
 @Path("ablesungenVorZweiJahrenHeute")
 public class AblesungVonVor2JahrenRessource {
-    public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd.MM.yy");
 
     // create an empty Ablesungen list, where we can put our Ablesungen entities to.
     public static ArrayList<Ablesung> ablesungenResult = new ArrayList<>();
@@ -26,7 +26,7 @@ public class AblesungVonVor2JahrenRessource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTwoYearOldAblesung() {
-        final String resourceName = "testdata.csv";     //muss umgenannt werden, soll die Ablesung speicher sein
+        final String resourceName = "testdata.csv";     //dataHandler csv datei
         InputStream inStream = null;
         try {
             inStream = getClass().getClassLoader().getResourceAsStream(resourceName);
@@ -34,20 +34,32 @@ public class AblesungVonVor2JahrenRessource {
             Scanner sc = new Scanner(inStream);     //scannt den speicher
             sc.useDelimiter(";");
 
-            // read through file, line by line, ignore first line (headers)
-            int cnt = 0;
-
+            /*
             LocalDate current_date = LocalDate.now();       //gets current date
             LocalDate two_years_ago = current_date.minusYears(2);            //subtract two years
             int get_year = two_years_ago.getYear();         //variable get_year = two years ago
             LocalDate begin_of_two_year = LocalDate.of(get_year, 1, 1);       //create variable begin_of_2_years
             String SaveAsString = String.valueOf(begin_of_two_year); //convert localDate to string because I cant format localDate with localDate
             LocalDate two_year_fm = LocalDate.parse(SaveAsString, DTF);
+            */
 
-            while (sc.hasNextLine()) {
-                cnt++;
+            LocalDate two_year_fn = LocalDate.of(LocalDate.now().getYear() - 2, 1, 1);
+
+            // read through file, line by line, ignore first line (headers)
+            int cnt = 0;
+
+            if(sc.hasNextLine()){
                 // First time will skip header, all other times it will simply advance to the next line
+                cnt++;
                 sc.nextLine();
+                cnt++;
+            }
+
+            while (sc.hasNextLine()&&cnt<=1000) {
+                if(cnt>2){
+                    sc.nextLine();
+
+                }
 
                 // convert individual column data to the right data types
                 int kundeNummer = sc.nextInt();
@@ -60,7 +72,7 @@ public class AblesungVonVor2JahrenRessource {
                 int zaehlerstand = sc.nextInt();
                 String kommentar = "";
 
-                if(datum.isAfter(two_year_fm)) {        //if date is after 01.01.2019, program continues.
+                if(datum.isAfter(two_year_fn)) {        //if date is after 01.01.2019, program continues.
                     // create an Ablesungen object with the above values
                     Ablesung a = new Ablesung(
 
@@ -79,6 +91,7 @@ public class AblesungVonVor2JahrenRessource {
                 }else{
                     System.out.println("ignored " + cnt);
                 }
+                cnt++;
             }
             System.out.println("after while");      //can be removed after testing
 
