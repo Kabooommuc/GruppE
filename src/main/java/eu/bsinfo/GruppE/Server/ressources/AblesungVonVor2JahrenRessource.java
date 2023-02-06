@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-@Path("ablesungenVorZweiJahrenHeute")
+@Path("ablesungenVorZweiJahren")
 public class AblesungVonVor2JahrenRessource {
     public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd.MM.yy");
 
@@ -34,15 +34,6 @@ public class AblesungVonVor2JahrenRessource {
             Scanner sc = new Scanner(inStream);     //scannt den speicher
             sc.useDelimiter(";");
 
-            /*
-            LocalDate current_date = LocalDate.now();       //gets current date
-            LocalDate two_years_ago = current_date.minusYears(2);            //subtract two years
-            int get_year = two_years_ago.getYear();         //variable get_year = two years ago
-            LocalDate begin_of_two_year = LocalDate.of(get_year, 1, 1);       //create variable begin_of_2_years
-            String SaveAsString = String.valueOf(begin_of_two_year); //convert localDate to string because I cant format localDate with localDate
-            LocalDate two_year_fm = LocalDate.parse(SaveAsString, DTF);
-            */
-
             LocalDate two_year_fn = LocalDate.of(LocalDate.now().getYear() - 2, 1, 1);
 
             // read through file, line by line, ignore first line (headers)
@@ -55,10 +46,9 @@ public class AblesungVonVor2JahrenRessource {
                 cnt++;
             }
 
-            while (sc.hasNextLine()&&cnt<=1000) {
+            while (sc.hasNextLine()&&cnt<=1079) {
                 if(cnt>2){
                     sc.nextLine();
-
                 }
 
                 // convert individual column data to the right data types
@@ -87,9 +77,9 @@ public class AblesungVonVor2JahrenRessource {
 
                     // add the newly created object to the List
                     ablesungenResult.add(a);
-                    System.out.println("added " + cnt);
-                }else{
-                    System.out.println("ignored " + cnt);
+            //        System.out.println("added " + cnt);
+            //    }else{
+            //        System.out.println("ignored " + cnt);
                 }
                 cnt++;
             }
