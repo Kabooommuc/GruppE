@@ -27,6 +27,7 @@ public class KundenRessource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response postKunde(Kunde postKunde) {
+        System.out.println("POST: "+postKunde);
         if(postKunde == null)
             return Response.status(Response.Status.BAD_REQUEST).entity(MSG_IS_NULL).build();
         kunden.add(postKunde);

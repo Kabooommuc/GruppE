@@ -4,6 +4,7 @@ import eu.bsinfo.GruppE.GUI.textfields.DoubleTextField;
 import eu.bsinfo.GruppE.GUI.textfields.IntTextField;
 import eu.bsinfo.GruppE.GUI.textfields.MyDateChooser;
 import eu.bsinfo.GruppE.GUI.textfields.MyTextField;
+import eu.bsinfo.GruppE.Server.models.Kunde;
 import lombok.Getter;
 
 import javax.swing.*;
@@ -16,6 +17,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
+
+import static eu.bsinfo.GruppE.Client.GuiToRestClient.postKunde;
 
 public class GUI extends JFrame {
 
@@ -177,6 +180,7 @@ public class GUI extends JFrame {
 
         createKunde.addActionListener(e -> openCustomerDialogue());
         addButton.addActionListener(e -> addData());
+
         saveButton.addActionListener(e -> save());
         exportButton.addActionListener(e -> export());
         exitButton.addActionListener(e -> exit());
@@ -236,11 +240,9 @@ public class GUI extends JFrame {
     }
     public void addKunde(String vorname, String nachname) {
 
+        Kunde newKunde = new Kunde(nachname, vorname);
+        postKunde(newKunde);
         displayMessage(INFO_TAG + "Kunde erstellt");
-        //TODO
-        //Add Kunde to Backend
-        //Use the returned UUID and map it with an ID
-        //Display ID
     }
 
     public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth, double[] percentages) {
@@ -266,7 +268,7 @@ public class GUI extends JFrame {
             return;
         }
         if (readingDate.getDate() == null) {
-            displayMessage(ERROR_TAG + "Invalide Datum");
+            displayMessage(ERROR_TAG + "Invalides Datum");
             return;
         }
 
@@ -285,6 +287,8 @@ public class GUI extends JFrame {
         System.out.println(md);
 
         clearInputFields();
+
+        // This is handling the MeassurementData to become a Ablesung and be sent to the server
         DataHandler.addData(md);
         addRow(md);
     }
