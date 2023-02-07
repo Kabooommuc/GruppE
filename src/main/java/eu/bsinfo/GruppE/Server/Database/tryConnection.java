@@ -12,11 +12,11 @@ public class tryConnection {
 
             final DatabaseMetaData meta = con.getMetaData();
             System.out.format(
-                    "Driver     : %s %s.%s\n", meta.getDriverName(), meta.
+                    "Driver : %s %s.%s\n", meta.getDriverName(), meta.
                             getDriverMajorVersion(),
                     meta.getDriverMinorVersion()
             );
-            System.out.format("DB       : %s %s.%s (%s)\n", meta.
+            System.out.format("DB     : %s %s.%s (%s)\n", meta.
                             getDatabaseProductName(),
                     meta.getDatabaseMajorVersion(),
                     meta.getDatabaseMinorVersion(),
