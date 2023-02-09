@@ -29,7 +29,9 @@ public class GUI extends JFrame {
     public static final String WARNING_TAG = "[" + WARNING + "]";
     private static final String ERROR = "Fehler";
     public static final String ERROR_TAG = "[" + ERROR + "]";
-    private final JComboBox<Integer> customerIdInput = new JComboBox<>(DataHandler.getKundenIDs().toArray(new Integer[0]));
+
+    //Dropdown Kundenliste
+    private final JComboBox<Kunde> customerIdInput = new JComboBox<>();
 
     private final MyTextField houseNumberInput = new MyTextField();
     private final MyTextField apartmentNumberInput = new MyTextField();
@@ -243,6 +245,8 @@ public class GUI extends JFrame {
         Kunde newKunde = new Kunde(nachname, vorname);
         postKunde(newKunde);
         displayMessage(INFO_TAG + "Kunde erstellt");
+        customerIdInput.addItem(newKunde);
+
     }
 
     public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth, double[] percentages) {

@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Stores and manages the already entered data
@@ -25,7 +26,7 @@ public class DataHandler {
     @Getter
     public static ArrayList<MeasurementData> data = new ArrayList<>();
     @Getter
-    public static ArrayList<Integer> kundenIDs = new ArrayList<>();
+    public static ArrayList<UUID> kundenIDs = new ArrayList<>();
 
     /**
      * Loads data from the cached save file and sets the data ArrayList to the data returned from the import.
