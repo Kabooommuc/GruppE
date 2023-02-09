@@ -1,10 +1,10 @@
 package eu.bsinfo.GruppE.Server.Database;
 
+import org.nocrala.tools.texttablefmt.Table;
+
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
 
 public class Util {
@@ -42,6 +42,30 @@ public class Util {
             } catch (final Exception e) {
                 // ignore ( code == aus skript )
             }
+        }
+    }
+
+    public static void printRs(final ResultSet rs) {
+
+        try {
+            final ResultSetMetaData rsmeta = rs.getMetaData();
+            final int cols = rsmeta.getColumnCount();
+            final Table t = new Table(cols);
+
+            for (int i = 1;  i <= cols; i++) {
+                    final String label = rsmeta.getColumnLabel(i);
+                    t.addCell(label);
+            }
+
+            while (rs.next()) {
+                for (int i = 1; i <= cols; i++) {
+                    final Object obj = rs.getObject(i);
+                    t.addCell(obj == null ? "" : obj.toString());
+                }
+            }
+            System.out.println(t.render());
+        } catch (final SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }
