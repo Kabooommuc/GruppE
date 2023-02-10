@@ -1,5 +1,7 @@
 package eu.bsinfo.GruppE.GUI;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.bsinfo.GruppE.Client.GuiToRestClient;
 import eu.bsinfo.GruppE.Server.models.Ablesung;
 import eu.bsinfo.GruppE.Server.models.Kunde;
@@ -47,24 +49,23 @@ public class DataHandler {
      *
      * @param md The MeasurementData Object to add
      */
-    public static void addData(MeasurementData md) {
+    public static void addData(MeasurementData md) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
 
          //hier muss aus measurementData eine Ablesung gemacht werden. also alle values raus und statt kundennr das kundenobjekt in ablesungen rein
 
-        int kundenNr = md.customerId;
-
-        Kunde kunde = new Kunde();
-        String kundenUUID = GuiToRestClient.getFromRest("uuid/"+kundenNr);
-        if (kundenUUID.equals("404 - not found")) {
+        UUID kundenNr = md.customerId;
+        String kundeJsonString = GuiToRestClient.getFromRest("kunden/"+kundenNr);
+        Kunde kunde = objectMapper.readValue(kundeJsonString, Kunde.class);
+        if (kundeJsonString.equals("404 - not found")) {
             GUI.displayMessage(GUI.ERROR_TAG + "Kunde " + md.customerId + " wurde nicht gefunden");
-        } else {
-            kunde = GuiToRestClient.getKundeFromUUID("kunden/" + kundenUUID);
         }
         Ablesung newAblesung = new Ablesung(
                 String.valueOf(md.counterId),
                 md.measurementReadingDateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                 kunde, md.comment, md.counterChange, md.powerCurrent);
 
+        System.out.println(newAblesung);
         GuiToRestClient.postAblesung(newAblesung);
     }
 

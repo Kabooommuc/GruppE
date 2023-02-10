@@ -1,5 +1,6 @@
 package eu.bsinfo.GruppE.GUI;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.bsinfo.GruppE.GUI.textfields.DoubleTextField;
 import eu.bsinfo.GruppE.GUI.textfields.IntTextField;
 import eu.bsinfo.GruppE.GUI.textfields.MyDateChooser;
@@ -181,7 +182,13 @@ public class GUI extends JFrame {
         base.add(actionButtons, BorderLayout.SOUTH);
 
         createKunde.addActionListener(e -> openCustomerDialogue());
-        addButton.addActionListener(e -> addData());
+        addButton.addActionListener(e -> {
+            try {
+                addData();
+            } catch (JsonProcessingException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         saveButton.addActionListener(e -> save());
         exportButton.addActionListener(e -> export());
@@ -263,7 +270,7 @@ public class GUI extends JFrame {
      * Checks if the data in the inputFields is valid. If valid, the data is added to the DataHandler
      * and the inputFields are cleared. If invalid, an error message is displayed and the data is not added.
      */
-    public void addData() {
+    public void addData() throws JsonProcessingException {
         MeasurementData md;
         String fieldCheckResult = InputChecker.checkInputFields(this);
 
@@ -275,9 +282,10 @@ public class GUI extends JFrame {
             displayMessage(ERROR_TAG + "Invalides Datum");
             return;
         }
+        Kunde kunde = (Kunde) customerIdInput.getSelectedItem();
 
         md = new MeasurementData(
-                (Integer) customerIdInput.getSelectedItem(),
+                kunde.getId(),
                 houseNumberInput.getText(),
                 apartmentNumberInput.getText(),
                 Integer.parseInt(counterIdInput.getText()),

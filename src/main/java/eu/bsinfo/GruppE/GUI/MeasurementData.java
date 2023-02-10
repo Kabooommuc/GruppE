@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * MeasurementData object which holds all information for a measurement
@@ -17,7 +18,7 @@ import java.util.Date;
         "measurementReadingDateTime", "powerCurrent", "householdCurrent", "counterChange", "comment"})
 public class MeasurementData {
     // ID of the Customer - bzw KundenNr die eingegeben wird
-    int customerId;
+    UUID customerId;
     // Number of the house with the measurement
     String houseNumber;
     // null as our measurements will not be done in an apartment
@@ -35,9 +36,6 @@ public class MeasurementData {
     // Comment field
     String comment;
 
-
-
-
     /**
      * Sets an variable value based on the variable order.
      *
@@ -47,7 +45,7 @@ public class MeasurementData {
     public void setValueBasedOnColumn(int index, Object newValue) {
         switch (index) {
             case 0:
-                setCustomerId((Integer) newValue);
+                setCustomerId((UUID) newValue);
             case 1:
                 setHouseNumber((String) newValue);
             case 2, 3:

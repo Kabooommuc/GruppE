@@ -28,6 +28,7 @@ public class AblesungRessource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response postAblesung(Ablesung postAblesung) {
+        System.out.println("POST: " + postAblesung);
         if(postAblesung == null)
             return Response.status(Response.Status.BAD_REQUEST).entity(MSG_ERROR).build();
         if(postAblesung.getKunde() == null)

@@ -28,11 +28,11 @@ public class GuiToRestClient {
         return response.readEntity(String.class);
     }
     public static Kunde getKundeFromUUID(String path) {
-        Invocation.Builder builder = target.path(path).request(MediaType.APPLICATION_JSON);
+        Invocation.Builder builder = target.path(path).request(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
         Response response = builder.get();
 
         System.out.println("Called " + path + ".");
-        if (response.getStatus() == 404) {
+        if (response.getStatus() <= 400) {
             // TODO Fehler abfangen
         }
         return response.readEntity(Kunde.class);
