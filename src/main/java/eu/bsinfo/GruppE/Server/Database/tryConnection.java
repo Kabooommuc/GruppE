@@ -30,6 +30,9 @@ public class tryConnection {
             databaseCRUD.createAblesung(ablesung);
             databaseCRUD.readAblesung(ablesung.getId());
 
+            ablesung.setKommentar("barfoo");
+            databaseCRUD.updateAblesung(ablesung);
+
             databaseCRUD.deleteKunde(kunde.getId());
         } catch (Exception e) {
             System.out.println(e);

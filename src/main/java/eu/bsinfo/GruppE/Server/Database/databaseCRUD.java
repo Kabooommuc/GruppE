@@ -39,7 +39,6 @@ public class databaseCRUD {
         Util.close(rsInsert);
     }
 
-    // TODO: DOES NOT WORK YET COMPLETELY
     public static Kunde readKunde(UUID uuid) throws SQLException {
         System.out.println("readKunde");
         PreparedStatement pst = con.prepareStatement("SELECT * from Kunde WHERE uuid=?;");
@@ -186,8 +185,47 @@ public class databaseCRUD {
         return null;
     }
 
-    public void updateAblesung(Ablesung ablesung) {
+    public static void updateAblesung(Ablesung ablesung) throws SQLException {
+        System.out.println("databaseCRUD.updateAblesung");
+        System.out.println(ablesung);
 
+        UUID uuid = ablesung.getId();
+
+        PreparedStatement pst = con.prepareStatement("SELECT * from Ablesung WHERE uuid=?;");
+        pst.setString(1, String.valueOf(uuid));
+        ResultSet rs = pst.executeQuery();
+
+        // Check if UUID does not exist in database
+        if (!rs.first()) {
+            throw new Error("Ablesung does not exist");
+        }
+        rs.beforeFirst();
+        Util.printRs(rs);
+
+        rs.beforeFirst();
+
+        int boolNum = 0;
+        if (ablesung.isNeuEingebaut())
+            boolNum = 1;
+
+        if (rs.next()) {
+            PreparedStatement update = con.prepareStatement("UPDATE Ablesung SET zaehlerNummer = ?, ableseDatum = ?, kommentar = ?, neuEingebaut = ?, zaehlerstand = ?, kunde = ? WHERE uuid=?;");
+            update.setString(1,ablesung.getZaehlerNummer());
+            update.setString(2,String.valueOf(ablesung.getDatum()));
+            update.setString(3,ablesung.getKommentar());
+            update.setString(4, String.valueOf(boolNum));
+            update.setString(5, String.valueOf(ablesung.getZaehlerstand()));
+            update.setString(6, String.valueOf(ablesung.getKunde().getId()));
+
+            update.setString(7, String.valueOf(uuid));
+            update.executeQuery();
+
+            ResultSet rs2 = pst.executeQuery();
+            Util.printRs(rs2);
+            return;
+        }
+
+        System.err.println("404 - Kunde not found");
     }
 
     public void deleteAblesung(Ablesung ablesung) {
