@@ -25,7 +25,7 @@ public class databaseCRUD {
         Util.printRs(rsUUID);
 
         // Check if UUID already exists in database
-        if (rsUUID.first() == true) {
+        if (rsUUID.first()) {
             throw new Error("Kunde already exists");
         }
         Util.close(checkUUID);
@@ -75,7 +75,7 @@ public class databaseCRUD {
         ResultSet rs = pst.executeQuery();
 
         // Check if UUID does not exist in database
-        if (rs.first() == false) {
+        if (!rs.first()) {
             throw new Error("Kunde does not exist");
         }
         rs.beforeFirst();
@@ -106,7 +106,7 @@ public class databaseCRUD {
         ResultSet rs = pst.executeQuery();
 
         // Check if UUID does not exist in database
-        if (rs.first() == false) {
+        if (!rs.first()) {
             throw new Error("Kunde does not exist");
 
         }
@@ -115,6 +115,9 @@ public class databaseCRUD {
 
         rs.beforeFirst();
         if (rs.next()) {
+            PreparedStatement replaceKundenUUIDinAblesung = con.prepareStatement("UPDATE Ablesung SET kunde = null WHERE kunde=?;");
+            replaceKundenUUIDinAblesung.setString(1, String.valueOf(uuid));
+            replaceKundenUUIDinAblesung.executeQuery();
             PreparedStatement delete = con.prepareStatement("DELETE FROM Kunde WHERE uuid=?;");
             delete.setString(1, String.valueOf(uuid));
             ResultSet deleteRs = delete.executeQuery();
@@ -157,8 +160,30 @@ public class databaseCRUD {
         Util.close(rsInsert);
     }
 
-    public void readAblesung(Ablesung ablesung) {
+    public static Ablesung readAblesung(UUID uuid) throws SQLException {
+        System.out.println("databaseCRUD.readAblesung");
 
+        PreparedStatement pst = con.prepareStatement("SELECT * from Ablesung WHERE uuid=?;");
+        pst.setString(1, String.valueOf(uuid));
+        ResultSet rs = pst.executeQuery();
+
+        // Check if UUID does not exist in database
+        if (!rs.first()) {
+            throw new Error("Ablesung does not exist");
+        }
+        rs.beforeFirst();
+        Util.printRs(rs);
+
+        rs.beforeFirst();
+        if (rs.next()) {
+            Kunde kunde = readKunde(UUID.fromString(rs.getString(7)));
+            Ablesung ablesung = new Ablesung(UUID.fromString(rs.getString(1)),rs.getString(2),rs.getDate(3).toLocalDate(),kunde, rs.getString(4),rs.getBoolean(5), rs.getDouble(6));
+            System.out.println(ablesung);
+            return ablesung;
+        }
+
+        System.err.println("404 - Ablesung not found");
+        return null;
     }
 
     public void updateAblesung(Ablesung ablesung) {

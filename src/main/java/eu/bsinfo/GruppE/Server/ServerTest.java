@@ -258,7 +258,7 @@ class ServerTest {
 
 	@Test
 	void t13_updateExistingAblesung() {
-		final int newZaehlerstand = crudTest.getZaehlerstand().intValue() + 100;
+		final int newZaehlerstand = (int) (crudTest.getZaehlerstand() + 100);
 		crudTest.setZaehlerstand(newZaehlerstand);
 		Response re = target.path(endpointAblesungen).request(MediaType.APPLICATION_JSON).accept(MediaType.TEXT_PLAIN)
 				.put(Entity.entity(crudTest, MediaType.APPLICATION_JSON));
