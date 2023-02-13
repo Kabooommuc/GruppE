@@ -23,6 +23,8 @@ public class tryConnection {
             kunde.setName("schebesta");
             kunde.setVorname("felix");
             databaseCRUD.updateKunde(kunde);
+
+            databaseCRUD.deleteKunde(kunde.getId());
         } catch (Exception e) {
             System.out.println(e);
         }

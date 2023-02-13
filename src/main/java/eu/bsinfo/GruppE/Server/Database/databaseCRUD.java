@@ -97,8 +97,29 @@ public class databaseCRUD {
         System.err.println("404 - Kunde not found");
     }
 
-    public void deleteKunde(Kunde kunde) {
+    public static void deleteKunde(UUID uuid) throws SQLException {
+        System.out.println("databaseCRUD.deleteKunde");
+        System.out.println("uuid = " + uuid);
 
+        PreparedStatement pst = con.prepareStatement("SELECT uuid from Kunde WHERE uuid=?;");
+        pst.setString(1, String.valueOf(uuid));
+        ResultSet rs = pst.executeQuery();
+
+        // Check if UUID does not exist in database
+        if (rs.first() == false) {
+            throw new Error("Kunde does not exist");
+
+        }
+        rs.beforeFirst();
+        Util.printRs(rs);
+
+        rs.beforeFirst();
+        if (rs.next()) {
+            PreparedStatement delete = con.prepareStatement("DELETE FROM Kunde WHERE uuid=?;");
+            delete.setString(1, String.valueOf(uuid));
+            ResultSet deleteRs = delete.executeQuery();
+            Util.printRs(deleteRs);
+        }
     }
 
     public void createAblesung(Ablesung ablesung) {
