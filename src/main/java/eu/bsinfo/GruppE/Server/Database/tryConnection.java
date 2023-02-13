@@ -1,16 +1,19 @@
 package eu.bsinfo.GruppE.Server.Database;
 
+import eu.bsinfo.GruppE.Server.models.Ablesung;
 import eu.bsinfo.GruppE.Server.models.Kunde;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class tryConnection {
     static final UUID id = UUID.fromString("fa241caf-b6d7-46bb-bbd7-43044f9997c2");
     static final Kunde kunde = new Kunde("Testing","Tester");
 
+    static final Ablesung ablesung = new Ablesung("zaehlerNummer", LocalDate.now(), kunde, "foobar", true, 123.12);
     static final Connection con = Util.getConnection("gm3");
 
     public static void main(String[] args) {
@@ -23,6 +26,9 @@ public class tryConnection {
             kunde.setName("schebesta");
             kunde.setVorname("felix");
             databaseCRUD.updateKunde(kunde);
+
+            databaseCRUD.createAblesung(ablesung);
+            databaseCRUD.readAblesung(ablesung.getId());
 
             databaseCRUD.deleteKunde(kunde.getId());
         } catch (Exception e) {

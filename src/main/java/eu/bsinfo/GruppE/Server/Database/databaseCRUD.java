@@ -122,8 +122,39 @@ public class databaseCRUD {
         }
     }
 
-    public void createAblesung(Ablesung ablesung) {
+    public static void createAblesung(Ablesung ablesung) throws SQLException {
+        System.out.println("databaseCRUD.createAblesung");
+        String uuid = String.valueOf(ablesung.getId());
 
+        PreparedStatement checkUUID = con.prepareStatement("SELECT * From Ablesung WHERE uuid=?;");
+        checkUUID.setString(1, uuid);
+        ResultSet rsUUID = checkUUID.executeQuery();
+        Util.printRs(rsUUID);
+
+        // Check if UUID already exists in database
+        if (rsUUID.first())
+            throw new Error("Ablesung already exists");
+
+        Util.close(checkUUID);
+
+        int boolNum = 0;
+        if (ablesung.isNeuEingebaut())
+            boolNum = 1;
+
+        /**
+         * Kunde is saved with its uuid, nothing else
+         */
+        PreparedStatement createAblesung = con.prepareStatement("INSERT INTO Ablesung (uuid, zaehlerNummer, ableseDatum, kommentar, neuEingebaut, zaehlerstand, kunde) VALUES (?,?,?,?,?,?,?);");
+        createAblesung.setString(1,uuid);
+        createAblesung.setString(2,ablesung.getZaehlerNummer());
+        createAblesung.setString(3,String.valueOf(ablesung.getDatum()));
+        createAblesung.setString(4,ablesung.getKommentar());
+        createAblesung.setString(5, String.valueOf(boolNum));
+        createAblesung.setString(6, String.valueOf(ablesung.getZaehlerstand()));
+        createAblesung.setString(7, String.valueOf(ablesung.getKunde().getId()));
+
+        ResultSet rsInsert = createAblesung.executeQuery();
+        Util.close(rsInsert);
     }
 
     public void readAblesung(Ablesung ablesung) {

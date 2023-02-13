@@ -23,13 +23,13 @@ public class Ablesung {
     @JsonProperty
     private boolean neuEingebaut;
     @JsonProperty
-    private Number zaehlerstand;
+    private double zaehlerstand;
 
     public Ablesung() {
         this.id = UUID.randomUUID();
     }
 
-    public Ablesung(String zaehlerNummer, LocalDate datum, Kunde kunde, String kommentar, boolean neuEingebaut, Number zaehlerstand) {
+    public Ablesung(String zaehlerNummer, LocalDate datum, Kunde kunde, String kommentar, boolean neuEingebaut, double zaehlerstand) {
         this.id = UUID.randomUUID();
         this.zaehlerNummer = zaehlerNummer;
         this.datum = datum;
@@ -38,4 +38,14 @@ public class Ablesung {
         this.neuEingebaut = neuEingebaut;
         this.zaehlerstand = zaehlerstand;
     }
+    public Ablesung(UUID uuid, String zaehlerNummer, LocalDate datum, Kunde kunde, String kommentar, boolean neuEingebaut, double zaehlerstand) {
+        this.id = uuid;
+        this.zaehlerNummer = zaehlerNummer;
+        this.datum = datum;
+        this.kunde = kunde;
+        this.kommentar = kommentar;
+        this.neuEingebaut = neuEingebaut;
+        this.zaehlerstand = zaehlerstand;
+    }
+
 }
