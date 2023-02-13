@@ -64,8 +64,37 @@ public class databaseCRUD {
         return null;
     }
 
-    public static void updateKunde(Kunde kunde) {
+    public static void updateKunde(Kunde kunde) throws SQLException {
+        System.out.println("databaseCRUD.updateKunde");
+        System.out.println(kunde);
 
+        UUID uuid = kunde.getId();
+
+        PreparedStatement pst = con.prepareStatement("SELECT * from Kunde WHERE uuid=?;");
+        pst.setString(1, String.valueOf(uuid));
+        ResultSet rs = pst.executeQuery();
+
+        // Check if UUID does not exist in database
+        if (rs.first() == false) {
+            throw new Error("Kunde does not exist");
+        }
+        rs.beforeFirst();
+        Util.printRs(rs);
+
+        rs.beforeFirst();
+        if (rs.next()) {
+            PreparedStatement update = con.prepareStatement("UPDATE Kunde SET name = ?, vorname = ? WHERE uuid=?;");
+            update.setString(1,kunde.getName());
+            update.setString(2,kunde.getVorname());
+            update.setString(3, String.valueOf(uuid));
+            ResultSet updateRs = update.executeQuery();
+
+            ResultSet rs2 = pst.executeQuery();
+            Util.printRs(rs2);
+            return;
+        }
+
+        System.err.println("404 - Kunde not found");
     }
 
     public void deleteKunde(Kunde kunde) {

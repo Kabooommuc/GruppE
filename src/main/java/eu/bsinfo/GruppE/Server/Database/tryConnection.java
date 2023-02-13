@@ -19,6 +19,10 @@ public class tryConnection {
             databaseCRUD.createKunde(kunde);
             Kunde ausgelesenerKunde = databaseCRUD.readKunde(kunde.getId());
             System.out.println(ausgelesenerKunde);
+
+            kunde.setName("schebesta");
+            kunde.setVorname("felix");
+            databaseCRUD.updateKunde(kunde);
         } catch (Exception e) {
             System.out.println(e);
         }
