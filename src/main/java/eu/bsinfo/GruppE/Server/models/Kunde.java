@@ -27,6 +27,12 @@ public class Kunde {
         this.vorname = vorname;
     }
 
+    public Kunde(UUID uuid, String name, String vorname) {
+        this.id = uuid;
+        this.name = name;
+        this.vorname = vorname;
+    }
+
     public static Kunde getKundeFromKunden(UUID id) {
         for(Kunde kunde : KundenRessource.kunden) {
             if(!kunde.getId().equals(id))
