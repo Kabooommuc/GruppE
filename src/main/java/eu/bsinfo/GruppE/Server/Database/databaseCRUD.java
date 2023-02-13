@@ -98,7 +98,6 @@ public class databaseCRUD {
 
     public static void deleteKunde(UUID uuid) throws SQLException {
         System.out.println("databaseCRUD.deleteKunde");
-        System.out.println("uuid = " + uuid);
 
         PreparedStatement pst = con.prepareStatement("SELECT uuid from Kunde WHERE uuid=?;");
         pst.setString(1, String.valueOf(uuid));
@@ -121,6 +120,8 @@ public class databaseCRUD {
             delete.setString(1, String.valueOf(uuid));
             ResultSet deleteRs = delete.executeQuery();
             Util.printRs(deleteRs);
+            System.out.println("deleted Kunde " + uuid);
+
         }
     }
 
@@ -228,8 +229,29 @@ public class databaseCRUD {
         System.err.println("404 - Kunde not found");
     }
 
-    public void deleteAblesung(Ablesung ablesung) {
+    public static void deleteAblesung(UUID uuid) throws SQLException {
+        System.out.println("databaseCRUD.deleteAblesung");
 
+        PreparedStatement pst = con.prepareStatement("SELECT uuid from Ablesung WHERE uuid=?;");
+        pst.setString(1, String.valueOf(uuid));
+        ResultSet rs = pst.executeQuery();
+
+        // Check if UUID does not exist in database
+        if (!rs.first()) {
+            throw new Error("Ablesung does not exist");
+
+        }
+        rs.beforeFirst();
+        Util.printRs(rs);
+
+        rs.beforeFirst();
+        if (rs.next()) {
+            PreparedStatement delete = con.prepareStatement("DELETE FROM Ablesung WHERE uuid=?;");
+            delete.setString(1, String.valueOf(uuid));
+            ResultSet deleteRs = delete.executeQuery();
+            Util.printRs(deleteRs);
+            System.out.println("deleted Ablesung " + uuid);
+        }
     }
 
 
