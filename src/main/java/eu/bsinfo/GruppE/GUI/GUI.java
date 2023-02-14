@@ -32,7 +32,7 @@ public class GUI extends JFrame {
     public static final String ERROR_TAG = "[" + ERROR + "]";
 
     //Dropdown Kundenliste
-    private final JComboBox<Kunde> customerIdInput = new JComboBox<>();
+    public static final JComboBox<Kunde> customerIdInput = new JComboBox<>();
 
     private final MyTextField houseNumberInput = new MyTextField();
     private final MyTextField apartmentNumberInput = new MyTextField();

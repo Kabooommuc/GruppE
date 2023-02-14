@@ -216,7 +216,7 @@ public class databaseCRUD {
             update.setString(3,ablesung.getKommentar());
             update.setString(4, String.valueOf(boolNum));
             update.setString(5, String.valueOf(ablesung.getZaehlerstand()));
-            update.setString(6, String.valueOf(ablesung.getKunde().getId()));
+            update.setString(6, String.valueOf(ablesung.getKunde()));
 
             update.setString(7, String.valueOf(uuid));
             update.executeQuery();

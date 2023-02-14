@@ -1,6 +1,7 @@
 package eu.bsinfo.GruppE.GUI;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.bsinfo.GruppE.Client.GuiToRestClient;
 import eu.bsinfo.GruppE.Server.models.Ablesung;
@@ -33,14 +34,18 @@ public class DataHandler {
     /**
      * Loads data from the cached save file and sets the data ArrayList to the data returned from the import.
      */
-    public static void loadData() {
-        try {
-            File jsonFile = new File(DataExporter.targetDirectoryFile + "/" + SAVE_FILENAME + ".json");
-            if (!jsonFile.exists()) return;
-            data = DataExporter.importJson(SAVE_FILENAME);
-        } catch (IOException e) {
-            e.printStackTrace();
-            GUI.displayMessage(ERROR_WHILE_LOADING);
+    public static void loadData() throws JsonProcessingException {
+        // get all Kunden
+        String allKundenString = GuiToRestClient.getFromRest("kunden");
+        System.out.println(allKundenString);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<Kunde> foo = objectMapper.readValue(allKundenString, new TypeReference<ArrayList<Kunde>>() {
+        });
+        for (Kunde k: foo) {
+            System.out.println(k);
+            kundenIDs.add(k.getId());
+            GUI.customerIdInput.addItem(k);
         }
     }
 
