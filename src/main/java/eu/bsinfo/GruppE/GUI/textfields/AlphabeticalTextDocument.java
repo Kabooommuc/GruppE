@@ -8,7 +8,7 @@ public class AlphabeticalTextDocument extends PlainDocument {
 
     public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
 
-        str = str.replaceAll("[^a-zA-Z\\s-]", "");
+        str = str.replaceAll("[^a-zA-Z\\s-üÜäÄöÖ]", "");
 
         super.insertString(offs, str, a);
     }
