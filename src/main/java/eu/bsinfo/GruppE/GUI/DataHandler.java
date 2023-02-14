@@ -39,13 +39,15 @@ public class DataHandler {
         System.out.println(allKundenString);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        ArrayList<Kunde> foo = objectMapper.readValue(allKundenString, new TypeReference<>() {
+        ArrayList<Kunde> kundenList = objectMapper.readValue(allKundenString, new TypeReference<>() {
         });
-        for (Kunde k: foo) {
+        for (Kunde k: kundenList) {
             System.out.println(k);
             kundenIDs.add(k.getId());
             GUI.customerIdInput.addItem(k.getId());
         }
+
+        // add ablesungen to table
     }
 
     /**

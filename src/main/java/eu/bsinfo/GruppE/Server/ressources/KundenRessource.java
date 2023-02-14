@@ -1,5 +1,7 @@
 package eu.bsinfo.GruppE.Server.ressources;
 
+import eu.bsinfo.GruppE.Server.Database.Util;
+import eu.bsinfo.GruppE.Server.Database.databaseCRUD;
 import eu.bsinfo.GruppE.Server.Server;
 import eu.bsinfo.GruppE.Server.models.Ablesung;
 import eu.bsinfo.GruppE.Server.models.Kunde;
@@ -7,6 +9,10 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -30,17 +36,23 @@ public class KundenRessource {
         System.out.println("POST: "+postKunde);
         if(postKunde == null)
             return Response.status(Response.Status.BAD_REQUEST).entity(MSG_IS_NULL).build();
-        kunden.add(postKunde);
+
+        try {
+            databaseCRUD.createKunde(postKunde);
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
         return Response.status(Response.Status.CREATED).entity(postKunde).build();
     }
 
     /**
-     * Gibt alle vorhandenen Kunden als JSON aus
+     * Gibt alle vorhandenen Kunden als ArrayList aus
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllKunden() {
-        return Response.status(Response.Status.OK).entity(kunden).build();
+    public Response getAllKunden() throws SQLException {
+        ArrayList<Kunde> kundenList = databaseCRUD.readAllKunden();
+        return Response.status(Response.Status.OK).entity(kundenList).build();
     }
 
     /**
@@ -72,15 +84,30 @@ public class KundenRessource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response putKunde(Kunde putKunde) {
-        for(Kunde kunde : kunden) {
-            if(!kunde.getId().equals(putKunde.getId()))
-                continue;
+        try {
 
-            kunden.set(kunden.indexOf(kunde), putKunde);
-            return Response.status(Response.Status.OK).entity(putKunde.getId() + MSG_UPDATED).build();
+            Connection con = Util.getConnection("gm3");
+            PreparedStatement checkUUID = con.prepareStatement("SELECT uuid From Kunde WHERE uuid=?;");
+            checkUUID.setString(1, String.valueOf(putKunde.getId()));
+            ResultSet rsUUID = checkUUID.executeQuery();
+            Util.printRs(rsUUID);
+
+            // Check if UUID already exists in database
+            if (rsUUID.first()) {
+                throw new Error("Kunde already exists");
+            }
+        } catch (SQLException e) {
+            System.err.println(e);
+            return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
         }
 
-        return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
+        try {
+            databaseCRUD.updateKunde(putKunde);
+            return Response.status(Response.Status.OK).entity(putKunde.getId() + MSG_UPDATED).build();
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
+        return null;
     }
 
     /**

@@ -4,6 +4,7 @@ import eu.bsinfo.GruppE.Server.models.Ablesung;
 import eu.bsinfo.GruppE.Server.models.Kunde;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class databaseCRUD {
@@ -13,6 +14,23 @@ public class databaseCRUD {
     final static int KUNDENAME = 2;
     final static int KUNDEVORNAME = 3;
 
+    public static ArrayList<Kunde> readAllKunden() throws SQLException {
+        ArrayList<Kunde> allKunden = new ArrayList<>();
+        System.out.println("readKunde");
+        PreparedStatement pst = con.prepareStatement("SELECT * from Kunde");
+
+        ResultSet rs = pst.executeQuery();
+        rs.beforeFirst();
+        Util.printRs(rs);
+
+        rs.beforeFirst();
+        while (rs.next()) {
+            Kunde kunde = new Kunde(UUID.fromString(rs.getString(KUNDEUUID)),rs.getString(KUNDENAME),rs.getString(KUNDEVORNAME));
+            System.out.println(kunde);
+            allKunden.add(kunde);
+        }
+        return allKunden;
+    }
     public static void createKunde(Kunde kunde) throws SQLException {
         System.out.println("createKunde");
         String uuid = String.valueOf(kunde.getId());
@@ -63,6 +81,13 @@ public class databaseCRUD {
         return null;
     }
 
+    /**
+     * @param kunde
+     * @throws SQLException
+     *
+     * Funktionalitaet fuer Lehrer notwendig, jedoch nicht als Feature in der GUI implementiert
+     * und daher nicht verwendet.
+     */
     public static void updateKunde(Kunde kunde) throws SQLException {
         System.out.println("databaseCRUD.updateKunde");
         System.out.println(kunde);
@@ -96,6 +121,13 @@ public class databaseCRUD {
         System.err.println("404 - Kunde not found");
     }
 
+    /**
+     * @param uuid
+     * @throws SQLException
+     *
+     * Funktionalitaet fuer Lehrer notwendig, jedoch nicht als Feature in der GUI implementiert
+     * und daher nicht verwendet.
+     */
     public static void deleteKunde(UUID uuid) throws SQLException {
         System.out.println("databaseCRUD.deleteKunde");
 

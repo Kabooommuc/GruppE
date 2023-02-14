@@ -61,24 +61,9 @@ public class Server {
             ObjectMapper objMapper = new ObjectMapper()
                     .registerModule(new JavaTimeModule());
             File jsonFileAblesungen = new File(targetDirectoryFile + "/" + serverAblesungenFileName + ".json");
-            File jsonFileKunden = new File(targetDirectoryFile + "/" + serverKundenFileName + ".json");
-            File jsonFileUUID = new File(targetDirectoryFile + "/" + serverUUIDFileName + ".json");
-            File jsonFileid = new File(targetDirectoryFile + "/" + serveridFileName + ".json");
             if(jsonFileAblesungen.exists()) {
                 Ablesung[] importedArrayData = objMapper.readValue(jsonFileAblesungen, Ablesung[].class);
                 AblesungRessource.ablesungen = new ArrayList<>(Arrays.asList(importedArrayData));
-            }
-            if(jsonFileKunden.exists()) {
-                Kunde[] importedArrayData = objMapper.readValue(jsonFileKunden, Kunde[].class);
-                KundenRessource.kunden = new ArrayList<>(Arrays.asList(importedArrayData));
-            }
-            if(jsonFileUUID.exists()) {
-                TypeReference<HashMap<Integer, UUID>> typeReference = new TypeReference<>() {};
-                UUIDRessource.idUUIDpairs = objMapper.readValue(jsonFileUUID, typeReference);
-            }
-            if(jsonFileid.exists()) {
-                TypeReference<HashMap<UUID, Integer>> typeReference = new TypeReference<>() {};
-                UUIDRessource.UUIDidpairs = objMapper.readValue(jsonFileid, typeReference);
             }
         }
 
