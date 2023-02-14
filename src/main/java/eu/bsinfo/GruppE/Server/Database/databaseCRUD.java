@@ -192,6 +192,30 @@ public class databaseCRUD {
         Util.close(rsInsert);
     }
 
+    public static ArrayList<Ablesung> readAllAblesungen() throws SQLException {
+        System.out.println("databaseCRUD.readAllAblesungen");
+
+        PreparedStatement pst = con.prepareStatement("SELECT * from Ablesung;");
+        ResultSet rs = pst.executeQuery();
+
+        // Check if UUID does not exist in database
+        if (!rs.first()) {
+            throw new Error("Ablesung does not exist");
+        }
+        rs.beforeFirst();
+        Util.printRs(rs);
+
+        rs.beforeFirst();
+        ArrayList<Ablesung> allAblesungen = new ArrayList<>();
+        while (rs.next()) {
+            Kunde kunde = readKunde(UUID.fromString(rs.getString(7)));
+            Ablesung ablesung = new Ablesung(UUID.fromString(rs.getString(1)), rs.getString(2), rs.getDate(3).toLocalDate(), kunde, rs.getString(4), rs.getBoolean(5), rs.getDouble(6));
+            System.out.println(ablesung);
+            allAblesungen.add(ablesung);
+        }
+
+        return allAblesungen;
+    }
     public static Ablesung readAblesung(UUID uuid) throws SQLException {
         System.out.println("databaseCRUD.readAblesung");
 

@@ -1,12 +1,16 @@
 package eu.bsinfo.GruppE.Server.ressources;
 
+import eu.bsinfo.GruppE.Server.Database.databaseCRUD;
 import eu.bsinfo.GruppE.Server.Server;
 import eu.bsinfo.GruppE.Server.models.Ablesung;
 import eu.bsinfo.GruppE.Server.models.Kunde;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jdk.jshell.spi.ExecutionControl;
+import org.w3c.dom.CDATASection;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -31,16 +35,12 @@ public class AblesungRessource {
         System.out.println("POST: " + postAblesung);
         if(postAblesung == null)
             return Response.status(Response.Status.BAD_REQUEST).entity(MSG_ERROR).build();
-        if(postAblesung.getKunde() == null)
-            return Response.status(Response.Status.NOT_FOUND).entity(KundenRessource.MSG_NOT_FOUND).build();
 
-        Kunde kundeWithData = Kunde.getKundeFromKunden(postAblesung.getKunde().getId());
-
-        if (kundeWithData == null)
-            return Response.status(Response.Status.NOT_FOUND).entity(KundenRessource.MSG_NOT_FOUND).build();
-
-        postAblesung.setKunde(kundeWithData);
-        ablesungen.add(postAblesung);
+        try {
+            databaseCRUD.createAblesung(postAblesung);
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
         return Response.status(Response.Status.CREATED).entity(postAblesung).build();
 
     }
@@ -51,8 +51,10 @@ public class AblesungRessource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllAblesungen() {
-        return Response.status(Response.Status.OK).entity(ablesungen).build();
+    public Response getAllAblesungen() throws SQLException {
+        ArrayList<Ablesung> allAblesungen = databaseCRUD.readAllAblesungen();
+
+        return Response.status(Response.Status.OK).entity(allAblesungen).build();
     }
 
     /**
