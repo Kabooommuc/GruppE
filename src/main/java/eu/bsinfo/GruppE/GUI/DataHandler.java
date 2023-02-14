@@ -9,7 +9,6 @@ import eu.bsinfo.GruppE.Server.models.Kunde;
 import lombok.Getter;
 
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -40,12 +39,12 @@ public class DataHandler {
         System.out.println(allKundenString);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        ArrayList<Kunde> foo = objectMapper.readValue(allKundenString, new TypeReference<ArrayList<Kunde>>() {
+        ArrayList<Kunde> foo = objectMapper.readValue(allKundenString, new TypeReference<>() {
         });
         for (Kunde k: foo) {
             System.out.println(k);
             kundenIDs.add(k.getId());
-            GUI.customerIdInput.addItem(k);
+            GUI.customerIdInput.addItem(k.getId());
         }
     }
 
