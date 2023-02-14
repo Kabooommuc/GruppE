@@ -1,10 +1,7 @@
 package eu.bsinfo.GruppE.GUI;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.bsinfo.GruppE.GUI.textfields.DoubleTextField;
-import eu.bsinfo.GruppE.GUI.textfields.IntTextField;
-import eu.bsinfo.GruppE.GUI.textfields.MyDateChooser;
-import eu.bsinfo.GruppE.GUI.textfields.MyTextField;
+import eu.bsinfo.GruppE.GUI.textfields.*;
 import eu.bsinfo.GruppE.Server.models.Kunde;
 import lombok.Getter;
 
@@ -18,6 +15,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
+import java.util.UUID;
 
 import static eu.bsinfo.GruppE.Client.GuiToRestClient.postKunde;
 
@@ -32,7 +30,7 @@ public class GUI extends JFrame {
     public static final String ERROR_TAG = "[" + ERROR + "]";
 
     //Dropdown Kundenliste
-    public static final JComboBox<Kunde> customerIdInput = new JComboBox<>();
+    public static final JComboBox<UUID> customerIdInput = new JComboBox<>();
 
     private final MyTextField houseNumberInput = new MyTextField();
     private final MyTextField apartmentNumberInput = new MyTextField();
@@ -206,8 +204,8 @@ public class GUI extends JFrame {
 
         JLabel firstName = new JLabel("Vorname: ");
         JLabel lastName = new JLabel("Nachname: ");
-        MyTextField firstNameInput= new MyTextField();
-        MyTextField lastNameInput= new MyTextField();
+        AlphabeticalTextField firstNameInput= new AlphabeticalTextField();
+        AlphabeticalTextField lastNameInput= new AlphabeticalTextField();
         JButton createCustomer = new JButton("Kunde Erstellen");
         JButton cancel = new JButton("Abbrechen");
 
@@ -252,7 +250,10 @@ public class GUI extends JFrame {
         Kunde newKunde = new Kunde(nachname, vorname);
         postKunde(newKunde);
         displayMessage(INFO_TAG + "Kunde erstellt");
-        customerIdInput.addItem(newKunde);
+
+        UUID newUUID = newKunde.getId();
+        DataHandler.getKundenIDs().add(newUUID);
+        customerIdInput.addItem(newUUID);
 
     }
 
