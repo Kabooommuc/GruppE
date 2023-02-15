@@ -16,7 +16,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.ZoneId;
 import java.util.Arrays;
-import java.util.UUID;
 
 import static eu.bsinfo.GruppE.Client.GuiToRestClient.getKundeFromUUID;
 import static eu.bsinfo.GruppE.Client.GuiToRestClient.postKunde;
@@ -32,7 +31,7 @@ public class GUI extends JFrame {
     public static final String ERROR_TAG = "[" + ERROR + "]";
 
     //Dropdown Kundenliste
-    public static final JComboBox<UUID> customerIdInput = new JComboBox<>();
+    public static final JComboBox<String> customerIdInput = new JComboBox<>();
 
     private final MyTextField houseNumberInput = new MyTextField();
     private final MyTextField apartmentNumberInput = new MyTextField();
@@ -253,9 +252,9 @@ public class GUI extends JFrame {
         postKunde(newKunde);
         displayMessage(INFO_TAG + "Kunde erstellt");
 
-        UUID newUUID = newKunde.getId();
-        DataHandler.getKundenIDs().add(newUUID);
-        customerIdInput.addItem(newUUID);
+        String newID = newKunde.getId();
+        DataHandler.getKundenIDs().add(newID);
+        customerIdInput.addItem(newID);
 
     }
 

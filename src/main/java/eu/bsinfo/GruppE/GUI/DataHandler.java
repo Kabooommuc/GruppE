@@ -12,7 +12,6 @@ import lombok.Getter;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * Stores and manages the already entered data
@@ -28,7 +27,7 @@ public class DataHandler {
     @Getter
     public static ArrayList<MeasurementData> data = new ArrayList<>();
     @Getter
-    public static ArrayList<UUID> kundenIDs = new ArrayList<>();
+    public static ArrayList<String> kundenIDs = new ArrayList<>();
 
     /**
      * Loads data from the cached save file and sets the data ArrayList to the data returned from the import.
@@ -82,7 +81,7 @@ public class DataHandler {
 
          //hier muss aus measurementData eine Ablesung gemacht werden. also alle values raus und statt kundennr das kundenobjekt in ablesungen rein
 
-        UUID kundenNr = md.customerId;
+        String kundenNr = md.customerId;
         String kundeJsonString = GuiToRestClient.getFromRest("kunden/"+kundenNr);
         Kunde kunde = objectMapper.readValue(kundeJsonString, Kunde.class);
         if (kundeJsonString.equals("404 - not found")) {

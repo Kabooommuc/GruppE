@@ -3,7 +3,10 @@ package eu.bsinfo.GruppE.Server.Database;
 import eu.bsinfo.GruppE.Server.models.Ablesung;
 import eu.bsinfo.GruppE.Server.models.Kunde;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -24,7 +27,7 @@ public class databaseCRUD {
 
         rs.beforeFirst();
         while (rs.next()) {
-            Kunde kunde = new Kunde(UUID.fromString(rs.getString(KUNDEUUID)),rs.getString(KUNDENAME),rs.getString(KUNDEVORNAME));
+            Kunde kunde = new Kunde(rs.getString(KUNDEUUID),rs.getString(KUNDENAME),rs.getString(KUNDEVORNAME));
             System.out.println(kunde);
             allKunden.add(kunde);
         }
@@ -57,14 +60,14 @@ public class databaseCRUD {
         Util.close(rsInsert);
     }
 
-    public static Kunde readKunde(UUID uuid) throws SQLException {
+    public static Kunde readKunde(String id) throws SQLException {
         System.out.println("readKunde");
         PreparedStatement pst = con.prepareStatement("SELECT * from Kunde WHERE uuid=?;");
-        pst.setString(1, String.valueOf(uuid));
+        pst.setString(1, id);
         ResultSet rs = pst.executeQuery();
 
         // Check if UUID does not exist in database
-        if (rs.first() == false) {
+        if (!rs.first()) {
             throw new Error("Kunde does not exist");
         }
         rs.beforeFirst();
@@ -72,7 +75,7 @@ public class databaseCRUD {
 
         rs.beforeFirst();
         if (rs.next()) {
-            Kunde kunde = new Kunde(UUID.fromString(rs.getString(KUNDEUUID)),rs.getString(KUNDENAME),rs.getString(KUNDEVORNAME));
+            Kunde kunde = new Kunde(rs.getString(KUNDEUUID),rs.getString(KUNDENAME),rs.getString(KUNDEVORNAME));
             System.out.println(kunde);
             return kunde;
         }
@@ -92,10 +95,10 @@ public class databaseCRUD {
         System.out.println("databaseCRUD.updateKunde");
         System.out.println(kunde);
 
-        UUID uuid = kunde.getId();
+        String id = kunde.getId();
 
         PreparedStatement pst = con.prepareStatement("SELECT * from Kunde WHERE uuid=?;");
-        pst.setString(1, String.valueOf(uuid));
+        pst.setString(1, String.valueOf(id));
         ResultSet rs = pst.executeQuery();
 
         // Check if UUID does not exist in database
@@ -110,7 +113,7 @@ public class databaseCRUD {
             PreparedStatement update = con.prepareStatement("UPDATE Kunde SET name = ?, vorname = ? WHERE uuid=?;");
             update.setString(1,kunde.getName());
             update.setString(2,kunde.getVorname());
-            update.setString(3, String.valueOf(uuid));
+            update.setString(3, String.valueOf(id));
             ResultSet updateRs = update.executeQuery();
 
             ResultSet rs2 = pst.executeQuery();
@@ -122,17 +125,17 @@ public class databaseCRUD {
     }
 
     /**
-     * @param uuid
+     * @param id
      * @throws SQLException
      *
      * Funktionalitaet fuer Lehrer notwendig, jedoch nicht als Feature in der GUI implementiert
      * und daher nicht verwendet.
      */
-    public static void deleteKunde(UUID uuid) throws SQLException {
+    public static void deleteKunde(String id) throws SQLException {
         System.out.println("databaseCRUD.deleteKunde");
 
         PreparedStatement pst = con.prepareStatement("SELECT uuid from Kunde WHERE uuid=?;");
-        pst.setString(1, String.valueOf(uuid));
+        pst.setString(1, id);
         ResultSet rs = pst.executeQuery();
 
         // Check if UUID does not exist in database
@@ -146,13 +149,13 @@ public class databaseCRUD {
         rs.beforeFirst();
         if (rs.next()) {
             PreparedStatement replaceKundenUUIDinAblesung = con.prepareStatement("UPDATE Ablesung SET kunde = null WHERE kunde=?;");
-            replaceKundenUUIDinAblesung.setString(1, String.valueOf(uuid));
+            replaceKundenUUIDinAblesung.setString(1, id);
             replaceKundenUUIDinAblesung.executeQuery();
             PreparedStatement delete = con.prepareStatement("DELETE FROM Kunde WHERE uuid=?;");
-            delete.setString(1, String.valueOf(uuid));
+            delete.setString(1, id);
             ResultSet deleteRs = delete.executeQuery();
             Util.printRs(deleteRs);
-            System.out.println("deleted Kunde " + uuid);
+            System.out.println("deleted Kunde " + id);
 
         }
     }
@@ -227,7 +230,7 @@ public class databaseCRUD {
 
         rs.beforeFirst();
         if (rs.next()) {
-            Kunde kunde = readKunde(UUID.fromString(rs.getString(7)));
+            Kunde kunde = readKunde(rs.getString(7));
             Ablesung ablesung = new Ablesung(UUID.fromString(rs.getString(1)),rs.getString(2),rs.getDate(3).toLocalDate(),kunde, rs.getString(4),rs.getBoolean(5), rs.getDouble(6));
             System.out.println(ablesung);
             return ablesung;
