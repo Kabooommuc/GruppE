@@ -205,7 +205,8 @@ public class databaseCRUD {
         rs.beforeFirst();
         ArrayList<Ablesung> allAblesungen = new ArrayList<>();
         while (rs.next()) {
-            Kunde kunde = readKunde(UUID.fromString(rs.getString(7)));
+            System.out.println(rs.getRow());
+            Kunde kunde = readKunde(String.valueOf(rs.getString(7)));
             Ablesung ablesung = new Ablesung(UUID.fromString(rs.getString(1)), rs.getString(2), rs.getDate(3).toLocalDate(), kunde, rs.getString(4), rs.getBoolean(5), rs.getDouble(6));
             System.out.println(ablesung);
             allAblesungen.add(ablesung);

@@ -33,25 +33,27 @@ public class DataHandler {
      * Loads data from the cached save file and sets the data ArrayList to the data returned from the import.
      */
     public static void loadData() throws JsonProcessingException {
-        String allAblesungenString = GuiToRestClient.getFromRest("ablesungen");
-        System.out.println("loadData: Ablesungen: " +allAblesungenString);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
 
         String allKundenString = GuiToRestClient.getFromRest("kunden");
         System.out.println("loadData: Kunden: "+allKundenString);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
         ArrayList<Kunde> kundenList = objectMapper.readValue(allKundenString, new TypeReference<>() {});
-        ArrayList<Ablesung> ablesungenList = objectMapper.readValue(allAblesungenString, new TypeReference<>() {});
         ArrayList<MeasurementData> measurementDataList = new ArrayList<>();
         for (Kunde k: kundenList) {
             System.out.println(k);
             kundenIDs.add(k.getId());
             GUI.customerIdInput.addItem(k.getId());
         }
+
+        String allAblesungenString = GuiToRestClient.getFromRest("ablesungen");
+        System.out.println("allAblesungenString: " +allAblesungenString);
+        ArrayList<Ablesung> ablesungenList = objectMapper.readValue(allAblesungenString, new TypeReference<>() {});
+        System.out.println("loadData: Ablesungen: " +allAblesungenString);
         for (Ablesung ablesung : ablesungenList) {
             MeasurementData md = new MeasurementData();
-            md.setCustomerId(ablesung.getId());
+            md.setCustomerId(ablesung.getKunde().getId());
             md.setHouseNumber("none");
             md.setApartmentNumber("none");
             md.setCounterId(Integer.parseInt(ablesung.getZaehlerNummer()));

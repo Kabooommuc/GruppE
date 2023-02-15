@@ -67,11 +67,10 @@ public class KundenRessource {
     public Response getKundeById(@PathParam("id") String id) throws SQLException {
         System.out.println("KundenRessource.getKundeById");
 
-        UUID kundenId = Server.convertStringToUUID(id);
-        if(kundenId == null)
+        if(id == null)
             return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
 
-        Kunde kunde = databaseCRUD.readKunde(kundenId);
+        Kunde kunde = databaseCRUD.readKunde(id);
         return Response.status(Response.Status.OK).entity(kunde).build();
     }
 
