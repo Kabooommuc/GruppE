@@ -15,9 +15,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
+
+import static eu.bsinfo.GruppE.Server.Database.setupDatabase.createDB;
 
 public class Server {
 
@@ -61,12 +64,12 @@ public class Server {
 
         server = JdkHttpServerFactory.createHttpServer(URI.create(url), rc);
 
-        //try {
-        //    createDB();
-        //    System.out.println("Database created....");
-        //} catch (SQLException e) {
-        //    throw new RuntimeException(e);
-        //}
+        try {
+            createDB();
+            System.out.println("Database created....");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("Ready for Requests....");
     }
 
@@ -107,5 +110,4 @@ public class Server {
 
         return objUUID;
     }
-
 }
