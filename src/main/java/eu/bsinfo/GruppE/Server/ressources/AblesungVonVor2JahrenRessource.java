@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+@Deprecated
 @Path("ablesungenVorZweiJahren")
 public class AblesungVonVor2JahrenRessource {
     public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd.MM.yy");
