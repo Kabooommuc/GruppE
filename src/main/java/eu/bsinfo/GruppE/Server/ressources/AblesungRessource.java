@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -22,15 +23,16 @@ public class AblesungRessource {
 
     /**
      * Prueft, ob KundenUUID aus der Ablesung existiert, wenn ja, speichert in ArrayList
+     *
      * @param postAblesung
      * @return
      */
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response postAblesung(Ablesung postAblesung) {
         System.out.println("POST: " + postAblesung);
-        if(postAblesung == null)
+        if (postAblesung == null)
             return Response.status(Response.Status.BAD_REQUEST).entity(MSG_ERROR).build();
 
         try {
@@ -44,6 +46,7 @@ public class AblesungRessource {
 
     /**
      * Gibt alle vorhandenen Ablesungen aus
+     *
      * @return
      */
     @GET
@@ -56,6 +59,7 @@ public class AblesungRessource {
 
     /**
      * Gibt Ablesung fuer AbluesungUUID aus
+     *
      * @param id
      * @return
      */
@@ -67,8 +71,8 @@ public class AblesungRessource {
         if (ablesungId == null)
             return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
 
-        for(Ablesung ablesung : ablesungen) {
-            if(!ablesung.getId().equals(ablesungId))
+        for (Ablesung ablesung : ablesungen) {
+            if (!ablesung.getId().equals(ablesungId))
                 continue;
             return Response.status(Response.Status.OK).entity(ablesung).build();
         }
@@ -78,15 +82,15 @@ public class AblesungRessource {
     /**
      * Veraendert Ablesung anhand von uebergebenen Daten
      *
-     * @param putAblesung Ablesung mit veränderten Daten
-     * @return Gibt 200 - OK und UUID zurück
+     * @param putAblesung
+     * @return
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response putAblesung(Ablesung putAblesung) {
-        for(Ablesung ablesung : ablesungen) {
-            if(!ablesung.getId().equals(putAblesung.getId()))
+        for (Ablesung ablesung : ablesungen) {
+            if (!ablesung.getId().equals(putAblesung.getId()))
                 continue;
 
             ablesungen.set(ablesungen.indexOf(ablesung), putAblesung);
@@ -98,18 +102,19 @@ public class AblesungRessource {
 
     /**
      * Loescht Ablesung aus ArrayList anhand von AblesungUUID
-     * @param id UUID des Kunden
+     * @param id
+     * @return
      */
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteAblesung(@PathParam("id") String id) {
         UUID ablesungId = Server.convertStringToUUID(id);
-        if(ablesungId == null)
+        if (ablesungId == null)
             return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
 
-        for(Ablesung ablesung : ablesungen) {
-            if(!ablesung.getId().equals(ablesungId))
+        for (Ablesung ablesung : ablesungen) {
+            if (!ablesung.getId().equals(ablesungId))
                 continue;
 
             ablesung.setKunde(null);
@@ -120,4 +125,23 @@ public class AblesungRessource {
         return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
     }
 
+
+    @GET
+    @Path("VorZweiJahrenHeute")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response VorZweiJahrenHeute() {
+        System.out.println(LocalDate.now());
+        System.out.println(LocalDate.now().minusYears(2));
+
+        for (Ablesung ablesung : ablesungen) {
+            System.out.println(ablesung.getDatum());
+
+            if (ablesung.getDatum().isAfter(LocalDate.now()) && ablesung.getDatum().isBefore(LocalDate.now().minusYears(2)))
+                continue;
+
+            return Response.status(Response.Status.OK).entity(ablesung).build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
+
+    }
 }
