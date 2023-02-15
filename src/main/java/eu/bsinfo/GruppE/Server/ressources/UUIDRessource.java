@@ -7,6 +7,9 @@ import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * OBSOLETE, NOT USED
+ */
 @Path("UUID")
 public class UUIDRessource {
 

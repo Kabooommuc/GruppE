@@ -3,12 +3,9 @@ package eu.bsinfo.GruppE.Server.ressources;
 import eu.bsinfo.GruppE.Server.Database.databaseCRUD;
 import eu.bsinfo.GruppE.Server.Server;
 import eu.bsinfo.GruppE.Server.models.Ablesung;
-import eu.bsinfo.GruppE.Server.models.Kunde;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jdk.jshell.spi.ExecutionControl;
-import org.w3c.dom.CDATASection;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -52,8 +49,8 @@ public class AblesungRessource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllAblesungen() throws SQLException {
+        System.out.println("AblesungRessource.getAllAblesungen");
         ArrayList<Ablesung> allAblesungen = databaseCRUD.readAllAblesungen();
-
         return Response.status(Response.Status.OK).entity(allAblesungen).build();
     }
 
@@ -80,8 +77,9 @@ public class AblesungRessource {
 
     /**
      * Veraendert Ablesung anhand von uebergebenen Daten
-     * @param putAblesung
-     * @return
+     *
+     * @param putAblesung Ablesung mit veränderten Daten
+     * @return Gibt 200 - OK und UUID zurück
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -100,8 +98,7 @@ public class AblesungRessource {
 
     /**
      * Loescht Ablesung aus ArrayList anhand von AblesungUUID
-     * @param id
-     * @return
+     * @param id UUID des Kunden
      */
     @DELETE
     @Path("{id}")

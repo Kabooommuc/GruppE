@@ -15,10 +15,9 @@ public class databaseCRUD {
     final static int KUNDEVORNAME = 3;
 
     public static ArrayList<Kunde> readAllKunden() throws SQLException {
+        System.out.println("databaseCRUD.readAllKunden");
         ArrayList<Kunde> allKunden = new ArrayList<>();
-        System.out.println("readKunde");
-        PreparedStatement pst = con.prepareStatement("SELECT * from Kunde");
-
+        PreparedStatement pst = con.prepareStatement("SELECT * from Kunde;");
         ResultSet rs = pst.executeQuery();
         rs.beforeFirst();
         Util.printRs(rs);
@@ -29,6 +28,7 @@ public class databaseCRUD {
             System.out.println(kunde);
             allKunden.add(kunde);
         }
+        rs.close();
         return allKunden;
     }
     public static void createKunde(Kunde kunde) throws SQLException {
@@ -194,14 +194,8 @@ public class databaseCRUD {
 
     public static ArrayList<Ablesung> readAllAblesungen() throws SQLException {
         System.out.println("databaseCRUD.readAllAblesungen");
+        ResultSet rs = con.createStatement().executeQuery("SELECT * FROM Ablesung;");
 
-        PreparedStatement pst = con.prepareStatement("SELECT * from Ablesung;");
-        ResultSet rs = pst.executeQuery();
-
-        // Check if UUID does not exist in database
-        if (!rs.first()) {
-            throw new Error("Ablesung does not exist");
-        }
         rs.beforeFirst();
         Util.printRs(rs);
 
@@ -213,6 +207,7 @@ public class databaseCRUD {
             System.out.println(ablesung);
             allAblesungen.add(ablesung);
         }
+        rs.close();
 
         return allAblesungen;
     }
@@ -309,6 +304,4 @@ public class databaseCRUD {
             System.out.println("deleted Ablesung " + uuid);
         }
     }
-
-
 }

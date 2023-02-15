@@ -18,6 +18,8 @@ public class GuiToRestClient {
     static WebTarget target = client.target(url);
 
     public static String getFromRest(String path) {
+        System.out.println("GuiToRestClient.getFromRest");
+        System.out.println("url + path = " + url + "/" + path);
         Invocation.Builder builder = target.path(path).request(MediaType.APPLICATION_JSON);
         Response response = builder.get();
 
@@ -28,10 +30,10 @@ public class GuiToRestClient {
         return response.readEntity(String.class);
     }
     public static Kunde getKundeFromUUID(String path) {
-        Invocation.Builder builder = target.path(path).request(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+        Invocation.Builder builder = target.path("kunden").path(path).request(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
         Response response = builder.get();
 
-        System.out.println("Called " + path + ".");
+        System.out.println("Called kunden/" + path + ".");
         if (response.getStatus() <= 400) {
             // TODO Fehler abfangen
         }

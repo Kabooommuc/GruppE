@@ -14,9 +14,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.UUID;
 
+import static eu.bsinfo.GruppE.Client.GuiToRestClient.getKundeFromUUID;
 import static eu.bsinfo.GruppE.Client.GuiToRestClient.postKunde;
 
 public class GUI extends JFrame {
@@ -283,14 +285,15 @@ public class GUI extends JFrame {
             displayMessage(ERROR_TAG + "Invalides Datum");
             return;
         }
-        Kunde kunde = (Kunde) customerIdInput.getSelectedItem();
+
+        Kunde kunde = getKundeFromUUID(String.valueOf(customerIdInput.getSelectedItem()));
 
         md = new MeasurementData(
                 kunde.getId(),
                 houseNumberInput.getText(),
                 apartmentNumberInput.getText(),
                 Integer.parseInt(counterIdInput.getText()),
-                readingDate.getDate(),
+                readingDate.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                 Double.parseDouble(powerCurrentInput.getText()),
                 Double.parseDouble(householdCurrentInput.getText()),
                 counterChangeInput.isSelected(),
@@ -306,7 +309,7 @@ public class GUI extends JFrame {
         addRow(md);
     }
 
-    private void addRow(MeasurementData md) {
+    public void addRow(MeasurementData md) {
         Object[] row = {
                 md.customerId,
                 md.houseNumber,
