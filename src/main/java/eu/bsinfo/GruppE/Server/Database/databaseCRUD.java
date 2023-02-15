@@ -67,7 +67,7 @@ public class databaseCRUD {
         ResultSet rs = pst.executeQuery();
 
         // Check if UUID does not exist in database
-        if (rs.first() == false) {
+        if (!rs.first()) {
             throw new Error("Kunde does not exist");
         }
         rs.beforeFirst();
