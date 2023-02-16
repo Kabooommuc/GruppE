@@ -52,7 +52,7 @@ public class InputChecker {
     private static int checkForEmpty(JTextField[] jTextFields) {
         for (int i = 0; i<jTextFields.length-1; i++) {
             if(jTextFields[i].getText().equals("")) {
-                return i;
+                return i+1; //hacky but works
             }
         }
         return -1;
