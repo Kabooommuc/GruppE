@@ -285,7 +285,7 @@ public class GUI extends JFrame {
             return;
         }
 
-        Kunde kunde = getKundeFromUUID(String.valueOf(customerIdInput.getSelectedItem()));
+        Kunde kunde = (Kunde) getKundeFromUUID(String.valueOf(customerIdInput.getSelectedItem()));
 
         md = new MeasurementData(
                 kunde.getId(),
@@ -322,19 +322,6 @@ public class GUI extends JFrame {
                 md.comment
         };
         tableModel.addRow(row);
-    }
-
-    /**
-     * Updates a value of the MeasurementData object from the given row index with the new value.
-     *
-     * @param row      row index of the edited cell
-     * @param column   column index of the edited cell
-     * @param newValue new value of the edited cell
-     */
-    @Deprecated
-    private void updateMDFromRow(int row, int column, Object newValue) {
-        MeasurementData mdUpdate = DataHandler.data.get(row);
-        mdUpdate.setValueBasedOnColumn(column, newValue);
     }
 
     /**
