@@ -81,11 +81,11 @@ public class GUI extends JFrame {
         });
 
         //TODO: something like this once customers can be loaded
-        //if(DataHandler.getKundenIDs().size()==0) {
-        //    saveButton.setEnabled(false);
-        //    addButton.setEnabled(false);
-        //    exportButton.setEnabled(false);
-        //}
+        if(DataHandler.getKundenIDs().size()==0) {
+            saveButton.setEnabled(false);
+            addButton.setEnabled(false);
+            exportButton.setEnabled(false);
+        }
 
         final int FRAME_WIDTH = 1800;
         final int FRAME_HEIGHT = 600;
@@ -251,9 +251,16 @@ public class GUI extends JFrame {
         postKunde(newKunde);
         displayMessage(INFO_TAG + "Kunde erstellt");
 
+        if(customerIdInput.getItemCount() == 0 ){
+            saveButton.setEnabled(true);
+            addButton.setEnabled(true);
+            exportButton.setEnabled(true);
+        }
+
         String newID = newKunde.getId();
         DataHandler.getKundenIDs().add(newID);
         customerIdInput.addItem(newID);
+
 
     }
 
