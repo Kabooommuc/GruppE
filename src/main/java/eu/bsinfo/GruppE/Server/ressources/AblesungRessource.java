@@ -22,10 +22,10 @@ public class AblesungRessource {
     private static final String MSG_UPDATED = " was successfully updated.";
 
     /**
-     * Prueft, ob KundenUUID aus der Ablesung existiert, wenn ja, speichert in ArrayList
+     * Prueft, ob KundenUUID aus der Ablesung existiert, wenn nein neuer Eintrag in der Datenbank
      *
-     * @param postAblesung
-     * @return
+     * @param postAblesung übergebene neue Ablesung
+     * @return 201 CREATED , Ablesung
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -37,46 +37,56 @@ public class AblesungRessource {
 
         try {
             databaseCRUD.createAblesung(postAblesung);
+            return Response.status(Response.Status.CREATED).entity(postAblesung).build();
         } catch (SQLException e) {
             System.err.println(e);
         }
-        return Response.status(Response.Status.CREATED).entity(postAblesung).build();
-
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
     /**
-     * Gibt alle vorhandenen Ablesungen aus
+     * Gibt alle vorhandenen Ablesungen in der DB aus
      *
-     * @return
+     * @return 200 OK
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllAblesungen() throws SQLException {
+    public Response getAllAblesungen() {
         System.out.println("AblesungRessource.getAllAblesungen");
-        ArrayList<Ablesung> allAblesungen = databaseCRUD.readAllAblesungen();
-        return Response.status(Response.Status.OK).entity(allAblesungen).build();
+
+        try {
+            ArrayList<Ablesung> allAblesungen = databaseCRUD.readAllAblesungen();
+            return Response.status(Response.Status.OK).entity(allAblesungen).build();
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
     /**
      * Gibt Ablesung fuer AbluesungUUID aus
      *
-     * @param id
-     * @return
+     * @param id Ablesung UUID
+     * @return 200 OK, abgefragtes Ablesungsobjekt
      */
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAblesungById(@PathParam("id") String id) {
-        UUID ablesungId = Server.convertStringToUUID(id);
-        if (ablesungId == null)
+        System.out.println("AblesungRessource.getAblesungById");
+
+        if (id == null)
             return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
 
-        for (Ablesung ablesung : ablesungen) {
-            if (!ablesung.getId().equals(ablesungId))
-                continue;
+        try {
+            UUID ablesungId = Server.convertStringToUUID(id);
+
+            Ablesung ablesung = databaseCRUD.readAblesung(ablesungId);
             return Response.status(Response.Status.OK).entity(ablesung).build();
+        } catch (SQLException e) {
+            System.err.println(e);
         }
-        return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
     /**
@@ -89,15 +99,16 @@ public class AblesungRessource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response putAblesung(Ablesung putAblesung) {
-        for (Ablesung ablesung : ablesungen) {
-            if (!ablesung.getId().equals(putAblesung.getId()))
-                continue;
+        System.out.println("AblesungRessource.putAblesung");
 
-            ablesungen.set(ablesungen.indexOf(ablesung), putAblesung);
+        try {
+            databaseCRUD.updateAblesung(putAblesung);
             return Response.status(Response.Status.OK).entity(putAblesung.getId() + MSG_UPDATED).build();
+        } catch (SQLException e) {
+            System.err.println(e);
         }
 
-        return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
     /**
@@ -109,23 +120,24 @@ public class AblesungRessource {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteAblesung(@PathParam("id") String id) {
+        System.out.println("AblesungRessource.deleteAblesung");
+
         UUID ablesungId = Server.convertStringToUUID(id);
         if (ablesungId == null)
             return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
 
-        for (Ablesung ablesung : ablesungen) {
-            if (!ablesung.getId().equals(ablesungId))
-                continue;
-
-            ablesung.setKunde(null);
-            ablesungen.remove(ablesung);
-            return Response.status(Response.Status.OK).entity(ablesung).build();
+        try {
+            databaseCRUD.deleteAblesung(ablesungId);
+            return Response.status(Response.Status.OK).build();
+        } catch (SQLException e) {
+            System.err.println(e);
         }
 
-        return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
 
+    // TODO @Tobi
     @GET
     @Path("VorZweiJahrenHeute")
     @Produces(MediaType.APPLICATION_JSON)
