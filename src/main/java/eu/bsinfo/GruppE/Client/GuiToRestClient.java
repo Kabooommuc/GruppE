@@ -1,14 +1,10 @@
 package eu.bsinfo.GruppE.Client;
 
-import eu.bsinfo.GruppE.GUI.MeasurementData;
 import eu.bsinfo.GruppE.Server.models.Ablesung;
 import eu.bsinfo.GruppE.Server.models.Kunde;
-import eu.bsinfo.GruppE.Server.ressources.KundenRessource;
 import jakarta.ws.rs.client.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import java.util.UUID;
 
 import static jakarta.ws.rs.client.Entity.json;
 
@@ -18,6 +14,8 @@ public class GuiToRestClient {
     static WebTarget target = client.target(url);
 
     public static String getFromRest(String path) {
+        System.out.println("GuiToRestClient.getFromRest");
+        System.out.println("url + path = " + url + "/" + path);
         Invocation.Builder builder = target.path(path).request(MediaType.APPLICATION_JSON);
         Response response = builder.get();
 
@@ -27,13 +25,13 @@ public class GuiToRestClient {
         }
         return response.readEntity(String.class);
     }
-    public static Kunde getKundeFromUUID(String path) {
-        Invocation.Builder builder = target.path(path).request(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+    public static Object getKundeFromUUID(String path) {
+        Invocation.Builder builder = target.path("kunden").path(path).request(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
         Response response = builder.get();
 
-        System.out.println("Called " + path + ".");
+        System.out.println("Called kunden/" + path + ".");
         if (response.getStatus() <= 400) {
-            // TODO Fehler abfangen
+            return ""  + returnStatusCode(response) + " - not found";
         }
         return response.readEntity(Kunde.class);
     }

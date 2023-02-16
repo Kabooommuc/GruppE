@@ -14,8 +14,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.ZoneId;
 import java.util.Arrays;
 
+import static eu.bsinfo.GruppE.Client.GuiToRestClient.getKundeFromUUID;
 import static eu.bsinfo.GruppE.Client.GuiToRestClient.postKunde;
 
 public class GUI extends JFrame {
@@ -281,14 +283,15 @@ public class GUI extends JFrame {
             displayMessage(ERROR_TAG + "Invalides Datum");
             return;
         }
-        Kunde kunde = (Kunde) customerIdInput.getSelectedItem();
+
+        Kunde kunde = (Kunde) getKundeFromUUID(String.valueOf(customerIdInput.getSelectedItem()));
 
         md = new MeasurementData(
                 kunde.getId(),
                 houseNumberInput.getText(),
                 apartmentNumberInput.getText(),
                 Integer.parseInt(counterIdInput.getText()),
-                readingDate.getDate(),
+                readingDate.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
                 Double.parseDouble(powerCurrentInput.getText()),
                 Double.parseDouble(householdCurrentInput.getText()),
                 counterChangeInput.isSelected(),
@@ -304,7 +307,7 @@ public class GUI extends JFrame {
         addRow(md);
     }
 
-    private void addRow(MeasurementData md) {
+    public void addRow(MeasurementData md) {
         Object[] row = {
                 md.customerId,
                 md.houseNumber,
@@ -318,19 +321,6 @@ public class GUI extends JFrame {
                 md.comment
         };
         tableModel.addRow(row);
-    }
-
-    /**
-     * Updates a value of the MeasurementData object from the given row index with the new value.
-     *
-     * @param row      row index of the edited cell
-     * @param column   column index of the edited cell
-     * @param newValue new value of the edited cell
-     */
-    @Deprecated
-    private void updateMDFromRow(int row, int column, Object newValue) {
-        MeasurementData mdUpdate = DataHandler.data.get(row);
-        mdUpdate.setValueBasedOnColumn(column, newValue);
     }
 
     /**

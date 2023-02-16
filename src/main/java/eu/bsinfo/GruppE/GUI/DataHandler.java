@@ -3,6 +3,7 @@ package eu.bsinfo.GruppE.GUI;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import eu.bsinfo.GruppE.Client.GuiToRestClient;
 import eu.bsinfo.GruppE.Server.models.Ablesung;
 import eu.bsinfo.GruppE.Server.models.Kunde;
@@ -10,7 +11,6 @@ import lombok.Getter;
 
 import java.awt.*;
 import java.io.IOException;
-import java.time.ZoneId;
 import java.util.ArrayList;
 
 /**
@@ -33,17 +33,41 @@ public class DataHandler {
      * Loads data from the cached save file and sets the data ArrayList to the data returned from the import.
      */
     public static void loadData() throws JsonProcessingException {
-        // get all Kunden
-        String allKundenString = GuiToRestClient.getFromRest("kunden");
-        System.out.println(allKundenString);
-
         ObjectMapper objectMapper = new ObjectMapper();
-        ArrayList<Kunde> kundenList = objectMapper.readValue(allKundenString, new TypeReference<>() {
-        });
+        objectMapper.registerModule(new JavaTimeModule());
+
+        String allKundenString = GuiToRestClient.getFromRest("kunden");
+        System.out.println("loadData: Kunden: "+allKundenString);
+
+        ArrayList<Kunde> kundenList = objectMapper.readValue(allKundenString, new TypeReference<>() {});
+        ArrayList<MeasurementData> measurementDataList = new ArrayList<>();
         for (Kunde k: kundenList) {
             System.out.println(k);
             kundenIDs.add(k.getId());
             GUI.customerIdInput.addItem(k.getId());
+        }
+
+        String allAblesungenString = GuiToRestClient.getFromRest("ablesungen");
+        System.out.println("allAblesungenString: " +allAblesungenString);
+        ArrayList<Ablesung> ablesungenList = objectMapper.readValue(allAblesungenString, new TypeReference<>() {});
+        System.out.println("loadData: Ablesungen: " +allAblesungenString);
+        for (Ablesung ablesung : ablesungenList) {
+            MeasurementData md = new MeasurementData();
+            md.setCustomerId(ablesung.getKunde().getId());
+            md.setHouseNumber("none");
+            md.setApartmentNumber("none");
+            md.setCounterId(Integer.parseInt(ablesung.getZaehlerNummer()));
+            md.setMeasurementReadingDateTime(ablesung.getDatum());
+            md.setCounterChange(ablesung.isNeuEingebaut());
+            md.setComment(ablesung.getKommentar());
+            md.setPowerCurrent(ablesung.getZaehlerstand());
+            md.setHouseholdCurrent(ablesung.getZaehlerstand());
+
+            measurementDataList.add(md);
+        }
+
+        for (MeasurementData md: measurementDataList) {
+            Runtime.gui.addRow(md);
         }
 
         // add ablesungen to table
@@ -67,7 +91,7 @@ public class DataHandler {
         }
         Ablesung newAblesung = new Ablesung(
                 String.valueOf(md.counterId),
-                md.measurementReadingDateTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                md.measurementReadingDateTime,
                 kunde, md.comment, md.counterChange, md.powerCurrent);
 
         System.out.println(newAblesung);

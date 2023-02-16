@@ -51,6 +51,8 @@ public class KundenRessource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllKunden() throws SQLException {
+        System.out.println("KundenRessource.getAllKunden");
+
         ArrayList<Kunde> kundenList = databaseCRUD.readAllKunden();
         return Response.status(Response.Status.OK).entity(kundenList).build();
     }
@@ -62,18 +64,14 @@ public class KundenRessource {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getKundeById(@PathParam("id") String id) {
-        UUID kundenId = Server.convertStringToUUID(id);
-        if(kundenId == null)
+    public Response getKundeById(@PathParam("id") String id) throws SQLException {
+        System.out.println("KundenRessource.getKundeById");
+
+        if(id == null)
             return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
 
-        for(Kunde kunde : kunden) {
-           if(!kunde.getId().equals(kundenId))
-               continue;
-           return Response.status(Response.Status.OK).entity(kunde).build();
-        }
-
-        return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
+        Kunde kunde = databaseCRUD.readKunde(id);
+        return Response.status(Response.Status.OK).entity(kunde).build();
     }
 
     /**

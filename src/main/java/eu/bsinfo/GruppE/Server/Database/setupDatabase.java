@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS Ablesung
 (
     uuid VARCHAR(36) not null primary key,
     zaehlerNummer VARCHAR(50) NOT NULL,
-    ableseDatum DATE not null,
+    ableseDatum VARCHAR(10) not null,
     kommentar TEXT,
     neuEingebaut BOOLEAN,
     zaehlerstand DOUBLE,
