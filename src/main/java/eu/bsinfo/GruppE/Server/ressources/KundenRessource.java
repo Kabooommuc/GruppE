@@ -1,33 +1,26 @@
 package eu.bsinfo.GruppE.Server.ressources;
 
-import eu.bsinfo.GruppE.Server.Database.Util;
 import eu.bsinfo.GruppE.Server.Database.databaseCRUD;
-import eu.bsinfo.GruppE.Server.Server;
-import eu.bsinfo.GruppE.Server.models.Ablesung;
 import eu.bsinfo.GruppE.Server.models.Kunde;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 
 @Path("kunden")
 public class KundenRessource {
 
-    public static ArrayList<Kunde> kunden = new ArrayList<>();
     public static final String MSG_NOT_FOUND = "Kunde not found!";
     private static final String MSG_UPDATED = " was successfully updated!";
     private static final String MSG_IS_NULL = "Kunde is null!";
 
     /**
-     * @param postKunde uebergebenes Kundenobjekt
-     * @return daten, die uebermittelt wurden
+     * Erstellt neuen Eintrag im Table Kunden, fügt übergebenes Kundenobjekt hinzu
+     * url: /kunden/
+     * @param postKunde Kundenobjekt das in die Datenbank eingetragen wird
+     * @return 201 CREATED, Kundenobjekt
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -46,102 +39,84 @@ public class KundenRessource {
     }
 
     /**
-     * Gibt alle vorhandenen Kunden als ArrayList aus
+     * Fragt in der Datenbank alle Kunden ab und gibt diese zurück
+     *
+     * @return 200 OK, ArrayList mit allen in der Datenbank eingetragenen Kunden
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllKunden() throws SQLException {
+    public Response getAllKunden() {
         System.out.println("KundenRessource.getAllKunden");
 
-        ArrayList<Kunde> kundenList = databaseCRUD.readAllKunden();
-        return Response.status(Response.Status.OK).entity(kundenList).build();
+        try {
+            ArrayList<Kunde> kundenList = databaseCRUD.readAllKunden();
+            return Response.status(Response.Status.OK).entity(kundenList).build();
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
     /**
-     * Fordert uuid des kunden, wenn vorhanden gibt kundendaten zurueck.
-     * @param id == UUID
+     * Ermöglicht das Abfragen eines bestimmten Kunden anhand seiner ID
+     *
+     * @param id ID des Kunden
+     * @return 200 OK, Abgefragtes Kundenobjekt
      */
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getKundeById(@PathParam("id") String id) throws SQLException {
+    public Response getKundeById(@PathParam("id") String id) {
         System.out.println("KundenRessource.getKundeById");
 
         if(id == null)
             return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
 
-        Kunde kunde = databaseCRUD.readKunde(id);
-        return Response.status(Response.Status.OK).entity(kunde).build();
+        try {
+            Kunde kunde = databaseCRUD.readKunde(id);
+            return Response.status(Response.Status.OK).entity(kunde).build();
+        } catch (SQLException e) {
+            System.err.println(e);
+        }
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
     /**
-     * Veraendert Daten eines Kunden anhand der uuid
-     * @param putKunde == Kundenobjekt
+     * Updated ein Kundenobjekt in der Datenbank
+     *
+     * @param putKunde Kundenobjekt mit aktualisierten Daten
+     * @return 200 OK
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response putKunde(Kunde putKunde) {
         try {
-
-            Connection con = Util.getConnection("gm3");
-            PreparedStatement checkUUID = con.prepareStatement("SELECT uuid From Kunde WHERE uuid=?;");
-            checkUUID.setString(1, String.valueOf(putKunde.getId()));
-            ResultSet rsUUID = checkUUID.executeQuery();
-            Util.printRs(rsUUID);
-
-            // Check if UUID already exists in database
-            if (rsUUID.first()) {
-                throw new Error("Kunde already exists");
-            }
-        } catch (SQLException e) {
-            System.err.println(e);
-            return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
-        }
-
-        try {
             databaseCRUD.updateKunde(putKunde);
             return Response.status(Response.Status.OK).entity(putKunde.getId() + MSG_UPDATED).build();
         } catch (SQLException e) {
             System.err.println(e);
         }
-        return null;
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 
     /**
-     * Loescht Kundenobjekt anhand der uuid
-     * @param id == UUID
+     * @DEPRECATED - NOT USED IN PROJECT
+     * Entfernt Kundendatensatz aus der Datenbank, Kunde wird anhand ID in DB gesucht
+     *
+     * @param id ID des Kunden
+     * @return 200 OK,
      */
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteKunde(@PathParam("id") String id) {
-        ArrayList<Ablesung> ablesungen = new ArrayList<>();
-
-        UUID kundenId = Server.convertStringToUUID(id);
-        if(kundenId == null)
-            return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
-
-        for(Kunde kunde : kunden) {
-            if(!kunde.getId().equals(kundenId))
-                continue;
-
-            for(Ablesung ablesung : AblesungRessource.ablesungen) {
-                if(!ablesung.getKunde().getId().equals(kunde.getId()))
-                    continue;
-
-                ablesung.setKunde(null);
-                ablesungen.add(ablesung);
-            }
-
-            kunden.remove(kunde);
-            HashMap<String, Object> responseHashMap = new HashMap<>();
-            responseHashMap.put("kunde", kunde);
-            responseHashMap.put("ablesungen", ablesungen);
-            return Response.status(Response.Status.OK).entity(responseHashMap).build();
+        try {
+            databaseCRUD.deleteKunde(id);
+            return Response.status(Response.Status.OK).build();
+        } catch (SQLException e) {
+                System.err.println();
         }
-
-        return Response.status(Response.Status.NOT_FOUND).entity(MSG_NOT_FOUND).build();
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
-
 }

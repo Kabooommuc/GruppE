@@ -2,7 +2,6 @@ package eu.bsinfo.GruppE.Server.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bsinfo.GruppE.GUI.CustomUUID;
-import eu.bsinfo.GruppE.Server.ressources.KundenRessource;
 import lombok.Data;
 import lombok.ToString;
 
@@ -30,13 +29,5 @@ public class Kunde {
         this.id = id;
         this.name = name;
         this.vorname = vorname;
-    }
-
-    public static Kunde getKundeFromKunden(String id) {
-        for(Kunde kunde : KundenRessource.kunden) {
-            if(kunde.getId().equals(id))
-                return kunde;
-        }
-        return null;
     }
 }
