@@ -58,7 +58,6 @@ public class GUI extends JFrame {
 
             counterTypeInput,
             counterIdInput,
-            //measurementReadingDateTimeInput,
             commentInput,
     };
 
