@@ -167,7 +167,7 @@ public class GUI extends JFrame {
         actionButtons.add(addButton);
         for(int i = 0; i < 5;i++)
             actionButtons.add(new JLabel(""));
-        actionButtons.add(exportButton);
+        //actionButtons.add(exportButton);
         actionButtons.add(exitButton);
 
         base.add(actionButtons, BorderLayout.SOUTH);
