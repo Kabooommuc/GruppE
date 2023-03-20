@@ -25,13 +25,13 @@ public class GuiToRestClient {
         }
         return response.readEntity(String.class);
     }
-    public static Object getKundeFromUUID(String path) {
+    public static Kunde getKundeFromUUID(String path) {
         Invocation.Builder builder = target.path("kunden").path(path).request(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
         Response response = builder.get();
 
         System.out.println("Called kunden/" + path + ".");
-        if (response.getStatus() <= 400) {
-            return ""  + returnStatusCode(response) + " - not found";
+        if (response.getStatus() >= 400) {
+            return null;
         }
         return response.readEntity(Kunde.class);
     }
