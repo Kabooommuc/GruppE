@@ -1,8 +1,6 @@
 package eu.bsinfo.GruppE.GUI;
 
-import static java.lang.System.err;
-
-public class Runtime {
+public class GUILauncher {
 
     public static GUI gui;
     public static void main(String[] args) {
@@ -10,7 +8,7 @@ public class Runtime {
         try {
             DataHandler.loadData();
         }  catch (Exception e){
-            err.println(e);
+            e.printStackTrace();
         }
     }
 

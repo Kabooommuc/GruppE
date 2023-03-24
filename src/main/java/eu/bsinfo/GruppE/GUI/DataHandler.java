@@ -19,8 +19,6 @@ import java.util.ArrayList;
 public class DataHandler {
     public static final String SAVE_FILENAME = "data";
     public static final String EXPORT_FILENAME = "export";
-
-    private static final String ERROR_WHILE_LOADING = GUI.ERROR_TAG + "Failed to load file!";
     private static final String ERROR_WHILE_SAVING = GUI.ERROR_TAG + "Failed to save file!";
     private static final String ERROR_COULD_NOT_OPEN = GUI.ERROR_TAG + "Could not open target directory";
 
@@ -67,7 +65,7 @@ public class DataHandler {
         }
 
         for (MeasurementData md: measurementDataList) {
-            Runtime.gui.addRow(md);
+            GUILauncher.gui.addRow(md);
         }
 
         // add ablesungen to table
