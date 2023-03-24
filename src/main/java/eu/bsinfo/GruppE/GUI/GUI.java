@@ -278,7 +278,7 @@ public class GUI extends JFrame {
             return;
         }
 
-        Kunde kunde = (Kunde) getKundeFromUUID(String.valueOf(customerIdInput.getSelectedItem()));
+        Kunde kunde = getKundeFromUUID(String.valueOf(customerIdInput.getSelectedItem()));
 
         md = new MeasurementData(
                 kunde.getId(),
